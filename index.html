@@ -118,6 +118,19 @@
         animation: float 8s ease-in-out infinite;
     }
 
+    #music-toggle {
+        position: fixed;
+        top: 20px; right: 20px;
+        width: 40px; height: 40px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(212, 175, 55, 0.6);
+        border-radius: 50%;
+        z-index: 10001;
+        display: flex; justify-content: center; align-items: center;
+        font-size: 12px; font-weight: bold; color: #1f1e33;
+        backdrop-filter: blur(4px);
+    }
+
     .glass-panel {
         background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
@@ -202,6 +215,15 @@
     #start-btn:hover, #save-btn:hover {
         background: #d4af37; color: #ffffff;
     }
+
+    .qr-footer {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-top: 30px; padding-top: 20px;
+        border-top: 1px solid rgba(31, 30, 51, 0.1);
+        text-align: left;
+    }
+    .qr-text { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .qr-image { width: 64px; height: 64px; border-radius: 4px; border: 1px solid rgba(31, 30, 51, 0.1); }
 </style>
 </head>
 <body>
@@ -217,6 +239,8 @@
 <audio id="bgm-player" loop preload="auto">
     <source src="bgm.mp3" type="audio/mpeg">
 </audio>
+
+<button id="music-toggle" class="hover-target">BGM</button>
 
 <div class="glass-panel" id="start-container">
     <h1 id="main-title">狼BTI</h1>
@@ -249,43 +273,74 @@
     <span class="micro-en" style="margin-bottom: 20px;">FINAL PROFILE GENERATED</span>
     <div id="result-title"></div>
     <div id="result-desc"></div>
-    <button id="save-btn" class="hidden hover-target">
+    
+    <div class="qr-footer">
+        <div class="qr-text">长按保存或截图<br>扫描右侧二维码测试你的狼BTI</div>
+        <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://baolilinglan.github.io/XLPJBTI-the-special-MBTI-test/" crossorigin="anonymous" alt="QR Code">
+    </div>
+
+    <button id="save-btn" class="hidden hover-target" style="margin-top: 20px;">
         导出成分报告
     </button>
 </div>
 
 <script>
-    const questions = [
-        { text: "1. 推送一个血狼破军的视频时，你点击播放的主要诉求是：", options: [ { text: "记录视频中的极端言论，作为社区争论的素材", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "收集最新的数值结论，补充自己对游戏机制的认知", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "观察画面中血狼破军的神态与外貌特征", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "根据血狼破军的特征，想象其为某种二次元萌化形象", effect: { d1: -1, d2: 1, d3: -1 } } ] },
-        { text: "2. 在血狼破军直播画面中出现进食环节，你的注意力主要集中在：", options: [ { text: "血狼破军进食的物理状态及食量大小", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "等待由于流程中断而在弹幕中引发的不满情绪", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "将其截取并搬运至外部论坛获取互动提示", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "换一个主播看", effect: { d1: -1, d2: -1, d3: -1 } } ] },
-        { text: "3. 看到龙哥哥、ve或其他相关主播在血狼直播间弹幕互动，你会：", options: [ { text: "观察他们之间的对话逻辑，建立主观的配对关系", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "试图从中发现可被截取攻击的文字漏洞", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "不清楚这些人员的社会关系，将其略过", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "发表激化群体矛盾的言论，等待冲突发生", effect: { d1: 1, d2: 1, d3: -1 } } ] },
-        { text: "4. 对于“小红点”这种社区反馈机制，你的态度是：", options: [ { text: "将其视为自己在外部论坛搬运信息的首要目标", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "忽略这些提示，只关注具有实际数值意义的讨论", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将其作为引发双方群体辩论成功后的附带结果", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "缺乏参与动机，不关注此类提示", effect: { d1: -1, d2: -1, d3: -1 } } ] },
-        { text: "5. 当讨论血狼破军的过往时，你倾向于：", options: [ { text: "汇总并罗列所有的负面事件，维持长期的关注以寻找更多素材", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "剥离客观事实，结合主播的虚拟形象构建二次创作文本", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "关注其与另一名主播的时间线交集", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "观察这些讨论如何破坏现有的社区秩序", effect: { d1: 1, d2: 1, d3: -1 } } ] },
-        { text: "6. 关于明日方舟的具体数据解析，你的常态是：", options: [ { text: "作为判定抽卡资源分配和角色评估的客观依据", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将其视为阻碍观看主播本人状态的冗余信息", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "对数据的获取渠道和意义均不了解", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "截图数据面板，在不同群体间制造对立", effect: { d1: 1, d2: 1, d3: -1 } } ] },
-        { text: "7. 在参与社区内关于杯级的讨论时，你会：", options: [ { text: "针对评级本身的合理性进行事实层面的辩论", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将评级结果发布至存在对立观点的区域", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "不清楚评级系统的意义与指向", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "利用评级结果的争议性煽动用户间的人身攻击", effect: { d1: 1, d2: -1, d3: -1 } } ] },
-        { text: "8. 若血狼的外貌或性格特征被提出，你的反应是：", options: [ { text: "对其外在特征表现出直接且持续的观察兴趣", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "将其与另一名存在交集的主播特征进行cp配对", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "将其转化为女性化的属性词条并进行自我满足", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "要求终止此类话题，恢复具体的数值计算", effect: { d1: 1, d2: 1, d3: 1 } } ] },
-        { text: "9. 对于其他人员针对血狼发布的攻击性言论，你的处理方式：", options: [ { text: "这就是我发的啊/简直就是我的互联网嘴替", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "截屏保存并在不同平台间传递", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "观察事态升级的过程以获取情绪刺激", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "无视或阻止此类信息传播，因其脱离了对主播本人的关注", effect: { d1: -1, d2: 1, d3: 1 } } ] },
-        { text: "10. 面对干员列表环节，你会：", options: [ { text: "维持观看，因为声音本身已满足需求", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "脑补闲聊对象是另一个特定主播", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "退出页面，此类内容不在关注范围内", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "在弹幕中发布带节奏的言论打破平静", effect: { d1: 1, d2: 1, d3: -1 } } ] },
-        { text: "11. 截取血狼直播言论的驱动力来自于：", options: [ { text: "获取外部平台用户的互动数据反馈", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "收集用于证明其言论错误或行为不当的证据", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "留存特定暧昧言论以便后续幻想", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "记录用于分析游戏机制的核心数值观点", effect: { d1: 1, d2: 1, d3: 1 } } ] },
-        { text: "12. 在理解血狼的特定新开发出的术语时，你：", options: [ { text: "将其作为推测与其他主播私下连结的线索", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "不具备该词汇的认知背景", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "利用此类词汇在弹幕中进行无差别的刷屏", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "尝试把该词汇带到其他平台使用", effect: { d1: 1, d2: -1, d3: 1 } } ] },
-        { text: "13. 当面临对某一角色的强度拉踩环境，你的定位是：", options: [ { text: "基于数据分析提供客观论据", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "挑起话题以观赏群体的非理性对立", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "将争议内容转运至其他社群", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "寻找拉踩言论中主播的用词失误以证明其观点有失偏颇", effect: { d1: 1, d2: -1, d3: -1 } } ] },
-        { text: "14. 若血狼破军的外部形象特征被公开，你最在乎的是：", options: [ { text: "声音和想象外貌与实际是否一致", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "大失所望，因其失去了网络主播的朦胧美", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "与预设的CP对象是否依然存在匹配度", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "外在形象不影响我对数据内容的获取", effect: { d1: 1, d2: 1, d3: 1 } } ] },
-        { text: "15. 在浏览外部社交平台时，你会主动搜索：", options: [ { text: "能够引发新一轮骂战的主播发言截图", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "自己先前搬运内容的回复情况", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "不主动搜索，对此生态圈无认知", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "与其他主播名字并列的同人关联内容", effect: { d1: -1, d2: -1, d3: 1 } } ] },
-        { text: "16. 将血狼破军转化为具有特定属性的虚拟形象，你认为：", options: [ { text: "这是满足个人情感压抑的有效途径", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "这分散了对其真实行为模式的观察", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "这种转化有利于激发更为混乱的社区反应", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "缺乏兴趣，不参与此类行为", effect: { d1: -1, d2: -1, d3: -1 } } ] },
-        { text: "17. 你判断一次血狼直播或视频有价值的标准是：", options: [ { text: "干员的客观强度得到了准确测定", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "提供了大量爆典", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "同接/视频播放量很高", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "存在可以与另一主播关联的互动暗示", effect: { d1: -1, d2: -1, d3: 1 } } ] },
-        { text: "18. 在观察血狼的社交关系网络时，你习惯：", options: [{text: "发掘连结线索并进行特定方向的解读", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "不具备观察的动机，关我什么事", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "专注于血狼干了什么", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "通过截取互动片段以引发其他群体的反感", effect: { d1: 1, d2: -1, d3: -1 } } ] },
-        { text: "19. 你在社区留下评论的主要目的是：", options: [ { text: "探讨具体的角色数值与机制效果", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "引发他人的回复", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "输出针对主播个人的负面论断", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "催化不同观点持有者之间的摩擦", effect: { d1: 1, d2: 1, d3: -1 } } ] },
-        { text: "20. 面对与自己预设不符的强度判断，你会：", options: [ { text: "坚持自己的观点", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "记录该描述带来的社区混乱状况", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "不关心描述的准确性，是血狼说的就行", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "根据该描述尝试无差别进行反驳", effect: { d1: 1, d2: -1, d3: -1 } } ] },
-        { text: "21. 当某个模组/干员更新时，你优先处理的信息是：", options: [ { text: "机制变动对强度排行的实际影响", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将其作为话题抛入论坛以等待反馈", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "无视游戏机制更新，我玩我的", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "我觉得不应该更新，要不我们回退到上个版本", effect: { d1: 1, d2: -1, d3: -1 } } ] },
-        { text: "22. 关于将主播进行捆绑讨论的行为，你认为：", options: [ { text: "这构成了你关注该群体的核心动力", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "这种行为与获取强度讨论信息无关", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "只要能导致争吵即可", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "是对客观数据研究的干扰", effect: { d1: 1, d2: 1, d3: 1 } } ] },
-        { text: "23. 评价日常的强度讨论行为记录，你的反应：", options: [ { text: "对其展现出的锐气抱有单纯的喜爱", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "以此强化自身构筑的理论", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "截图发至外部宣称其缺乏专业态度", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "无有效反馈机制", effect: { d1: -1, d2: -1, d3: -1 } } ] },
-        { text: "24. 对于特定干员绰号的附加，你的认知是：", options: [ { text: "接受该称谓，只要合适", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "利用该绰号在不同用户间挑起对立", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "不在乎该称谓的指向与含义，无论其是否合适", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "分析该称谓与其他角色之间的关系", effect: { d1: -1, d2: -1, d3: 1 } } ] },
-        { text: "25. 观看血狼直播的时间分配中，你将多数精力用于：", options: [ { text: "观察其实际特征（声音、身体行为）", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "记录所有可能作为负面物料的片段", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "评估屏幕内各项数值的推演", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将屏幕内形象替换为虚构属性", effect: { d1: -1, d2: 1, d3: -1 } } ] },
-        { text: "26. 对于外部针对血狼的负面评价，你会：", options: [ { text: "全部浏览并作为自身知识库的补充", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "将其作为材料搬运至更多平台以获取互动", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "观察负面评价造成的社区动荡", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "缺乏接触此类评价的路径", effect: { d1: -1, d2: -1, d3: -1 } } ] },
-        { text: "27. 对于社区内的冲突，你的参与方式是：", options: [ { text: "不预设自身立场，致力于使冲突扩大化", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "作为特定言论的传递载体获取回复", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "通过抛出黑料主导冲突走向", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "完全隔离于社区冲突之外", effect: { d1: -1, d2: -1, d3: -1 } } ] },
-        { text: "28. 在处理具体数据论证时，你的态度：", options: [ { text: "视其为评估强度的唯一客观标准", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将其作为引发拉踩与争端的工具", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "剥离数据，仅观察血狼本身", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "通过数据寻找相关连结人员的踪迹", effect: { d1: -1, d2: -1, d3: 1 } } ] },
-        { text: "29. 在总结自身的关注行为时，你认为核心在于：", options: [ { text: "掌握客观的机制信息与测评结论", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "对血狼的单纯喜好与物理关注", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "依靠搬运行为获得的社交反馈", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "在持续的负面审视中体现深层的执念", effect: { d1: 1, d2: -1, d3: -1 } } ] }
+    const setA = [
+        { d1: 1, d2: 1, d3: 1 },
+        { d1: 1, d2: -1, d3: -1 },
+        { d1: -1, d2: 1, d3: -1 },
+        { d1: -1, d2: -1, d3: 1 }
     ];
+    
+    const setB = [
+        { d1: -1, d2: -1, d3: -1 },
+        { d1: -1, d2: 1, d3: 1 },
+        { d1: 1, d2: -1, d3: 1 },
+        { d1: 1, d2: 1, d3: -1 }
+    ];
+
+    const rawQuestions = [
+        { text: "1. 推送一个血狼破军的视频时，你点击播放的主要诉求是：", options: ["记录视频中的极端言论，作为社区争论的素材", "收集最新的数值结论，补充自己对游戏机制的认知", "观察画面中血狼破军的神态与外貌特征", "根据血狼破军的特征，想象其为某种二次元萌化形象"] },
+        { text: "2. 在血狼破军直播画面中出现进食环节，你的注意力主要集中在：", options: ["血狼破军进食的物理状态及食量大小", "等待由于流程中断而在弹幕中引发的不满情绪", "将其截取并搬运至外部论坛获取互动提示", "换一个主播看"] },
+        { text: "3. 看到龙哥哥、ve或其他相关主播在血狼直播间弹幕互动，你会：", options: ["观察他们之间的对话逻辑，建立主观的配对关系", "试图从中发现可被截取攻击的文字漏洞", "不清楚这些人员的社会关系，将其略过", "发表激化群体矛盾的言论，等待冲突发生"] },
+        { text: "4. 对于“小红点”这种社区反馈机制，你的态度是：", options: ["将其视为自己在外部论坛搬运信息的首要目标", "忽略这些提示，只关注具有实际数值意义的讨论", "将其作为引发双方群体辩论成功后的附带结果", "缺乏参与动机，不关注此类提示"] },
+        { text: "5. 当讨论血狼破军的过往时，你倾向于：", options: ["汇总并罗列所有的负面事件，维持长期的关注以寻找更多素材", "剥离客观事实，结合主播的虚拟形象构建二次创作文本", "关注其与另一名主播的时间线交集", "观察这些讨论如何破坏现有的社区秩序"] },
+        { text: "6. 关于明日方舟的具体数据解析，你的常态是：", options: ["作为判定抽卡资源分配和角色评估的客观依据", "将其视为阻碍观看主播本人状态的冗余信息", "对数据的获取渠道和意义均不了解", "截图数据面板，在不同群体间制造对立"] },
+        { text: "7. 在参与社区内关于杯级的讨论时，你会：", options: ["针对评级本身的合理性进行事实层面的辩论", "将评级结果发布至存在对立观点的区域", "不清楚评级系统的意义与指向", "利用评级结果的争议性煽动用户间的人身攻击"] },
+        { text: "8. 若血狼的外貌或性格特征被提出，你的反应是：", options: ["对其外在特征表现出直接且持续的观察兴趣", "将其与另一名存在交集的主播特征进行cp配对", "将其转化为女性化的属性词条并进行自我满足", "要求终止此类话题，恢复具体的数值计算"] },
+        { text: "9. 对于其他人员针对血狼发布的攻击性言论，你的处理方式：", options: ["这就是我发的啊/简直就是我的互联网嘴替", "截屏保存并在不同平台间传递", "观察事态升级的过程以获取情绪刺激", "无视或阻止此类信息传播，因其脱离了对主播本人的关注"] },
+        { text: "10. 面对干员列表环节，你会：", options: ["维持观看，因为声音本身已满足需求", "脑补闲聊对象是另一个特定主播", "退出页面，此类内容不在关注范围内", "在弹幕中发布带节奏的言论打破平静"] },
+        { text: "11. 截取血狼直播言论的驱动力来自于：", options: ["获取外部平台用户的互动数据反馈", "收集用于证明其言论错误或行为不当的证据", "留存特定暧昧言论以便后续幻想", "记录用于分析游戏机制的核心数值观点"] },
+        { text: "12. 在理解血狼的特定新开发出的术语时，你：", options: ["将其作为推测与其他主播私下连结的线索", "不具备该词汇的认知背景", "利用此类词汇在弹幕中进行无差别的刷屏", "尝试把该词汇带到其他平台使用"] },
+        { text: "13. 当面临对某一角色的强度拉踩环境，你的定位是：", options: ["基于数据分析提供客观论据", "挑起话题以观赏群体的非理性对立", "将争议内容转运至其他社群", "寻找拉踩言论中主播的用词失误以证明其观点有失偏颇"] },
+        { text: "14. 若血狼破军的外部形象特征被公开，你最在乎的是：", options: ["声音和想象外貌与实际是否一致", "大失所望，因其失去了网络主播的朦胧美", "与预设的CP对象是否依然存在匹配度", "外在形象不影响我对数据内容的获取"] },
+        { text: "15. 在浏览外部社交平台时，你会主动搜索：", options: ["能够引发新一轮骂战的主播发言截图", "自己先前搬运内容的回复情况", "不主动搜索，对此生态圈无认知", "与其他主播名字并列的同人关联内容"] },
+        { text: "16. 将血狼破军转化为具有特定属性的虚拟形象，你认为：", options: ["这是满足个人情感压抑的有效途径", "这分散了对其真实行为模式的观察", "这种转化有利于激发更为混乱的社区反应", "缺乏兴趣，不参与此类行为"] },
+        { text: "17. 你判断一次血狼直播或视频有价值的标准是：", options: ["干员的客观强度得到了准确测定", "提供了大量爆典", "同接/视频播放量很高", "存在可以与另一主播关联的互动暗示"] },
+        { text: "18. 在观察血狼的社交关系网络时，你习惯：", options: ["发掘连结线索并进行特定方向的解读", "不具备观察的动机，关我什么事", "专注于血狼干了什么", "通过截取互动片段以引发其他群体的反感"] },
+        { text: "19. 你在社区留下评论的主要目的是：", options: ["探讨具体的角色数值与机制效果", "引发他人的回复", "输出针对主播个人的负面论断", "催化不同观点持有者之间的摩擦"] },
+        { text: "20. 面对与自己预设不符的强度判断，你会：", options: ["坚持自己的观点", "记录该描述带来的社区混乱状况", "不关心描述的准确性，是血狼说的就行", "根据该描述尝试无差别进行反驳"] },
+        { text: "21. 当某个模组/干员更新时，你优先处理的信息是：", options: ["机制变动对强度排行的实际影响", "将其作为话题抛入论坛以等待反馈", "无视游戏机制更新，我玩我的", "我觉得不应该更新，要不我们回退到上个版本"] },
+        { text: "22. 关于将主播进行捆绑讨论的行为，你认为：", options: ["这构成了你关注该群体的核心动力", "这种行为与获取强度讨论信息无关", "只要能导致争吵即可", "是对客观数据研究的干扰"] },
+        { text: "23. 评价日常的强度讨论行为记录，你的反应：", options: ["对其展现出的锐气抱有单纯的喜爱", "以此强化自身构筑的理论", "截图发至外部宣称其缺乏专业态度", "无有效反馈机制"] },
+        { text: "24. 对于特定干员绰号的附加，你的认知是：", options: ["接受该称谓，只要合适", "利用该绰号在不同用户间挑起对立", "不在乎该称谓的指向与含义，无论其是否合适", "分析该称谓与其他角色之间的关系"] },
+        { text: "25. 观看血狼直播的时间分配中，你将多数精力用于：", options: ["观察其实际特征（声音、身体行为）", "记录所有可能作为负面物料的片段", "评估屏幕内各项数值的推演", "将屏幕内形象替换为虚构属性"] },
+        { text: "26. 对于外部针对血狼的负面评价，你会：", options: ["全部浏览并作为自身知识库的补充", "将其作为材料搬运至更多平台以获取互动", "观察负面评价造成的社区动荡", "缺乏接触此类评价的路径"] },
+        { text: "27. 对于社区内的冲突，你的参与方式是：", options: ["不预设自身立场，致力于使冲突扩大化", "作为特定言论的传递载体获取回复", "通过抛出黑料主导冲突走向", "完全隔离于社区冲突之外"] },
+        { text: "28. 在处理具体数据论证时，你的态度：", options: ["视其为评估强度的唯一客观标准", "将其作为引发拉踩与争端的工具", "剥离数据，仅观察血狼本身", "通过数据寻找相关连结人员的踪迹"] },
+        { text: "29. 在总结自身的关注行为时，你认为核心在于：", options: ["掌握客观的机制信息与测评结论", "对血狼的单纯喜好与物理关注", "依靠搬运行为获得的社交反馈", "在持续的负面审视中体现深层的执念"] }
+    ];
+
+    const questions = rawQuestions.map((q, index) => {
+        const currentSet = (index % 2 === 0) ? setA : setB;
+        return {
+            text: q.text,
+            options: q.options.map((optText, optIndex) => ({
+                text: optText,
+                effect: currentSet[optIndex]
+            }))
+        };
+    });
 
     const outcomes = {
         "positive_positive_positive": { 
@@ -326,6 +381,7 @@
     let scoreDim1 = 0, scoreDim2 = 0, scoreDim3 = 0;
     let typeWriterInterval = null;
     let isTyping = false;
+    let isMusicPlaying = false;
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
@@ -347,9 +403,22 @@
     const saveBtn = document.getElementById("save-btn");
     const startBtn = document.getElementById("start-btn");
     const processingLog = document.getElementById("processing-log");
+    const bgmPlayer = document.getElementById('bgm-player');
+    const musicToggle = document.getElementById('music-toggle');
 
     const baikeFragments = ["中杯", "超大杯", "毒攻略", "新神已至", "大杯偏上", "合约登顶", "你什么冠军", "枪枪爆头", "为用而用"];
     
+    musicToggle.addEventListener('click', () => {
+        if (isMusicPlaying) {
+            bgmPlayer.pause();
+            musicToggle.style.opacity = '0.5';
+        } else {
+            bgmPlayer.play().catch(e => console.log("BGM播放失败:", e));
+            musicToggle.style.opacity = '1';
+        }
+        isMusicPlaying = !isMusicPlaying;
+    });
+
     function spawnFloatingText() {
         const container = document.getElementById('floating-texts');
         if (!container) return;
@@ -423,7 +492,7 @@
     }
 
     function bindCursorHover() {
-        document.querySelectorAll('.hover-target, .option-btn').forEach(el => {
+        document.querySelectorAll('.hover-target, .option-btn, #music-toggle').forEach(el => {
             el.addEventListener('mouseenter', () => customCursor.classList.add('cursor-hover'));
             el.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-hover'));
         });
@@ -431,8 +500,12 @@
     bindCursorHover();
 
     startBtn.addEventListener('click', () => {
-        const bgmPlayer = document.getElementById('bgm-player');
-        if (bgmPlayer) bgmPlayer.play().catch(e => console.log("BGM播放挂起:", e));
+        if (!isMusicPlaying) {
+            bgmPlayer.play().then(() => {
+                isMusicPlaying = true;
+                musicToggle.style.opacity = '1';
+            }).catch(e => console.log("BGM播放挂起:", e));
+        }
         customCursor.classList.remove('cursor-hover');
         startContainer.classList.add('hidden');
         quizContainer.classList.remove('hidden');
@@ -548,9 +621,11 @@
     saveBtn.addEventListener('click', function() {
         const captureTarget = document.getElementById('result-container');
         this.classList.add('hidden');
+        
         html2canvas(captureTarget, {
             backgroundColor: '#ffffff', 
-            scale: 2 
+            scale: 2,
+            useCORS: true 
         }).then(canvas => {
             const link = document.createElement('a');
             link.download = '狼BTI成分报告.png';
@@ -558,6 +633,7 @@
             link.click();
             this.classList.remove('hidden');
         }).catch(err => {
+            console.error("截图生成失败", err);
             this.classList.remove('hidden');
         });
     });
