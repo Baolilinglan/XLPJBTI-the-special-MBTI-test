@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>狼BTI - 你的血狼人格鉴定</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+    @media (pointer: fine) {
+        * { cursor: none !important; }
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        background-color: #effeff;
+        background-image: 
+            radial-gradient(circle at 15% 30%, rgba(212, 175, 55, 0.12), transparent 40%),
+            radial-gradient(circle at 85% 70%, rgba(31, 30, 51, 0.08), transparent 40%),
+            repeating-linear-gradient(45deg, rgba(31, 30, 51, 0.02) 0px, rgba(31, 30, 51, 0.02) 1px, transparent 1px, transparent 20px),
+            repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 0px, rgba(212, 175, 55, 0.03) 1px, transparent 1px, transparent 20px);
+        color: #1f1e33;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+        transition: background-image 0.5s ease-out;
+    }
+
+    body.glitch-active {
+        animation: glitch-anim 0.2s linear infinite;
+    }
+    @keyframes glitch-anim {
+        0% { filter: hue-rotate(0deg) blur(0px); transform: translate(0, 0) skew(0deg); }
+        20% { filter: hue-rotate(15deg) blur(1px); transform: translate(-2px, 1px) skew(-1deg); }
+        40% { filter: hue-rotate(-15deg) blur(0px); transform: translate(2px, -1px) skew(1deg); }
+        60% { filter: hue-rotate(30deg) blur(2px); transform: translate(-1px, 2px) skew(-2deg); }
+        80% { filter: hue-rotate(-30deg) blur(1px); transform: translate(1px, -2px) skew(2deg); }
+        100% { filter: hue-rotate(0deg) blur(0px); transform: translate(0, 0) skew(0deg); }
+    }
+
+    #floating-texts {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+    }
+    .floating-text {
+        position: absolute;
+        bottom: -50px;
+        color: rgba(31, 30, 51, 0.03);
+        white-space: nowrap;
+        font-family: 'Helvetica Neue', 'SimHei', sans-serif;
+        font-weight: 600;
+        letter-spacing: 2px;
+        animation: float-up-text linear forwards;
+    }
+    @keyframes float-up-text {
+        0% { transform: translateY(0); opacity: 0; }
+        10% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { transform: translateY(-110vh); opacity: 0; }
+    }
+
+    #custom-cursor {
+        position: fixed;
+        top: -50px; left: -50px;
+        width: 18px; height: 18px;
+        border: 1px solid rgba(212, 175, 55, 0.8);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 10000;
+        display: flex; justify-content: center; align-items: center;
+        transition: width 0.2s, height 0.2s, background 0.2s, border-color 0.2s;
+    }
+    #custom-cursor::after {
+        content: '';
+        width: 4px; height: 4px;
+        background: #1f1e33;
+        border-radius: 50%;
+        transition: transform 0.2s;
+    }
+    #custom-cursor.cursor-hover {
+        width: 32px; height: 32px;
+        background: rgba(212, 175, 55, 0.1);
+        border-color: rgba(31, 30, 51, 0.4);
+    }
+    #custom-cursor.cursor-hover::after {
+        transform: scale(0);
+    }
+    @media (hover: none) and (pointer: coarse) {
+        #custom-cursor { display: none !important; }
+    }
+
+    #trail-canvas {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none; z-index: 9998;
+    }
+    #fireworks-canvas {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none; z-index: 9999;
+    }
+
+    #wbti-watermark {
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 25vw; font-weight: 900;
+        color: rgba(31, 30, 51, 0.02);
+        z-index: 0; pointer-events: none; user-select: none;
+        letter-spacing: -1vw;
+        animation: float 8s ease-in-out infinite;
+    }
+
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        border-radius: 12px;
+        padding: 40px;
+        width: 85%; max-width: 600px;
+        box-shadow: 0 30px 60px -15px rgba(31, 30, 51, 0.15);
+        text-align: center;
+        position: relative; z-index: 10;
+        max-height: 90vh; overflow-y: auto;
+    }
+    .glass-panel::-webkit-scrollbar { width: 6px; }
+    .glass-panel::-webkit-scrollbar-thumb { background: rgba(31, 30, 51, 0.1); border-radius: 3px; }
+    .hidden { display: none !important; }
+
+    .micro-en {
+        font-size: 10px; color: #64748b; letter-spacing: 1px;
+        text-transform: uppercase; font-family: monospace;
+        margin-top: 4px; display: block;
+    }
+
+    #main-title { font-size: 44px; font-weight: 600; margin-bottom: 16px; color: #1f1e33; letter-spacing: 2px; }
+    #sub-title { font-size: 15px; color: #475569; line-height: 1.6; margin-bottom: 40px; }
+
+    .progress-bar-container {
+        width: 100%; height: 2px;
+        background: rgba(31, 30, 51, 0.1);
+        border-radius: 1px; margin-bottom: 25px; overflow: hidden;
+    }
+    .progress-bar {
+        height: 100%; width: 0%;
+        background: #d4af37;
+        transition: width 0.3s ease;
+    }
+
+    .fade-in { animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .typing-cursor {
+        display: inline-block; width: 8px; height: 16px;
+        background-color: #1f1e33; vertical-align: middle;
+        margin-left: 4px; animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .header-group { margin-bottom: 30px; text-align: left; }
+    #question-text { font-size: 17px; line-height: 1.6; margin: 0; font-weight: 500; min-height: 56px; color: #1f1e33; }
+
+    .option-btn {
+        display: block; width: 100%;
+        padding: 14px 18px; margin: 10px 0;
+        background: #ffffff;
+        border: 1px solid rgba(31, 30, 51, 0.15);
+        border-radius: 8px; color: #334155;
+        font-size: 14px; transition: background 0.2s, border-color 0.2s, color 0.2s;
+        text-align: left;
+    }
+    .option-btn:hover {
+        background: rgba(212, 175, 55, 0.05);
+        border-color: rgba(212, 175, 55, 0.6); color: #1f1e33;
+    }
+
+    #processing-log {
+        font-family: monospace; font-size: 14px;
+        color: #475569; text-align: left; line-height: 2; margin-top: 20px;
+    }
+
+    #result-title { font-size: 24px; font-weight: 600; margin-bottom: 24px; color: #1f1e33; letter-spacing: 1px; }
+    #result-desc { font-size: 14px; color: #334155; margin-bottom: 30px; line-height: 1.8; text-align: left; white-space: pre-wrap; }
+    
+    #start-btn, #save-btn {
+        display: inline-block; width: auto;
+        padding: 12px 32px; background: #ffffff; 
+        border: 1px solid #d4af37; border-radius: 20px;
+        color: #1f1e33; font-size: 15px; font-weight: 500;
+        transition: all 0.2s; margin-top: 10px; text-align: center;
+    }
+    #start-btn:hover, #save-btn:hover {
+        background: #d4af37; color: #ffffff;
+    }
+</style>
+</head>
+<body>
+
+<div id="wbti-watermark">WOLF BTI</div>
+<div id="floating-texts"></div>
+
+<canvas id="trail-canvas"></canvas>
+<canvas id="fireworks-canvas"></canvas>
+
+<div id="custom-cursor"></div>
+
+<audio id="bgm-player" loop preload="auto">
+    <source src="bgm.mp3" type="audio/mpeg">
+</audio>
+
+<div class="glass-panel" id="start-container">
+    <h1 id="main-title">狼BTI</h1>
+    <div id="sub-title">看看你是什么种类的血狼破军观众</div>
+    <span class="micro-en" style="margin-bottom: 30px;">SYSTEM INITIALIZATION COMPLETE</span>
+    <button id="start-btn" class="hover-target">开始鉴定</button>
+</div>
+
+<div class="glass-panel hidden" id="quiz-container">
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div id="quiz-content">
+        <div class="header-group">
+            <h2 id="question-text"></h2>
+            <span class="micro-en" id="question-micro">AWAITING INPUT...</span>
+        </div>
+        <div id="options-container" class="hidden"></div>
+    </div>
+</div>
+
+<div class="glass-panel hidden" id="processing-container">
+    <div style="font-size: 14px; color: #1f1e33; letter-spacing: 1px; font-weight: bold;">PROCESSING DATA</div>
+    <span class="micro-en">EXTRACTING PARAMETERS</span>
+    <div id="processing-log"></div>
+</div>
+
+<div class="glass-panel hidden" id="result-container">
+    <div style="font-size: 12px; color: #64748b; margin-bottom: 4px; letter-spacing: 1px;">ASSESSMENT COMPLETED</div>
+    <span class="micro-en" style="margin-bottom: 20px;">FINAL PROFILE GENERATED</span>
+    <div id="result-title"></div>
+    <div id="result-desc"></div>
+    <button id="save-btn" class="hidden hover-target">
+        导出成分报告
+    </button>
+</div>
+
+<script>
+    const questions = [
+        { text: "1. 推送一个血狼破军的视频时，你点击播放的主要诉求是：", options: [ { text: "记录视频中的极端言论，作为社区争论的素材", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "收集最新的数值结论，补充自己对游戏机制的认知", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "观察画面中血狼破军的神态与外貌特征", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "根据血狼破军的特征，想象其为某种二次元萌化形象", effect: { d1: -1, d2: 1, d3: -1 } } ] },
+        { text: "2. 在血狼破军直播画面中出现进食环节，你的注意力主要集中在：", options: [ { text: "血狼破军进食的物理状态及食量大小", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "等待由于流程中断而在弹幕中引发的不满情绪", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "将其截取并搬运至外部论坛获取互动提示", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "换一个主播看", effect: { d1: -1, d2: -1, d3: -1 } } ] },
+        { text: "3. 看到龙哥哥、ve或其他相关主播在血狼直播间弹幕互动，你会：", options: [ { text: "观察他们之间的对话逻辑，建立主观的配对关系", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "试图从中发现可被截取攻击的文字漏洞", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "不清楚这些人员的社会关系，将其略过", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "发表激化群体矛盾的言论，等待冲突发生", effect: { d1: 1, d2: 1, d3: -1 } } ] },
+        { text: "4. 对于“小红点”这种社区反馈机制，你的态度是：", options: [ { text: "将其视为自己在外部论坛搬运信息的首要目标", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "忽略这些提示，只关注具有实际数值意义的讨论", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将其作为引发双方群体辩论成功后的附带结果", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "缺乏参与动机，不关注此类提示", effect: { d1: -1, d2: -1, d3: -1 } } ] },
+        { text: "5. 当讨论血狼破军的过往时，你倾向于：", options: [ { text: "汇总并罗列所有的负面事件，维持长期的关注以寻找更多素材", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "剥离客观事实，结合主播的虚拟形象构建二次创作文本", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "关注其与另一名主播的时间线交集", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "观察这些讨论如何破坏现有的社区秩序", effect: { d1: 1, d2: 1, d3: -1 } } ] },
+        { text: "6. 关于明日方舟的具体数据解析，你的常态是：", options: [ { text: "作为判定抽卡资源分配和角色评估的客观依据", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将其视为阻碍观看主播本人状态的冗余信息", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "对数据的获取渠道和意义均不了解", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "截图数据面板，在不同群体间制造对立", effect: { d1: 1, d2: 1, d3: -1 } } ] },
+        { text: "7. 在参与社区内关于杯级的讨论时，你会：", options: [ { text: "针对评级本身的合理性进行事实层面的辩论", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将评级结果发布至存在对立观点的区域", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "不清楚评级系统的意义与指向", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "利用评级结果的争议性煽动用户间的人身攻击", effect: { d1: 1, d2: -1, d3: -1 } } ] },
+        { text: "8. 若血狼的外貌或性格特征被提出，你的反应是：", options: [ { text: "对其外在特征表现出直接且持续的观察兴趣", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "将其与另一名存在交集的主播特征进行cp配对", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "将其转化为女性化的属性词条并进行自我满足", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "要求终止此类话题，恢复具体的数值计算", effect: { d1: 1, d2: 1, d3: 1 } } ] },
+        { text: "9. 对于其他人员针对血狼发布的攻击性言论，你的处理方式：", options: [ { text: "这就是我发的啊/简直就是我的互联网嘴替", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "截屏保存并在不同平台间传递", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "观察事态升级的过程以获取情绪刺激", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "无视或阻止此类信息传播，因其脱离了对主播本人的关注", effect: { d1: -1, d2: 1, d3: 1 } } ] },
+        { text: "10. 面对干员列表环节，你会：", options: [ { text: "维持观看，因为声音本身已满足需求", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "脑补闲聊对象是另一个特定主播", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "退出页面，此类内容不在关注范围内", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "在弹幕中发布带节奏的言论打破平静", effect: { d1: 1, d2: 1, d3: -1 } } ] },
+        { text: "11. 截取血狼直播言论的驱动力来自于：", options: [ { text: "获取外部平台用户的互动数据反馈", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "收集用于证明其言论错误或行为不当的证据", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "留存特定暧昧言论以便后续幻想", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "记录用于分析游戏机制的核心数值观点", effect: { d1: 1, d2: 1, d3: 1 } } ] },
+        { text: "12. 在理解血狼的特定新开发出的术语时，你：", options: [ { text: "将其作为推测与其他主播私下连结的线索", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "不具备该词汇的认知背景", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "利用此类词汇在弹幕中进行无差别的刷屏", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "尝试把该词汇带到其他平台使用", effect: { d1: 1, d2: -1, d3: 1 } } ] },
+        { text: "13. 当面临对某一角色的强度拉踩环境，你的定位是：", options: [ { text: "基于数据分析提供客观论据", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "挑起话题以观赏群体的非理性对立", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "将争议内容转运至其他社群", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "寻找拉踩言论中主播的用词失误以证明其观点有失偏颇", effect: { d1: 1, d2: -1, d3: -1 } } ] },
+        { text: "14. 若血狼破军的外部形象特征被公开，你最在乎的是：", options: [ { text: "声音和想象外貌与实际是否一致", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "大失所望，因其失去了网络主播的朦胧美", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "与预设的CP对象是否依然存在匹配度", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "外在形象不影响我对数据内容的获取", effect: { d1: 1, d2: 1, d3: 1 } } ] },
+        { text: "15. 在浏览外部社交平台时，你会主动搜索：", options: [ { text: "能够引发新一轮骂战的主播发言截图", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "自己先前搬运内容的回复情况", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "不主动搜索，对此生态圈无认知", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "与其他主播名字并列的同人关联内容", effect: { d1: -1, d2: -1, d3: 1 } } ] },
+        { text: "16. 将血狼破军转化为具有特定属性的虚拟形象，你认为：", options: [ { text: "这是满足个人情感压抑的有效途径", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "这分散了对其真实行为模式的观察", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "这种转化有利于激发更为混乱的社区反应", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "缺乏兴趣，不参与此类行为", effect: { d1: -1, d2: -1, d3: -1 } } ] },
+        { text: "17. 你判断一次血狼直播或视频有价值的标准是：", options: [ { text: "干员的客观强度得到了准确测定", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "提供了大量爆典", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "同接/视频播放量很高", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "存在可以与另一主播关联的互动暗示", effect: { d1: -1, d2: -1, d3: 1 } } ] },
+        { text: "18. 在观察血狼的社交关系网络时，你习惯：", options: [{text: "发掘连结线索并进行特定方向的解读", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "不具备观察的动机，关我什么事", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "专注于血狼干了什么", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "通过截取互动片段以引发其他群体的反感", effect: { d1: 1, d2: -1, d3: -1 } } ] },
+        { text: "19. 你在社区留下评论的主要目的是：", options: [ { text: "探讨具体的角色数值与机制效果", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "引发他人的回复", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "输出针对主播个人的负面论断", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "催化不同观点持有者之间的摩擦", effect: { d1: 1, d2: 1, d3: -1 } } ] },
+        { text: "20. 面对与自己预设不符的强度判断，你会：", options: [ { text: "坚持自己的观点", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "记录该描述带来的社区混乱状况", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "不关心描述的准确性，是血狼说的就行", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "根据该描述尝试无差别进行反驳", effect: { d1: 1, d2: -1, d3: -1 } } ] },
+        { text: "21. 当某个模组/干员更新时，你优先处理的信息是：", options: [ { text: "机制变动对强度排行的实际影响", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将其作为话题抛入论坛以等待反馈", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "无视游戏机制更新，我玩我的", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "我觉得不应该更新，要不我们回退到上个版本", effect: { d1: 1, d2: -1, d3: -1 } } ] },
+        { text: "22. 关于将主播进行捆绑讨论的行为，你认为：", options: [ { text: "这构成了你关注该群体的核心动力", effect: { d1: -1, d2: -1, d3: 1 } }, { text: "这种行为与获取强度讨论信息无关", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "只要能导致争吵即可", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "是对客观数据研究的干扰", effect: { d1: 1, d2: 1, d3: 1 } } ] },
+        { text: "23. 评价日常的强度讨论行为记录，你的反应：", options: [ { text: "对其展现出的锐气抱有单纯的喜爱", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "以此强化自身构筑的理论", effect: { d1: -1, d2: 1, d3: -1 } }, { text: "截图发至外部宣称其缺乏专业态度", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "无有效反馈机制", effect: { d1: -1, d2: -1, d3: -1 } } ] },
+        { text: "24. 对于特定干员绰号的附加，你的认知是：", options: [ { text: "接受该称谓，只要合适", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "利用该绰号在不同用户间挑起对立", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "不在乎该称谓的指向与含义，无论其是否合适", effect: { d1: -1, d2: -1, d3: -1 } }, { text: "分析该称谓与其他角色之间的关系", effect: { d1: -1, d2: -1, d3: 1 } } ] },
+        { text: "25. 观看血狼直播的时间分配中，你将多数精力用于：", options: [ { text: "观察其实际特征（声音、身体行为）", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "记录所有可能作为负面物料的片段", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "评估屏幕内各项数值的推演", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将屏幕内形象替换为虚构属性", effect: { d1: -1, d2: 1, d3: -1 } } ] },
+        { text: "26. 对于外部针对血狼的负面评价，你会：", options: [ { text: "全部浏览并作为自身知识库的补充", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "将其作为材料搬运至更多平台以获取互动", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "观察负面评价造成的社区动荡", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "缺乏接触此类评价的路径", effect: { d1: -1, d2: -1, d3: -1 } } ] },
+        { text: "27. 对于社区内的冲突，你的参与方式是：", options: [ { text: "不预设自身立场，致力于使冲突扩大化", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "作为特定言论的传递载体获取回复", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "通过抛出黑料主导冲突走向", effect: { d1: 1, d2: -1, d3: -1 } }, { text: "完全隔离于社区冲突之外", effect: { d1: -1, d2: -1, d3: -1 } } ] },
+        { text: "28. 在处理具体数据论证时，你的态度：", options: [ { text: "视其为评估强度的唯一客观标准", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "将其作为引发拉踩与争端的工具", effect: { d1: 1, d2: 1, d3: -1 } }, { text: "剥离数据，仅观察血狼本身", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "通过数据寻找相关连结人员的踪迹", effect: { d1: -1, d2: -1, d3: 1 } } ] },
+        { text: "29. 在总结自身的关注行为时，你认为核心在于：", options: [ { text: "掌握客观的机制信息与测评结论", effect: { d1: 1, d2: 1, d3: 1 } }, { text: "对血狼的单纯喜好与物理关注", effect: { d1: -1, d2: 1, d3: 1 } }, { text: "依靠搬运行为获得的社交反馈", effect: { d1: 1, d2: -1, d3: 1 } }, { text: "在持续的负面审视中体现深层的执念", effect: { d1: 1, d2: -1, d3: -1 } } ] }
+    ];
+
+    const outcomes = {
+        "positive_positive_positive": { 
+            title: "【强度党】", 
+            desc: "你关注血狼破军只是单纯的为了了解干员强度，然后考虑要不要跳过池子或者对干员开始拉踩，无论如何，你乐在其中。\n\n你是绝对的功利主义者，看视频只跳到最后看结论。只要他敢说一句“中杯”，你就敢拿着截图去贴吧大战三百回合；只要他说一句“必抽”，你立马盘算手里的合成玉。你把他的话当成抽卡圣旨和PVP的弹药库，干员在你眼里不是角色，而是一组组冰冷的DPS数据和你在赛博空间跟人对喷的资本。" 
+        },
+        "positive_positive_negative": { 
+            title: "【混沌乐子人】", 
+            desc: "无聊，你只是想看到所有人都在网上吵起来，血流成河。\n\n你就是互联网上最纯粹的反派。血狼破军？他只是你用来点燃赛博火药桶的一根火柴罢了。你最喜欢看粉丝和黑子在评论区撕得不可开交，看强度党和XP党打得头破血流。你站在高处，一边吃瓜一边煽风点火，唯恐天下不乱。哪里有战火，哪里就有你的身影，你就是混乱的化身，到处拉屎的毒瘤！" 
+        },
+        "positive_negative_positive": { 
+            title: "【小红点厨】", 
+            desc: "你单纯喜欢搬运血狼破军的言论到其他论坛，有人叫你狼孝子，有人叫你传话太监，只有你知道你只是对小红点爱得深沉。\n\n你每天像个勤劳的工蜂一样穿梭在B站、贴吧和NGA之间。血狼刚叹了口气，你已经把“血狼对新干员绝望了”发到了各大版块。被人骂又怎样？被封号又怎样？只要看到右上角那个象征着消息回复的红色数字亮起“99+”，你的多巴胺就会疯狂分泌。你不在乎血狼，你只在乎流量，你就是互联网信息搬运界的神。" 
+        },
+        "positive_negative_negative": { 
+            title: "【狼黑】", 
+            desc: "你单纯的讨厌血狼破军，但是却知道血狼破军的每一个黑料，他的每一场直播你都看，他的每一次爆典你都迫不及待地搬运到其他地方给别人看，或许你比所有人都真的更爱血狼破军。\n\n你嘴上骂得比谁都脏，心里却把他装得比谁都满。你美其名曰“收集反面教材”，实则连他三年前直播打了个喷嚏你都记得清清楚楚。你比任何一个粉丝都准时蹲守在直播间，生怕漏掉他哪怕一秒钟的黑历史。你这种由恨生爱的扭曲情感，简直是饭圈虐恋的最高境界，承认吧，你就是他最大的真爱粉。" 
+        },
+        "negative_positive_positive": { 
+            title: "【军奴】", 
+            desc: "你只是单纯喜欢血狼破军的肉体，喜欢他的声音，性格，还有大胃袋，其实你或许没有那么关注明日方舟的干员强度，你只是喜欢看血狼破军。\n\n每当他开播，你的关注点永远不在什么DPS计算和法术抗性上，你只在乎他今天吃了几个汉堡，喝了多少可乐。哪怕他在屏幕前发呆打嗝，你都能在屏幕后疯狂截屏。你对他的爱超越了泰拉大陆的任何一个干员，你不是来玩游戏的，你是来赛博追星的，纯度极高的老缠粉说的就是你。" 
+        },
+        "negative_positive_negative": { 
+            title: "【狼小妹单推厨】", 
+            desc: "你喜欢看血狼破军，但是会把他幻想成一个娘化的萌妹形象再对其进行前所未有的性压抑。\n\n在你扭曲的视界里，那个满嘴强度的男人早已被套上了白丝女仆装。你每天在脑海里进行着不可告人的二创，把他的每一次破防大叫都脑补成傲娇萝莉的娇嗔。别人在看干员测评，你在进行赛博发情，你的成分之复杂、XP之诡异，简直是方舟圈未解之谜，建议立刻去看医生！" 
+        },
+        "negative_negative_positive": { 
+            title: "【龙狼📏】", 
+            desc: "你喜欢看血狼破军和其他主播互动，磕cp，比如龙哥哥，比如ve，比如某个fifa人物，或许你也喜欢看一些其他主播的cp，比如龙龙骗骗请和......\n\n你的雷达永远只对男男互动有反应。只要血狼的直播间出现了其他男人的声音，或者提到了某人的名字，你的大脑就会立刻开始撰写十万字的同人小黄文。你对明日方舟的强度毫无兴趣，你只在乎今天龙哥哥有没有来查房，ve有没有和他连麦。你就是互联网上最可怕的赛博红娘，拿着放大镜在玻璃碴子里找糖吃。" 
+        },
+        "negative_negative_negative": { 
+            title: "【萌萌人】", 
+            desc: "血狼破军是谁？\n\n你对这片风起云涌的互联网粪坑一无所知。什么大杯超大杯，什么龙狼CP，什么传话太监，你统统不关心。你可能只是一个偶尔上线抽个卡、看看漂亮纸片人老婆的纯路人。这个充满黑话和戾气的测试对你来说就像是天书，快跑吧，这里的水太深了，不适合你这种纯洁的泰拉小白。" 
+        }
+    };
+
+    let currentQuestionIndex = 0;
+    let scoreDim1 = 0, scoreDim2 = 0, scoreDim3 = 0;
+    let typeWriterInterval = null;
+    let isTyping = false;
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let envColor1 = 'rgba(212, 175, 55, 0.12)'; 
+    let envColor2 = 'rgba(31, 30, 51, 0.08)'; 
+    
+    const customCursor = document.getElementById('custom-cursor');
+    const trailCanvas = document.getElementById('trail-canvas');
+    const tCtx = trailCanvas.getContext('2d');
+    let trails = [];
+
+    const startContainer = document.getElementById("start-container");
+    const quizContainer = document.getElementById("quiz-container");
+    const processingContainer = document.getElementById("processing-container");
+    const resultContainer = document.getElementById("result-container");
+    const questionTextElement = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options-container");
+    const progressBar = document.getElementById("progress-bar");
+    const saveBtn = document.getElementById("save-btn");
+    const startBtn = document.getElementById("start-btn");
+    const processingLog = document.getElementById("processing-log");
+
+    const baikeFragments = ["中杯", "超大杯", "毒攻略", "新神已至", "大杯偏上", "合约登顶", "你什么冠军", "枪枪爆头", "为用而用"];
+    
+    function spawnFloatingText() {
+        const container = document.getElementById('floating-texts');
+        if (!container) return;
+        const el = document.createElement('div');
+        el.className = 'floating-text';
+        el.innerText = baikeFragments[Math.floor(Math.random() * baikeFragments.length)];
+        el.style.left = (Math.random() * 90) + 'vw';
+        el.style.animationDuration = (Math.random() * 15 + 15) + 's';
+        el.style.fontSize = (Math.random() * 12 + 14) + 'px';
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 30000);
+    }
+    setInterval(spawnFloatingText, 3000);
+
+    function resizeCanvas() {
+        trailCanvas.width = window.innerWidth;
+        trailCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        customCursor.style.left = mouseX + 'px';
+        customCursor.style.top = mouseY + 'px';
+
+        if(window.matchMedia("(pointer: fine)").matches) {
+            trails.push({ x: mouseX, y: mouseY, life: 1, char: Math.random() > 0.5 ? '1' : '0' });
+        }
+
+        const xPercent = (mouseX / window.innerWidth) * 100;
+        const yPercent = (mouseY / window.innerHeight) * 100;
+        document.body.style.backgroundImage = `
+            radial-gradient(circle at ${xPercent}% ${yPercent}%, ${envColor1}, transparent 40%),
+            radial-gradient(circle at ${100 - xPercent}% ${100 - yPercent}%, ${envColor2}, transparent 40%),
+            repeating-linear-gradient(45deg, rgba(31, 30, 51, 0.02) 0px, rgba(31, 30, 51, 0.02) 1px, transparent 1px, transparent 20px),
+            repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 0px, rgba(212, 175, 55, 0.03) 1px, transparent 1px, transparent 20px)
+        `;
+    });
+
+    function animateTrail() {
+        tCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+        tCtx.font = "12px monospace";
+        for (let i = trails.length - 1; i >= 0; i--) {
+            let p = trails[i];
+            p.life -= 0.04; p.y += 0.5; 
+            tCtx.fillStyle = `rgba(212, 175, 55, ${p.life * 0.5})`;
+            tCtx.fillText(p.char, p.x, p.y);
+            if (p.life <= 0) trails.splice(i, 1);
+        }
+        requestAnimationFrame(animateTrail);
+    }
+    animateTrail();
+
+    function updateEnvironmentLight() {
+        let limit = currentQuestionIndex || 1;
+        let r1_ratio = Math.max(-1, Math.min(1, scoreDim1 / limit));
+        let r2_ratio = Math.max(-1, Math.min(1, scoreDim2 / limit));
+        
+        let baseR1 = 212 + (r1_ratio * 20);
+        let baseG1 = 175 + (r2_ratio * 20);
+        let baseB1 = 55 + (Math.abs(r1_ratio) * 20);
+        
+        let baseR2 = 31 - (r1_ratio * 10);
+        let baseG2 = 30 + (Math.abs(r2_ratio) * 10);
+        let baseB2 = 51 + (r2_ratio * 10);
+
+        envColor1 = `rgba(${Math.floor(baseR1)}, ${Math.floor(baseG1)}, ${Math.floor(baseB1)}, 0.15)`;
+        envColor2 = `rgba(${Math.floor(baseR2)}, ${Math.floor(baseG2)}, ${Math.floor(baseB2)}, 0.1)`;
+    }
+
+    function bindCursorHover() {
+        document.querySelectorAll('.hover-target, .option-btn').forEach(el => {
+            el.addEventListener('mouseenter', () => customCursor.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-hover'));
+        });
+    }
+    bindCursorHover();
+
+    startBtn.addEventListener('click', () => {
+        const bgmPlayer = document.getElementById('bgm-player');
+        if (bgmPlayer) bgmPlayer.play().catch(e => console.log("BGM播放挂起:", e));
+        customCursor.classList.remove('cursor-hover');
+        startContainer.classList.add('hidden');
+        quizContainer.classList.remove('hidden');
+        loadQuestion();
+    });
+
+    function typeWriter(text, element, speed, callback) {
+        clearInterval(typeWriterInterval);
+        element.innerHTML = "";
+        isTyping = true;
+        let i = 0;
+        const textSpan = document.createElement("span");
+        const cursorSpan = document.createElement("span");
+        cursorSpan.className = "typing-cursor";
+        element.appendChild(textSpan);
+        element.appendChild(cursorSpan);
+        typeWriterInterval = setInterval(() => {
+            if (i < text.length) {
+                textSpan.innerHTML += text.charAt(i);
+                i++;
+            } else {
+                clearInterval(typeWriterInterval);
+                isTyping = false;
+                if (callback) callback();
+            }
+        }, speed);
+    }
+
+    function loadQuestion() {
+        const currentQuestion = questions[currentQuestionIndex];
+        const progressPercent = (currentQuestionIndex / questions.length) * 100;
+        progressBar.style.width = progressPercent + "%";
+        optionsContainer.classList.add("hidden");
+        optionsContainer.innerHTML = "";
+        currentQuestion.options.forEach(option => {
+            const button = document.createElement("button");
+            button.innerText = option.text;
+            button.classList.add("option-btn");
+            button.onclick = () => {
+                if(!isTyping) {
+                    customCursor.classList.remove('cursor-hover');
+                    selectOption(option.effect);
+                }
+            };
+            optionsContainer.appendChild(button);
+        });
+        document.getElementById("question-micro").innerText = `AWAITING INPUT... [SEQ: ${(currentQuestionIndex + 1).toString().padStart(2, '0')}]`;
+        typeWriter(currentQuestion.text, questionTextElement, 15, () => {
+            optionsContainer.classList.remove("hidden");
+            optionsContainer.classList.add("fade-in");
+            bindCursorHover(); 
+        });
+    }
+
+    function selectOption(effect) {
+        scoreDim1 += effect.d1;
+        scoreDim2 += effect.d2;
+        scoreDim3 += effect.d3;
+        currentQuestionIndex++;
+        updateEnvironmentLight();
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            progressBar.style.width = "100%";
+            setTimeout(showProcessing, 400); 
+        }
+    }
+
+    function showProcessing() {
+        document.body.classList.add("glitch-active"); 
+        setTimeout(() => {
+            document.body.classList.remove("glitch-active");
+            quizContainer.classList.add("hidden");
+            processingContainer.classList.remove("hidden");
+            const logs = ["> 提取行为决策链...", "> 解析社区交互参数...", "> 注入狼小妹能量...", "> 比对成分数据...", "> 生成最终模型...", "> COMPLETED."];
+            let logIndex = 0;
+            processingLog.innerHTML = "";
+            const logInterval = setInterval(() => {
+                if (logIndex < logs.length) {
+                    const p = document.createElement("div");
+                    p.innerText = logs[logIndex];
+                    p.classList.add("fade-in");
+                    processingLog.appendChild(p);
+                    logIndex++;
+                } else {
+                    clearInterval(logInterval);
+                    setTimeout(() => {
+                        processingContainer.classList.add("hidden");
+                        showResult();
+                    }, 600);
+                }
+            }, 500); 
+        }, 200);
+    }
+
+    function showResult() {
+        resultContainer.classList.remove("hidden");
+        resultContainer.classList.add("fade-in");
+        let key = "";
+        key += (scoreDim1 >= 0) ? "positive_" : "negative_";
+        key += (scoreDim2 >= 0) ? "positive_" : "negative_";
+        key += (scoreDim3 >= 0) ? "positive" : "negative";
+        const finalOutcome = outcomes[key];
+        document.getElementById("result-title").innerText = finalOutcome.title;
+        document.getElementById("result-desc").innerText = finalOutcome.desc;
+        startDataBurst();
+        setTimeout(() => {
+            saveBtn.classList.remove("hidden"); 
+            bindCursorHover(); 
+        }, 800);
+    }
+
+    saveBtn.addEventListener('click', function() {
+        const captureTarget = document.getElementById('result-container');
+        this.classList.add('hidden');
+        html2canvas(captureTarget, {
+            backgroundColor: '#ffffff', 
+            scale: 2 
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = '狼BTI成分报告.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            this.classList.remove('hidden');
+        }).catch(err => {
+            this.classList.remove('hidden');
+        });
+    });
+
+    function startDataBurst() {
+        const fCanvas = document.getElementById('fireworks-canvas');
+        const ctx = fCanvas.getContext('2d');
+        fCanvas.width = window.innerWidth;
+        fCanvas.height = window.innerHeight;
+        const particles = [];
+        const colors = ['#d4af37', '#1f1e33', '#475569', '#cbd5e1'];
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x; this.y = y; this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 1;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.friction = 0.92; this.gravity = 0.05;
+                this.alpha = 1; this.decay = Math.random() * 0.02 + 0.01;
+            }
+            update() {
+                this.vx *= this.friction; this.vy *= this.friction;
+                this.vy += this.gravity; this.x += this.vx; this.y += this.vy;
+                this.alpha -= this.decay;
+            }
+            draw() {
+                ctx.save(); ctx.globalAlpha = this.alpha;
+                ctx.beginPath(); ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+                ctx.fillStyle = this.color; ctx.fill(); ctx.restore();
+            }
+        }
+        function explode(x, y) {
+            for (let i = 0; i < 40; i++) particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+        }
+        function fAnimate() {
+            requestAnimationFrame(fAnimate);
+            ctx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+            if (Math.random() < 0.02) explode(Math.random() * fCanvas.width, fCanvas.height * Math.random() * 0.5);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update(); p.draw();
+                if (p.alpha <= 0) particles.splice(i, 1);
+            }
+        }
+        explode(fCanvas.width / 2, fCanvas.height / 3);
+        setTimeout(() => explode(fCanvas.width * 0.3, fCanvas.height * 0.4), 500);
+        setTimeout(() => explode(fCanvas.width * 0.7, fCanvas.height * 0.4), 1000);
+        fAnimate();
+    }
+</script>
+</body>
+</html>
