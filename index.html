@@ -58,7 +58,7 @@
     .floating-text {
         position: absolute;
         bottom: -50px;
-        color: rgba(100, 116, 139, 0.8); /* 透明度调高至80% */
+        color: rgba(100, 116, 139, 0.8);
         white-space: nowrap;
         font-family: 'Helvetica Neue', 'SimHei', sans-serif;
         font-weight: 600;
@@ -182,10 +182,11 @@
         margin-bottom: 20px;
         text-align: left;
         border: 1px solid rgba(31, 30, 51, 0.08);
+        transition: all 0.3s;
     }
     .share-info-row {
         font-size: 15px;
-        color: #1f1e33;
+        color: inherit;
         margin-bottom: 8px;
         font-weight: 500;
     }
@@ -270,13 +271,13 @@
     }
 
     #result-title { display: none; }
-    #result-desc { font-size: 14px; color: #334155; margin-bottom: 20px; line-height: 1.8; text-align: left; white-space: pre-wrap; }
+    #result-desc { font-size: 14px; color: inherit; margin-bottom: 20px; line-height: 1.8; text-align: left; white-space: pre-wrap; transition: color 0.3s; }
     
     #radar-container {
         width: 100%; max-width: 350px; margin: 0 auto 20px;
     }
 
-    #start-btn, #save-btn, #restart-btn {
+    #start-btn, #resume-btn, #save-btn, #restart-btn {
         display: inline-block; width: auto;
         padding: 12px 32px; background: #ffffff; 
         border: 1px solid #d4af37; border-radius: 20px;
@@ -284,12 +285,12 @@
         transition: all 0.2s; margin-top: 10px; text-align: center;
         cursor: pointer;
     }
-    #start-btn:hover, #save-btn:hover, #restart-btn:hover {
+    #start-btn:hover, #resume-btn:hover, #save-btn:hover, #restart-btn:hover {
         background: #d4af37; color: #ffffff;
     }
 
     .action-group {
-        display: flex; justify-content: center; gap: 15px; margin-top: 20px;
+        display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;
     }
 
     .qr-footer {
@@ -298,8 +299,21 @@
         border-top: 1px solid rgba(31, 30, 51, 0.1);
         text-align: left;
     }
-    .qr-text { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .qr-text { font-size: 12px; color: inherit; line-height: 1.5; opacity: 0.8; }
     .qr-image { width: 64px; height: 64px; border-radius: 4px; border: 1px solid rgba(31, 30, 51, 0.1); }
+
+    .achievement-badge {
+        display: inline-block; background: rgba(212, 175, 55, 0.15);
+        color: #b8860b; font-size: 12px; padding: 4px 8px;
+        border-radius: 4px; border: 1px solid rgba(212, 175, 55, 0.4);
+        margin: 4px 4px 4px 0; font-weight: bold;
+    }
+
+    .screenshot-controls {
+        font-size: 12px; color: #64748b; margin-top: 15px; display: flex;
+        justify-content: center; gap: 10px; align-items: center;
+    }
+    .screenshot-controls label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -330,7 +344,10 @@
     </div>
 
     <span class="micro-en" style="margin-bottom: 20px;">SYSTEM INITIALIZATION COMPLETE</span>
-    <button id="start-btn" class="hover-target">开始鉴定</button>
+    <div class="action-group" style="margin-top: 0;">
+        <button id="start-btn" class="hover-target">开始鉴定</button>
+        <button id="resume-btn" class="hidden hover-target">恢复上次进度</button>
+    </div>
 </div>
 
 <div class="glass-panel hidden" id="quiz-container">
@@ -365,13 +382,17 @@
         <div class="share-info-row" id="out-purity"></div>
         <div class="share-info-row share-info-danger" id="out-danger"></div>
         
+        <div id="achievements-container" style="margin-top: 8px;"></div>
+        
         <div id="out-divider" style="height: 1px; background: rgba(31,30,51,0.1); margin: 15px 0;"></div>
         
         <div class="share-info-row" id="out-same-percent"></div>
-        <div class="share-info-row" id="out-leaderboard" style="margin-top: 10px; font-size: 13.5px; color: #475569; font-weight: normal; line-height: 1.6;">
+        <div class="share-info-row" id="out-leaderboard" style="margin-top: 10px; font-size: 13.5px; opacity: 0.8; font-weight: normal; line-height: 1.6;">
             <div id="out-most"></div>
             <div id="out-rarest"></div>
         </div>
+        
+        <div class="share-info-row" id="out-path-insight" style="margin-top: 15px; font-size: 13.5px; font-style: italic; background: rgba(31, 30, 51, 0.05); padding: 12px; border-radius: 6px; border-left: 3px solid #d4af37;"></div>
     </div>
 
     <div id="radar-container" class="hidden">
@@ -380,9 +401,15 @@
 
     <div id="result-desc"></div>
     
-    <div class="qr-footer">
+    <div class="qr-footer" id="qr-footer">
         <div class="qr-text">长按保存或截图<br>扫描右侧二维码测试你的狼BTI</div>
         <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://baolilinglan.github.io/XLPJBTI-the-special-MBTI-test/" crossorigin="anonymous" alt="QR Code">
+    </div>
+
+    <div class="screenshot-controls" id="screenshot-controls">
+        <label><input type="checkbox" id="chk-dark-mode"> 深色模式</label>
+        <label><input type="checkbox" id="chk-hide-radar"> 隐藏雷达</label>
+        <label><input type="checkbox" id="chk-hide-path"> 隐藏路径印记</label>
     </div>
 
     <div class="action-group">
@@ -392,15 +419,15 @@
 </div>
 
 <script>
-    const S_QD = { d1: 1, d2: 1, d3: 1 };
-    const S_LZ = { d1: 1, d2: 1, d3: -1 };
-    const S_HD = { d1: 1, d2: -1, d3: 1 };
-    const S_LH = { d1: 1, d2: -1, d3: -1 };
-    const S_JN = { d1: -1, d2: 1, d3: 1 };
-    const S_XM = { d1: -1, d2: 1, d3: -1 };
-    const S_LL = { d1: -1, d2: -1, d3: 1 };
-    const S_MM = { d1: -1, d2: -1, d3: -1 };
-    const S_NONE = { d1: 0, d2: 0, d3: 0 };
+    const S_QD = { d1: 1, d2: 1, d3: 1, typeStr: "强度党" };
+    const S_LZ = { d1: 1, d2: 1, d3: -1, typeStr: "乐子人" };
+    const S_HD = { d1: 1, d2: -1, d3: 1, typeStr: "小红点厨" };
+    const S_LH = { d1: 1, d2: -1, d3: -1, typeStr: "狼黑" };
+    const S_JN = { d1: -1, d2: 1, d3: 1, typeStr: "军奴" };
+    const S_XM = { d1: -1, d2: 1, d3: -1, typeStr: "狼小妹单推" };
+    const S_LL = { d1: -1, d2: -1, d3: 1, typeStr: "龙狼CP" };
+    const S_MM = { d1: -1, d2: -1, d3: -1, typeStr: "萌萌人" };
+    const S_NONE = { d1: 0, d2: 0, d3: 0, typeStr: "无动于衷" };
 
     const rawQuestions = [
         { text: "推送一个血狼破军的视频时，你决定点击播放的潜意识诉求是：", options: [ { text: "收集最新的干员数值与机制测评，辅助我的游戏决策", effect: S_QD }, { text: "潜意识里在寻找那些能够引爆社区话题的“暴言”或片段", effect: S_LZ }, { text: "不太在意内容，单纯想看看他今天的直播状态和神态", effect: S_JN }, { text: "在脑海中将其代入某种二次元软妹或傲娇属性的形象", effect: S_XM }, { text: "顺手点开看一眼", effect: S_NONE }, { text: "试图用鼠标左键把屏幕里的他抠出来", effect: S_NONE } ] },
@@ -471,8 +498,16 @@
         { text: "如果你走在路上，突然从天而降一个装满合成玉的保险箱砸中了他，你会：", options: [ { text: "立刻计算合成玉的体积和下落速度，推导保险箱的冲击力", effect: S_QD }, { text: "在旁边开香槟，觉得这是天道轮回的节目效果", effect: S_LZ }, { text: "尖叫着冲上去，试图用自己的身体替他挡住二次伤害", effect: S_JN }, { text: "冷漠地路过，觉得这是他做毒攻略应得的报应", effect: S_LH }, { text: "赶紧打120叫救护车并报警", effect: S_NONE }, { text: "抱着保险箱开始在街上跳霹雳舞", effect: S_NONE } ] }
     ];
 
-    rawQuestions.forEach(q => {
+    rawQuestions.forEach((q, index) => {
         q.options.push({ text: "我都不想选", effect: S_NONE });
+        const text = q.text;
+        if (/(数据|数值|强度|杯|机制|DPS|计算|模组|干员|实战|测评|登顶|合约|退环境|打法)/.test(text)) {
+            q.category = 'strength'; 
+        } else if (/(情绪|外貌|CP|龙哥哥|互动|声音|心疼|脑补|幻想|傲娇|真实|羁绊|纯爱|相貌|面具)/.test(text)) {
+            q.category = 'emotion'; 
+        } else {
+            q.category = 'community'; 
+        }
     });
 
     const outcomes = {
@@ -521,6 +556,7 @@
     let activeQuestions = [];
     let currentQuestionIndex = 0;
     let scoreHistory = [];
+    let userPath = []; 
     let scoreDim1 = 0, scoreDim2 = 0, scoreDim3 = 0;
     let noneCount = 0;
     let typeWriterInterval = null;
@@ -553,6 +589,7 @@
     const progressBar = document.getElementById("progress-bar");
     const saveBtn = document.getElementById("save-btn");
     const startBtn = document.getElementById("start-btn");
+    const resumeBtn = document.getElementById("resume-btn");
     const restartBtn = document.getElementById("restart-btn");
     const backBtn = document.getElementById("back-btn");
     const quizActionBar = document.getElementById("quiz-action-bar");
@@ -561,6 +598,22 @@
     const bgmPlayer = document.getElementById('bgm-player');
     const musicToggle = document.getElementById('music-toggle');
     const userIdInput = document.getElementById("user-id-input");
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, type, duration, vol=0.05) {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
+    }
+
+    if (localStorage.getItem('wbti_progress')) {
+        resumeBtn.classList.remove('hidden');
+    }
 
     const baikeFragments = ["中杯", "超大杯", "毒攻略", "新神已至", "大杯偏上", "合约登顶", "你什么冠军", "枪枪爆头", "为用而用", "会赢的", "Work Work", "我既是天选，也是唯一", "血狼破军", "七分裤", "设计师", "攻速+7"];
     
@@ -662,11 +715,22 @@
 
     function initGameSession() {
         userId = userIdInput.value.trim();
-        activeQuestions = [...rawQuestions].sort(() => 0.5 - Math.random()).slice(0, 15);
+        
+        let strengthPool = rawQuestions.filter(q => q.category === 'strength').sort(() => 0.5 - Math.random());
+        let emotionPool = rawQuestions.filter(q => q.category === 'emotion').sort(() => 0.5 - Math.random());
+        let commPool = rawQuestions.filter(q => q.category === 'community').sort(() => 0.5 - Math.random());
+
+        activeQuestions = [
+            ...strengthPool.slice(0, 5),
+            ...emotionPool.slice(0, 5),
+            ...commPool.slice(0, 5)
+        ].sort(() => 0.5 - Math.random());
+        
         currentQuestionIndex = 0;
         scoreDim1 = 0; scoreDim2 = 0; scoreDim3 = 0;
         noneCount = 0;
         scoreHistory = [];
+        userPath = []; 
         progressBar.style.width = "0%";
         themeLocked = false;
         document.body.classList.remove('heavy-glitch', 'glitch-active');
@@ -677,9 +741,46 @@
             myRadarChart.destroy();
             myRadarChart = null;
         }
+        clearProgress();
     }
 
+    function saveProgress() {
+        const data = {
+            activeQuestions, currentQuestionIndex, scoreDim1, scoreDim2, scoreDim3, noneCount, userPath, scoreHistory
+        };
+        localStorage.setItem('wbti_progress', JSON.stringify(data));
+    }
+
+    function clearProgress() {
+        localStorage.removeItem('wbti_progress');
+    }
+
+    resumeBtn.addEventListener('click', () => {
+        const savedData = JSON.parse(localStorage.getItem('wbti_progress'));
+        if(savedData) {
+            if (!isMusicPlaying) {
+                bgmPlayer.play().catch(e => console.log("BGM挂起:", e));
+                isMusicPlaying = true; musicToggle.style.opacity = '1';
+            }
+            activeQuestions = savedData.activeQuestions;
+            currentQuestionIndex = savedData.currentQuestionIndex;
+            scoreDim1 = savedData.scoreDim1;
+            scoreDim2 = savedData.scoreDim2;
+            scoreDim3 = savedData.scoreDim3;
+            noneCount = savedData.noneCount;
+            userPath = savedData.userPath;
+            scoreHistory = savedData.scoreHistory;
+            
+            customCursor.classList.remove('cursor-hover');
+            startContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            updateEnvironmentLight();
+            loadQuestion();
+        }
+    });
+
     startBtn.addEventListener('click', () => {
+        playTone(500, 'sine', 0.1);
         if (!isMusicPlaying) {
             bgmPlayer.play().then(() => {
                 isMusicPlaying = true;
@@ -694,11 +795,13 @@
     });
 
     restartBtn.addEventListener('click', () => {
+        playTone(400, 'square', 0.1);
         if (fireworkAnimId) cancelAnimationFrame(fireworkAnimId);
         const fCanvas = document.getElementById('fireworks-canvas');
         fCanvas.getContext('2d').clearRect(0, 0, fCanvas.width, fCanvas.height);
         
         document.getElementById("share-info-block").style.display = "none";
+        document.getElementById("achievements-container").innerHTML = "";
         
         initGameSession();
         resultContainer.classList.add('hidden');
@@ -712,13 +815,16 @@
 
     backBtn.addEventListener('click', () => {
         if (currentQuestionIndex > 0 && !isTyping) {
+            playTone(300, 'triangle', 0.1);
             currentQuestionIndex--;
             const prevState = scoreHistory.pop();
             scoreDim1 = prevState.d1;
             scoreDim2 = prevState.d2;
             scoreDim3 = prevState.d3;
             noneCount = prevState.nc;
+            userPath.pop(); 
             updateEnvironmentLight();
+            saveProgress();
             loadQuestion();
         }
     });
@@ -759,6 +865,7 @@
             button.classList.add("option-btn");
             button.onclick = () => {
                 if(!isTyping) {
+                    playTone(600, 'sine', 0.05);
                     customCursor.classList.remove('cursor-hover');
                     selectOption(option.effect, option.text === "我都不想选");
                 }
@@ -781,12 +888,8 @@
     }
 
     function selectOption(effect, isNone) {
-        scoreHistory.push({
-            d1: scoreDim1,
-            d2: scoreDim2,
-            d3: scoreDim3,
-            nc: noneCount
-        });
+        scoreHistory.push({ d1: scoreDim1, d2: scoreDim2, d3: scoreDim3, nc: noneCount });
+        userPath.push({ qIndex: currentQuestionIndex, type: effect.typeStr });
         
         scoreDim1 += effect.d1;
         scoreDim2 += effect.d2;
@@ -794,10 +897,13 @@
         if (isNone) noneCount++;
         currentQuestionIndex++;
         updateEnvironmentLight();
+        
         if (currentQuestionIndex < activeQuestions.length) {
+            saveProgress();
             loadQuestion();
         } else {
             progressBar.style.width = "100%";
+            clearProgress();
             setTimeout(showProcessing, 400); 
         }
     }
@@ -813,6 +919,7 @@
             processingLog.innerHTML = "";
             const logInterval = setInterval(() => {
                 if (logIndex < logs.length) {
+                    playTone(800 + logIndex*100, 'square', 0.05);
                     const p = document.createElement("div");
                     p.innerText = logs[logIndex];
                     p.classList.add("fade-in");
@@ -833,7 +940,7 @@
         const ctx = document.getElementById('radarChart').getContext('2d');
         const maxScore = activeQuestions.length;
         
-        const data = [
+        const userData = [
             Math.abs(scoreDim1 >= 0 ? scoreDim1 : 0), 
             Math.abs(scoreDim2 >= 0 ? scoreDim2 : 0), 
             Math.abs(scoreDim3 >= 0 ? scoreDim3 : 0), 
@@ -842,20 +949,37 @@
             Math.abs(scoreDim3 < 0 ? scoreDim3 : 0)   
         ];
 
+        const avgData = [
+            Math.floor(Math.random() * 5 + 2), Math.floor(Math.random() * 5 + 2),
+            Math.floor(Math.random() * 5 + 2), Math.floor(Math.random() * 5 + 2),
+            Math.floor(Math.random() * 5 + 2), Math.floor(Math.random() * 5 + 2)
+        ];
+
         myRadarChart = new Chart(ctx, {
             type: 'radar',
             data: {
                 labels: ['强度关注', '乐子拱火', '核心黏性', '脑补二创', '佛系吃瓜', '逆向黑粉'],
-                datasets: [{
-                    label: '倾向分值',
-                    data: data,
-                    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+                datasets: [
+                {
+                    label: '你的倾向',
+                    data: userData,
+                    backgroundColor: 'rgba(212, 175, 55, 0.4)',
                     borderColor: 'rgba(212, 175, 55, 1)',
                     pointBackgroundColor: 'rgba(31, 30, 51, 1)',
                     pointBorderColor: '#ffffff',
-                    pointHoverBackgroundColor: '#ffffff',
-                    pointHoverBorderColor: 'rgba(31, 30, 51, 1)',
-                    borderWidth: 2
+                    borderWidth: 2,
+                    order: 1
+                },
+                {
+                    label: '大众平均',
+                    data: avgData,
+                    backgroundColor: 'rgba(100, 116, 139, 0.1)',
+                    borderColor: 'rgba(100, 116, 139, 0.3)',
+                    pointBackgroundColor: 'rgba(100, 116, 139, 0.5)',
+                    pointRadius: 2,
+                    borderWidth: 1,
+                    borderDash: [5, 5],
+                    order: 2
                 }]
             },
             options: {
@@ -871,7 +995,7 @@
                     }
                 },
                 plugins: {
-                    legend: { display: false },
+                    legend: { position: 'bottom', labels: { boxWidth: 12, font: {size: 10} } },
                     tooltip: { enabled: false }
                 }
             }
@@ -894,48 +1018,30 @@
         } else {
             switch (key) {
                 case "positive_positive_positive": 
-                    envColor1 = 'rgba(0, 120, 255, 0.15)'; 
-                    envColor2 = 'rgba(0, 50, 150, 0.1)';
-                    currentThemeColor = '#0078ff';
-                    currentThemeParticles = ['#0078ff', '#00d4ff', '#e0f2fe', '#0ea5e9'];
-                    break;
+                    envColor1 = 'rgba(0, 120, 255, 0.15)'; envColor2 = 'rgba(0, 50, 150, 0.1)';
+                    currentThemeColor = '#0078ff'; currentThemeParticles = ['#0078ff', '#00d4ff', '#e0f2fe', '#0ea5e9']; break;
                 case "positive_positive_negative":
                 case "positive_negative_negative":
                 case "positive_negative_positive":
-                    envColor1 = 'rgba(220, 20, 60, 0.18)'; 
-                    envColor2 = 'rgba(100, 0, 0, 0.15)';
-                    currentThemeColor = '#dc143c';
-                    currentThemeParticles = ['#dc143c', '#ff0000', '#8b0000', '#fecdd3'];
-                    needsGlitch = true;
-                    break;
+                    envColor1 = 'rgba(220, 20, 60, 0.18)'; envColor2 = 'rgba(100, 0, 0, 0.15)';
+                    currentThemeColor = '#dc143c'; currentThemeParticles = ['#dc143c', '#ff0000', '#8b0000', '#fecdd3']; needsGlitch = true; break;
                 case "negative_negative_positive":
                 case "negative_positive_negative":
-                    envColor1 = 'rgba(255, 105, 180, 0.18)'; 
-                    envColor2 = 'rgba(199, 21, 133, 0.1)';
-                    currentThemeColor = '#ff69b4';
-                    currentThemeParticles = ['#ff69b4', '#ff1493', '#fbcfe8', '#db2777'];
-                    break;
+                    envColor1 = 'rgba(255, 105, 180, 0.18)'; envColor2 = 'rgba(199, 21, 133, 0.1)';
+                    currentThemeColor = '#ff69b4'; currentThemeParticles = ['#ff69b4', '#ff1493', '#fbcfe8', '#db2777']; break;
                 case "negative_negative_negative":
                 case "negative_positive_positive":
-                    envColor1 = 'rgba(240, 240, 240, 0.3)'; 
-                    envColor2 = 'rgba(200, 200, 200, 0.2)';
-                    currentThemeColor = '#cbd5e1';
-                    currentThemeParticles = ['#ffffff', '#f1f5f9', '#cbd5e1', '#94a3b8'];
-                    break;
+                    envColor1 = 'rgba(240, 240, 240, 0.3)'; envColor2 = 'rgba(200, 200, 200, 0.2)';
+                    currentThemeColor = '#cbd5e1'; currentThemeParticles = ['#ffffff', '#f1f5f9', '#cbd5e1', '#94a3b8']; break;
                 default:
-                    envColor1 = 'rgba(212, 175, 55, 0.12)';
-                    envColor2 = 'rgba(31, 30, 51, 0.08)';
-                    currentThemeColor = '#d4af37';
-                    currentThemeParticles = ['#d4af37', '#1f1e33', '#475569', '#cbd5e1'];
-                    break;
+                    envColor1 = 'rgba(212, 175, 55, 0.12)'; envColor2 = 'rgba(31, 30, 51, 0.08)';
+                    currentThemeColor = '#d4af37'; currentThemeParticles = ['#d4af37', '#1f1e33', '#475569', '#cbd5e1']; break;
             }
         }
 
         if (needsGlitch) {
             document.body.classList.add('heavy-glitch');
-            themeGlitchTimeout = setTimeout(() => {
-                document.body.classList.remove('heavy-glitch');
-            }, 1000);
+            themeGlitchTimeout = setTimeout(() => { document.body.classList.remove('heavy-glitch'); }, 1000);
         }
 
         const xPercent = (mouseX / window.innerWidth) * 100;
@@ -948,7 +1054,47 @@
         `;
     }
 
+    function generatePathInsight() {
+        if(noneCount === activeQuestions.length) return "未检测到有效选择路径。";
+        let validPaths = userPath.filter(p => p.type !== "无动于衷");
+        if(validPaths.length === 0) return "未记录到具备倾向性的行为特征。";
+
+        for(let i = 0; i <= validPaths.length - 3; i++) {
+            if(validPaths[i].type === validPaths[i+1].type && validPaths[i+1].type === validPaths[i+2].type) {
+                return `在第${validPaths[i].qIndex + 1}题附近，你连续呈现【${validPaths[i].type}】的显著特征。`;
+            }
+        }
+        
+        let lastHalf = validPaths.slice(-Math.floor(validPaths.length / 2));
+        if (lastHalf.length > 0) {
+            let counts = {};
+            lastHalf.forEach(p => { counts[p.type] = (counts[p.type] || 0) + 1; });
+            let maxType = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
+            if(counts[maxType] >= 3) {
+                return `在测试中后期，你的决策模型明显转向了【${maxType}】行为路径。`;
+            }
+        }
+        return "行为特征呈散发性，阵营意向反复横跳。";
+    }
+
+    function detectAchievements() {
+        let achs = [];
+        let currentStreak = 0; let lastType = "";
+        userPath.forEach(p => {
+            if(p.type === lastType && p.type !== "无动于衷") currentStreak++;
+            else { currentStreak = 1; lastType = p.type; }
+            if(currentStreak === 5) achs.push(`【死忠印记】连续5次选择${p.type}倾向`);
+        });
+
+        if(Math.abs(scoreDim1) >= 12) achs.push("【魔怔人】强度属性极度溢出");
+        if(Math.abs(scoreDim2) >= 12) achs.push("【终极乐子人】情绪属性极度溢出");
+        if(noneCount >= 8 && noneCount < 15) achs.push("【高傲的看客】拒绝参与绝大部分互动");
+        
+        return [...new Set(achs)];
+    }
+
     function showResult() {
+        playTone(600, 'sine', 0.1); setTimeout(() => playTone(800, 'sine', 0.2), 150);
         resultContainer.classList.remove("hidden");
         resultContainer.classList.add("fade-in");
         
@@ -958,7 +1104,6 @@
         key += (scoreDim3 >= 0) ? "positive" : "negative";
         
         applyTheme(key);
-
         const shareBlock = document.getElementById("share-info-block");
 
         if (noneCount === activeQuestions.length) {
@@ -969,11 +1114,12 @@
             document.getElementById("out-same-percent").style.display = "none";
             document.getElementById("out-leaderboard").style.display = "none";
             document.getElementById("out-divider").style.display = "none";
+            document.getElementById("out-path-insight").style.display = "none";
+            document.getElementById("achievements-container").innerHTML = "";
             document.getElementById("result-desc").innerText = "无法完成测试，请重新答题。";
             radarContainer.classList.add("hidden");
         } else {
             const finalOutcome = outcomes[key];
-            
             const maxScoreSum = activeQuestions.length * 3;
             const currentScoreSum = Math.abs(scoreDim1) + Math.abs(scoreDim2) + Math.abs(scoreDim3);
             const purity = Math.min(100, Math.floor(60 + (currentScoreSum / maxScoreSum) * 40));
@@ -982,21 +1128,26 @@
             
             if (userId) {
                 const idEl = document.getElementById("out-user-id");
-                idEl.style.display = "block";
-                idEl.innerText = `代号：${userId}`;
-            } else {
-                document.getElementById("out-user-id").style.display = "none";
-            }
+                idEl.style.display = "block"; idEl.innerText = `代号：${userId}`;
+            } else { document.getElementById("out-user-id").style.display = "none"; }
             
             document.getElementById("out-title").innerText = `你是【${finalOutcome.title}】`;
             
             const purityEl = document.getElementById("out-purity");
-            purityEl.style.display = "block";
-            purityEl.innerText = `纯度：${purity}%`;
+            purityEl.style.display = "block"; purityEl.innerText = `纯度：${purity}%`;
             
             const dangerEl = document.getElementById("out-danger");
-            dangerEl.style.display = "block";
-            dangerEl.innerText = `危险等级：${finalOutcome.danger}`;
+            dangerEl.style.display = "block"; dangerEl.innerText = `危险等级：${finalOutcome.danger}`;
+
+            const achs = detectAchievements();
+            const achContainer = document.getElementById("achievements-container");
+            achContainer.innerHTML = "";
+            achs.forEach(ach => {
+                const span = document.createElement("span");
+                span.className = "achievement-badge";
+                span.innerText = ach;
+                achContainer.appendChild(span);
+            });
 
             document.getElementById("out-divider").style.display = "block";
 
@@ -1007,16 +1158,13 @@
             let myBase = basePercents[finalOutcome.title] || 10;
             let myPercent = (myBase + (Math.random() * 4 - 2)).toFixed(1);
             const samePercentEl = document.getElementById("out-same-percent");
-            samePercentEl.style.display = "block";
-            samePercentEl.innerText = `与你相同人格：${myPercent}% 的人`;
+            samePercentEl.style.display = "block"; samePercentEl.innerText = `与你相同人格：${myPercent}% 的人`;
 
             const allKeys = Object.keys(outcomes);
             const allTitles = allKeys.map(k => outcomes[k].title);
             let mostIndex = Math.floor(Math.random() * allTitles.length);
             let rarestIndex = Math.floor(Math.random() * allTitles.length);
-            while (rarestIndex === mostIndex) {
-                rarestIndex = Math.floor(Math.random() * allTitles.length);
-            }
+            while (rarestIndex === mostIndex) { rarestIndex = Math.floor(Math.random() * allTitles.length); }
             let mostPercent = (28 + Math.random() * 12).toFixed(1);
             let rarestPercent = (1 + Math.random() * 4).toFixed(1);
             
@@ -1024,6 +1172,10 @@
             leaderboardEl.style.display = "block";
             document.getElementById("out-most").innerText = `今日最多：${allTitles[mostIndex]} (${mostPercent}%)`;
             document.getElementById("out-rarest").innerText = `最稀有：${allTitles[rarestIndex]} (${rarestPercent}%)`;
+
+            const pathInsightEl = document.getElementById("out-path-insight");
+            pathInsightEl.style.display = "block";
+            pathInsightEl.innerText = `轨迹刻印：${generatePathInsight()}`;
 
             document.getElementById("result-desc").innerText = finalOutcome.desc;
             
@@ -1041,11 +1193,33 @@
 
     saveBtn.addEventListener('click', function() {
         const captureTarget = document.getElementById('result-container');
+        const originalBg = captureTarget.style.background;
+        const originalColor = captureTarget.style.color;
+        
+        const isDark = document.getElementById('chk-dark-mode').checked;
+        if(isDark) {
+            captureTarget.style.background = '#1f1e33';
+            captureTarget.style.color = '#cbd5e1';
+            document.getElementById('result-desc').style.color = '#cbd5e1';
+            document.getElementById('share-info-block').style.background = 'rgba(255,255,255,0.05)';
+        }
+
+        const hideRadar = document.getElementById('chk-hide-radar').checked;
+        if(hideRadar) radarContainer.style.display = 'none';
+
+        const hidePath = document.getElementById('chk-hide-path').checked;
+        const pathEl = document.getElementById('out-path-insight');
+        const origPathDisplay = pathEl.style.display;
+        if(hidePath) pathEl.style.display = 'none';
+
+        const controlsRow = document.getElementById('screenshot-controls');
+        controlsRow.style.display = 'none';
+        
         this.classList.add('hidden');
         restartBtn.classList.add('hidden');
         
         html2canvas(captureTarget, {
-            backgroundColor: '#ffffff', 
+            backgroundColor: isDark ? '#1f1e33' : '#ffffff', 
             scale: 2,
             useCORS: true 
         }).then(canvas => {
@@ -1053,10 +1227,20 @@
             link.download = '狼BTI成分报告.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
+            
+            captureTarget.style.background = originalBg;
+            captureTarget.style.color = originalColor;
+            document.getElementById('result-desc').style.color = 'inherit';
+            document.getElementById('share-info-block').style.background = 'rgba(248, 250, 252, 0.9)';
+            radarContainer.style.display = '';
+            pathEl.style.display = origPathDisplay;
+            controlsRow.style.display = 'flex';
+            
             this.classList.remove('hidden');
             restartBtn.classList.remove('hidden');
         }).catch(err => {
             console.error("截图生成失败", err);
+            controlsRow.style.display = 'flex';
             this.classList.remove('hidden');
             restartBtn.classList.remove('hidden');
         });
