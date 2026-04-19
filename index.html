@@ -34,6 +34,10 @@
     body.glitch-active {
         animation: glitch-anim 0.2s linear infinite;
     }
+    body.heavy-glitch {
+        animation: glitch-anim 0.1s linear infinite;
+        filter: contrast(1.1) saturate(1.2);
+    }
     @keyframes glitch-anim {
         0% { filter: hue-rotate(0deg) blur(0px); transform: translate(0, 0) skew(0deg); }
         20% { filter: hue-rotate(15deg) blur(1px); transform: translate(-2px, 1px) skew(-1deg); }
@@ -54,7 +58,7 @@
     .floating-text {
         position: absolute;
         bottom: -50px;
-        color: rgba(31, 30, 51, 0.03);
+        color: rgba(100, 116, 139, 0.8); /* 透明度调高至80% */
         white-space: nowrap;
         font-family: 'Helvetica Neue', 'SimHei', sans-serif;
         font-weight: 600;
@@ -155,6 +159,40 @@
         margin-bottom: 25px;
     }
 
+    #user-id-input {
+        width: 80%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(31, 30, 51, 0.3);
+        border-radius: 8px;
+        font-size: 14px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.9);
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    #user-id-input:focus {
+        border-color: #d4af37;
+    }
+
+    .share-info-block {
+        background: rgba(248, 250, 252, 0.9);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        text-align: left;
+        border: 1px solid rgba(31, 30, 51, 0.08);
+    }
+    .share-info-row {
+        font-size: 15px;
+        color: #1f1e33;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    .share-info-danger {
+        letter-spacing: 2px;
+    }
+
     .micro-en {
         font-size: 10px; color: #64748b; letter-spacing: 1px;
         text-transform: uppercase; font-family: monospace;
@@ -206,12 +244,32 @@
         border-color: rgba(212, 175, 55, 0.6); color: #1f1e33;
     }
 
+    .action-bar {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 15px;
+    }
+    #back-btn {
+        background: transparent;
+        border: 1px solid rgba(31, 30, 51, 0.3);
+        border-radius: 6px;
+        color: #475569;
+        padding: 8px 16px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    #back-btn:hover {
+        background: rgba(31, 30, 51, 0.05);
+        color: #1f1e33;
+    }
+
     #processing-log {
         font-family: monospace; font-size: 14px;
         color: #475569; text-align: left; line-height: 2; margin-top: 20px;
     }
 
-    #result-title { font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #1f1e33; letter-spacing: 1px; }
+    #result-title { display: none; }
     #result-desc { font-size: 14px; color: #334155; margin-bottom: 20px; line-height: 1.8; text-align: left; white-space: pre-wrap; }
     
     #radar-container {
@@ -264,6 +322,8 @@
     <h1 id="main-title">狼BTI</h1>
     <div id="sub-title">看看你是什么种类的血狼破军观众</div>
     
+    <input type="text" id="user-id-input" class="hover-target" placeholder="输入你的代号 (选填)" maxlength="16" autocomplete="off">
+
     <div class="disclaimer-box">
         免责声明：<br>
         本应用“狼BTI”仅供娱乐。测试题目、选项及结局均为对特定亚文化圈层社区现象的夸张化再创作与戏仿。本测试不具备心理学参考价值，绝不代表您的真实性格或现实状态。所有情境均为虚构，不针对任何个人的现实攻击。请保持理智，勿将结果作为现实评价或引发争端的依据。网络并非法外之地，请遵守社区规范。点击开始即视为您已阅读并同意以纯属娱乐的心态体验。
@@ -283,6 +343,9 @@
             <span class="micro-en" id="question-micro">AWAITING INPUT...</span>
         </div>
         <div id="options-container" class="hidden"></div>
+        <div class="action-bar hidden" id="quiz-action-bar">
+            <button id="back-btn" class="hover-target">← 上一题</button>
+        </div>
     </div>
 </div>
 
@@ -295,8 +358,22 @@
 <div class="glass-panel hidden" id="result-container">
     <div style="font-size: 12px; color: #64748b; margin-bottom: 4px; letter-spacing: 1px;">ASSESSMENT COMPLETED</div>
     <span class="micro-en" style="margin-bottom: 20px;">FINAL PROFILE GENERATED</span>
-    <div id="result-title"></div>
     
+    <div class="share-info-block" id="share-info-block">
+        <div class="share-info-row" id="out-user-id" style="display: none;"></div>
+        <div class="share-info-row" id="out-title"></div>
+        <div class="share-info-row" id="out-purity"></div>
+        <div class="share-info-row share-info-danger" id="out-danger"></div>
+        
+        <div id="out-divider" style="height: 1px; background: rgba(31,30,51,0.1); margin: 15px 0;"></div>
+        
+        <div class="share-info-row" id="out-same-percent"></div>
+        <div class="share-info-row" id="out-leaderboard" style="margin-top: 10px; font-size: 13.5px; color: #475569; font-weight: normal; line-height: 1.6;">
+            <div id="out-most"></div>
+            <div id="out-rarest"></div>
+        </div>
+    </div>
+
     <div id="radar-container" class="hidden">
         <canvas id="radarChart"></canvas>
     </div>
@@ -364,7 +441,7 @@
         { text: "如果明天就是世界末日，你今晚会做什么？", options: [ { text: "疯狂吃顿好的", effect: S_NONE }, { text: "看血狼破军最后一次直播", effect: S_NONE }, { text: "去贴吧发最后一个引战帖", effect: S_NONE }, { text: "把所有干员精二", effect: S_NONE }, { text: "和家人在一起度过最后的时光", effect: S_NONE }, { text: "冲到大街上和红绿灯接吻", effect: S_NONE } ] },
         { text: "当社区内爆发关于强度的激烈冲突时，你参与的方式往往是：", options: [ { text: "根本不在乎对错，只想把水搅浑让两边打得更凶", effect: S_LZ }, { text: "化身无情的复读机，将特定的暴论复制粘贴到各个角落", effect: S_HD }, { text: "通过精准地抛出早年黑料，试图主导冲突的负面走向", effect: S_LH }, { text: "默默关闭页面，当做什么都没发生，完全隔离于冲突之外", effect: S_MM }, { text: "偶尔回两句理性客观的话", effect: S_NONE }, { text: "搬运成吨的沙子试图把冲突掩埋", effect: S_NONE } ] },
         { text: "如果必须用一句话总结你持续关注这个圈子的原因，你会选择：", options: [ { text: "这里能提供相对硬核的机制分析和对干员强度的无情解构", effect: S_QD }, { text: "我就是喜欢看一群人为了几段数据在网上争得面红耳赤", effect: S_LZ }, { text: "不断搬运信息能让我获得一种身处社交漩涡中心的充实感", effect: S_HD }, { text: "即使带着长期的负面审视，我也无法否认内心的某种执念", effect: S_LH }, { text: "就是当个电子盆栽随便看看打发时间", effect: S_NONE }, { text: "为了在这个圈子里找到失散多年的外星表哥", effect: S_NONE } ] },
-        { text: "看到有新人玩家在弹幕里认真提问一个基础游戏机制，而当时正在进行高强度的对线，你会：", options: [ { text: "觉得这很破坏对线氛围，无视甚至试图转移这个不合时宜的提问", effect: S_LL }, { text: "在心里把新人的茫然和主播的暴躁对比，脑补出一场柔弱对抗强硬的戏码", effect: S_XM }, { text: "迅速截图这个充满违感的画面，发到论坛里嘲笑", effect: S_LH }, { text: "在一旁静静看着，觉得主播就算在对线中偶尔的回应也很吸引人", effect: S_JN }, { text: "看心情随便回复解答一下新人", effect: S_NONE }, { text: "告诉新人卸载游戏才能变强", effect: S_NONE } ] },
+        { text: "看到有新人玩家在弹幕里认真提问一个基础游戏机制，而当时正在进行高强度的对线，你会：", options: [ { text: "觉得这很破坏对线氛围，无视甚至试图转移这个不合时宜的提问", effect: S_LL }, { text: "在心里把新人的茫然和主播的暴躁对比，脑补出一场柔弱对抗强硬的戏码", effect: S_XM }, { text: "迅速截图这个充满违和感的画面，发到论坛里嘲笑", effect: S_LH }, { text: "在一旁静静看着，觉得主播就算在对线中偶尔的回应也很吸引人", effect: S_JN }, { text: "看心情随便回复解答一下新人", effect: S_NONE }, { text: "告诉新人卸载游戏才能变强", effect: S_NONE } ] },
         { text: "最终，当你关闭直播或视频的网页时，你带走的是：", options: [ { text: "对当前版本干员抽取优先级的清晰规划", effect: S_QD }, { text: "又一场足以让社区混乱好几天的谈资", effect: S_LZ }, { text: "右上角未读消息即将突破99+的期待", effect: S_HD }, { text: "一段可以用来在脑内反复加工和回味的CP互动切片", effect: S_LL }, { text: "普通的观看体验", effect: S_NONE }, { text: "我把电脑主机一起带走了", effect: S_NONE } ] },
         { text: "如果血狼破军去参加《歌手》，你认为他会唱什么？", options: [ { text: "《小红点之歌》", effect: S_NONE }, { text: "《超大杯进行曲》", effect: S_NONE }, { text: "上去报一段干员DPS菜名", effect: S_NONE }, { text: "在台上表演两分钟吃汉堡", effect: S_NONE }, { text: "唱一首普通的流行歌", effect: S_NONE }, { text: "用腹语模拟干员部署的音效震碎玻璃", effect: S_NONE } ] },
         { text: "假设你可以拥有一项超能力，你希望是：", options: [ { text: "看一眼就知道干员DPS", effect: S_NONE }, { text: "让任何人在论坛里只能发问号", effect: S_NONE }, { text: "变成龙哥哥", effect: S_NONE }, { text: "把世界变成明日方舟服务器", effect: S_NONE }, { text: "瞬间移动", effect: S_NONE }, { text: "能让全世界的人同时打一个喷嚏", effect: S_NONE } ] },
@@ -400,41 +477,50 @@
 
     const outcomes = {
         "positive_positive_positive": { 
-            title: "【强度党】", 
-            desc: "你关注血狼破军只是单纯的为了了解干员强度，然后考虑要不要跳过池子或者对干员开始拉踩，无论如何，你乐在其中。\n\n你是绝对的功利主义者，看视频只跳到最后看结论。只要他敢说一句“中杯”，你就敢拿着截图去贴吧大战三百回合；只要他说一句“必抽”，你立马盘算手里的合成玉。你把他的话当成抽卡圣旨和PVP的弹药库，干员在你眼里不是角色，而是一组组冰冷的DPS数据和你在赛博空间跟人对喷的资本。" 
+            title: "强度党", 
+            desc: "你关注血狼破军只是单纯的为了了解干员强度，然后考虑要不要跳过池子或者对干员开始拉踩，无论如何，你乐在其中。\n\n你是绝对的功利主义者，看视频只跳到最后看结论。只要他敢说一句“中杯”，你就敢拿着截图去贴吧大战三百回合；只要他说一句“必抽”，你立马盘算手里的合成玉。你把他的话当成抽卡圣旨和PVP的弹药库，干员在你眼里不是角色，而是一组组冰冷的DPS数据和你在赛博空间跟人对喷的资本。",
+            danger: "⚠️⚠️"
         },
         "positive_positive_negative": { 
-            title: "【混沌乐子人】", 
-            desc: "无聊，你只是想看到所有人都在网上吵起来，血流成河。\n\n你就是互联网上最纯粹的反派。血狼破军？他只是你用来点燃赛博火药桶的一根火柴罢了。你最喜欢看粉丝和黑子在评论区撕得不可开交，看强度党和XP党打得头破血流。你站在高处，一边吃瓜一边煽风点火，唯恐天下不乱。哪里有战火，哪里就有你的身影，你就是混乱的化身，到处拉屎的毒瘤！" 
+            title: "混沌乐子人", 
+            desc: "无聊，你只是想看到所有人都在网上吵起来，血流成河。\n\n你就是互联网上最纯粹的反派。血狼破军？他只是你用来点燃赛博火药桶的一根火柴罢了。你最喜欢看粉丝和黑子在评论区撕得不可开交，看强度党和XP党打得头破血流。你站在高处，一边吃瓜一边煽风点火，唯恐天下不乱。哪里有战火，哪里就有你的身影，你就是混乱的化身，到处拉屎的毒瘤！",
+            danger: "⚠️⚠️⚠️⚠️⚠️"
         },
         "positive_negative_positive": { 
-            title: "【小红点厨】", 
-            desc: "你单纯喜欢搬运血狼破军的言论到其他论坛，有人叫你狼孝子，有人叫你传话太监，只有你知道你只是对小红点爱得深沉。\n\n你每天像个勤劳的工蜂一样穿梭在B站、贴吧和NGA之间。血狼刚叹了口气，你已经把“血狼对新干员绝望了”发到了各大版块。被人骂又怎样？被封号又怎样？只要看到右上角那个象征着消息回复的红色数字亮起“99+”，你的多巴胺就会疯狂分泌。你不在乎血狼，你只在乎流量，你就是互联网信息搬运界的神。" 
+            title: "小红点厨", 
+            desc: "你单纯喜欢搬运血狼破军的言论到其他论坛，有人叫你狼孝子，有人叫你传话太监，只有你知道你只是对小红点爱得深沉。\n\n你每天像个勤劳的工蜂一样穿梭在B站、贴吧和NGA之间。血狼刚叹了口气，你已经把“血狼对新干员绝望了”发到了各大版块。被人骂又怎样？被封号又怎样？只要看到右上角那个象征着消息回复的红色数字亮起“99+”，你的多巴胺就会疯狂分泌。你不在乎血狼，你只在乎流量，你就是互联网信息搬运界的神。",
+            danger: "⚠️⚠️⚠️⚠️"
         },
         "positive_negative_negative": { 
-            title: "【狼黑】", 
-            desc: "你单纯的讨厌血狼破军，但是却知道血狼破军的每一个黑料，他的每一场直播你都看，他的每一次爆典你都迫不及待地搬运到其他地方给别人看，或许你比所有人都真的更爱血狼破军。\n\n你嘴上骂得比谁都脏，心里却把他装得比谁都满。你美其名曰“收集反面教材”，实则连他三年前直播打了个喷嚏你都记得清清楚楚。你比任何一个粉丝都准时蹲守在直播间，生怕漏掉他哪怕一秒钟的黑历史。你这种由恨生爱的扭曲情感，简直是饭圈虐恋的最高境界，承认吧，你就是他最大的真爱粉。" 
+            title: "狼黑", 
+            desc: "你单纯的讨厌血狼破军，但是却知道血狼破军的每一个黑料，他的每一场直播你都看，他的每一次爆典你都迫不及待地搬运到其他地方给别人看，或许你比所有人都真的更爱血狼破军。\n\n你嘴上骂得比谁都脏，心里却把他装得比谁都满。你美其名曰“收集反面教材”，实则连他三年前直播打了个喷嚏你都记得清清楚楚。你比任何一个粉丝都准时蹲守在直播间，生怕漏掉他哪怕一秒钟的黑历史。你这种由恨生爱的扭曲情感，简直是饭圈虐恋的最高境界，承认吧，你就是他最大的真爱粉。",
+            danger: "⚠️⚠️⚠️⚠️⚠️"
         },
         "negative_positive_positive": { 
-            title: "【军奴】", 
-            desc: "你只是单纯喜欢血狼破军的肉体，喜欢他的声音，性格，还有大胃袋，其实你或许没有那么关注明日方舟的干员强度，你只是喜欢看血狼破军。\n\n每当他开播，你的关注点永远不在什么DPS计算和法术抗性上，你只在乎他今天吃了几个汉堡，喝了多少可乐。哪怕他在屏幕前发呆打嗝，你都能在屏幕后疯狂截屏。你对他的爱超越了泰拉大陆的任何一个干员，你不是来玩游戏的，你是来赛博追星的，纯度极高的老缠粉说的就是你。" 
+            title: "军奴", 
+            desc: "你只是单纯喜欢血狼破军的肉体，喜欢他的声音，性格，还有大胃袋，其实你或许没有那么关注明日方舟的干员强度，你只是喜欢看血狼破军。\n\n每当他开播，你的关注点永远不在什么DPS计算和法术抗性上，你只在乎他今天吃了几个汉堡，喝了多少可乐。哪怕他在屏幕前发呆打嗝，你都能在屏幕后疯狂截屏。你对他的爱超越了泰拉大陆的任何一个干员，你不是来玩游戏的，你是来赛博追星的，纯度极高的老缠粉说的就是你。",
+            danger: "⚠️⚠️⚠️"
         },
         "negative_positive_negative": { 
-            title: "【狼小妹单推厨】", 
-            desc: "你喜欢看血狼破军，但是会把他幻想成一个娘化的萌妹形象再对其进行前所未有的性压抑。\n\n在你扭曲的视界里，那个满嘴强度的男人早已被套上了白丝女仆装。你每天在脑海里进行着不可告人的二创，把他的每一次破防大叫都脑补成傲娇萝莉的娇嗔。别人在看干员测评，你在进行赛博发情，你的成分之复杂、XP之诡异，简直是方舟圈未解之谜，建议立刻去看医生！" 
+            title: "狼小妹单推厨", 
+            desc: "你喜欢看血狼破军，但是会把他幻想成一个娘化的萌妹形象再对其进行前所未有的性压抑。\n\n在你扭曲的视界里，那个满嘴强度的男人早已被套上了白丝女仆装。你每天在脑海里进行着不可告人的二创，把他的每一次破防大叫都脑补成傲娇萝莉的娇嗔。别人在看干员测评，你在进行赛博发情，你的成分之复杂、XP之诡异，简直是方舟圈未解之谜，建议立刻去看医生！",
+            danger: "⚠️⚠️⚠️⚠️"
         },
         "negative_negative_positive": { 
-            title: "【龙狼📏】", 
-            desc: "你喜欢看血狼破军和其他主播互动，磕cp，比如龙哥哥，比如ve，比如某个fifa人物，或许你也喜欢看一些其他主播的cp，比如龙龙骗骗请和......\n\n你的雷达永远只对男男互动有反应。只要血狼的直播间出现了其他男人的声音，或者提到了某人的名字，你的大脑就会立刻开始撰写十万字的同人小黄文。你对明日方舟的强度毫无兴趣，你只在乎今天龙哥哥有没有来查房，ve有没有和他连麦。你就是互联网上最可怕的赛博红娘，拿着放大镜在玻璃碴子里找糖吃。" 
+            title: "龙狼📏", 
+            desc: "你喜欢看血狼破军和其他主播互动，磕cp，比如龙哥哥，比如ve，比如某个fifa人物，或许你也喜欢看一些其他主播的cp，比如龙龙骗骗请和......\n\n你的雷达永远只对男男互动有反应。只要血狼的直播间出现了其他男人的声音，或者提到了某人的名字，你的大脑就会立刻开始撰写十万字的同人小黄文。你对明日方舟的强度毫无兴趣，你只在乎今天龙哥哥有没有来查房，ve有没有和他连麦。你就是互联网上最可怕的赛博红娘，拿着放大镜在玻璃碴子里找糖吃。",
+            danger: "⚠️⚠️⚠️"
         },
         "negative_negative_negative": { 
-            title: "【萌萌人】", 
-            desc: "血狼破军是谁？\n\n你对这片风起云涌的互联网粪坑一无所知。什么大杯超大杯，什么龙狼CP，什么传话太监，你统统不关心。你可能只是一个偶尔上线抽个卡、看看漂亮纸片人老婆的纯路人。这个充满黑话和戾气的测试对你来说就像是天书，快跑吧，这里的水太深了，不适合你这种纯洁的泰拉小白。" 
+            title: "萌萌人", 
+            desc: "血狼破军是谁？\n\n你对这片风起云涌的互联网粪坑一无所知。什么大杯超大杯，什么龙狼CP，什么传话太监，你统统不关心。你可能只是一个偶尔上线抽个卡、看看漂亮纸片人老婆的纯路人。这个充满黑话和戾气的测试对你来说就像是天书，快跑吧，这里的水太深了，不适合你这种纯洁的泰拉小白。",
+            danger: "⚠️"
         }
     };
 
     let activeQuestions = [];
     let currentQuestionIndex = 0;
+    let scoreHistory = [];
     let scoreDim1 = 0, scoreDim2 = 0, scoreDim3 = 0;
     let noneCount = 0;
     let typeWriterInterval = null;
@@ -442,6 +528,11 @@
     let isMusicPlaying = false;
     let fireworkAnimId = null;
     let myRadarChart = null;
+    let currentThemeColor = '#d4af37';
+    let currentThemeParticles = ['#d4af37', '#1f1e33', '#475569', '#cbd5e1'];
+    let themeLocked = false;
+    let userId = "";
+    let themeGlitchTimeout = null;
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
@@ -463,12 +554,15 @@
     const saveBtn = document.getElementById("save-btn");
     const startBtn = document.getElementById("start-btn");
     const restartBtn = document.getElementById("restart-btn");
+    const backBtn = document.getElementById("back-btn");
+    const quizActionBar = document.getElementById("quiz-action-bar");
     const processingLog = document.getElementById("processing-log");
     const radarContainer = document.getElementById("radar-container");
     const bgmPlayer = document.getElementById('bgm-player');
     const musicToggle = document.getElementById('music-toggle');
+    const userIdInput = document.getElementById("user-id-input");
 
-    const baikeFragments = ["中杯", "超大杯", "毒攻略", "新神已至", "大杯偏上", "合约登顶", "你什么冠军", "枪枪爆头", "为用而用", "会赢的", "大静谧", "微波炉香蕉"];
+    const baikeFragments = ["中杯", "超大杯", "毒攻略", "新神已至", "大杯偏上", "合约登顶", "你什么冠军", "枪枪爆头", "为用而用", "会赢的", "Work Work", "我既是天选，也是唯一", "血狼破军", "七分裤", "设计师", "攻速+7"];
     
     musicToggle.addEventListener('click', () => {
         if (isMusicPlaying) {
@@ -528,8 +622,12 @@
         for (let i = trails.length - 1; i >= 0; i--) {
             let p = trails[i];
             p.life -= 0.04; p.y += 0.5; 
-            tCtx.fillStyle = `rgba(212, 175, 55, ${p.life * 0.5})`;
+            tCtx.fillStyle = themeLocked ? currentThemeColor : `rgba(212, 175, 55, ${p.life * 0.5})`;
+            if(themeLocked && p.life > 0) {
+                tCtx.globalAlpha = p.life * 0.5;
+            }
             tCtx.fillText(p.char, p.x, p.y);
+            tCtx.globalAlpha = 1;
             if (p.life <= 0) trails.splice(i, 1);
         }
         requestAnimationFrame(animateTrail);
@@ -537,6 +635,7 @@
     animateTrail();
 
     function updateEnvironmentLight() {
+        if (themeLocked) return;
         let limit = currentQuestionIndex || 1;
         let r1_ratio = Math.max(-1, Math.min(1, scoreDim1 / limit));
         let r2_ratio = Math.max(-1, Math.min(1, scoreDim2 / limit));
@@ -554,7 +653,7 @@
     }
 
     function bindCursorHover() {
-        document.querySelectorAll('.hover-target, .option-btn, #music-toggle').forEach(el => {
+        document.querySelectorAll('.hover-target, .option-btn, #music-toggle, input').forEach(el => {
             el.addEventListener('mouseenter', () => customCursor.classList.add('cursor-hover'));
             el.addEventListener('mouseleave', () => customCursor.classList.remove('cursor-hover'));
         });
@@ -562,11 +661,17 @@
     bindCursorHover();
 
     function initGameSession() {
+        userId = userIdInput.value.trim();
         activeQuestions = [...rawQuestions].sort(() => 0.5 - Math.random()).slice(0, 15);
         currentQuestionIndex = 0;
         scoreDim1 = 0; scoreDim2 = 0; scoreDim3 = 0;
         noneCount = 0;
+        scoreHistory = [];
         progressBar.style.width = "0%";
+        themeLocked = false;
+        document.body.classList.remove('heavy-glitch', 'glitch-active');
+        if(themeGlitchTimeout) clearTimeout(themeGlitchTimeout);
+        currentThemeColor = '#d4af37';
         updateEnvironmentLight();
         if (myRadarChart) {
             myRadarChart.destroy();
@@ -593,6 +698,8 @@
         const fCanvas = document.getElementById('fireworks-canvas');
         fCanvas.getContext('2d').clearRect(0, 0, fCanvas.width, fCanvas.height);
         
+        document.getElementById("share-info-block").style.display = "none";
+        
         initGameSession();
         resultContainer.classList.add('hidden');
         resultContainer.classList.remove('fade-in');
@@ -601,6 +708,19 @@
         customCursor.classList.remove('cursor-hover');
         quizContainer.classList.remove('hidden');
         loadQuestion();
+    });
+
+    backBtn.addEventListener('click', () => {
+        if (currentQuestionIndex > 0 && !isTyping) {
+            currentQuestionIndex--;
+            const prevState = scoreHistory.pop();
+            scoreDim1 = prevState.d1;
+            scoreDim2 = prevState.d2;
+            scoreDim3 = prevState.d3;
+            noneCount = prevState.nc;
+            updateEnvironmentLight();
+            loadQuestion();
+        }
     });
 
     function typeWriter(text, element, speed, callback) {
@@ -630,6 +750,7 @@
         const progressPercent = (currentQuestionIndex / activeQuestions.length) * 100;
         progressBar.style.width = progressPercent + "%";
         optionsContainer.classList.add("hidden");
+        quizActionBar.classList.add("hidden");
         optionsContainer.innerHTML = "";
         
         currentQuestion.options.forEach(option => {
@@ -651,11 +772,22 @@
         typeWriter(renderText, questionTextElement, 15, () => {
             optionsContainer.classList.remove("hidden");
             optionsContainer.classList.add("fade-in");
+            if (currentQuestionIndex > 0) {
+                quizActionBar.classList.remove("hidden");
+                quizActionBar.classList.add("fade-in");
+            }
             bindCursorHover(); 
         });
     }
 
     function selectOption(effect, isNone) {
+        scoreHistory.push({
+            d1: scoreDim1,
+            d2: scoreDim2,
+            d3: scoreDim3,
+            nc: noneCount
+        });
+        
         scoreDim1 += effect.d1;
         scoreDim2 += effect.d2;
         scoreDim3 += effect.d3;
@@ -746,22 +878,153 @@
         });
     }
 
+    function applyTheme(key) {
+        themeLocked = true;
+        document.body.classList.remove('heavy-glitch', 'glitch-active');
+        if(themeGlitchTimeout) clearTimeout(themeGlitchTimeout);
+        
+        let needsGlitch = false;
+
+        if (noneCount === activeQuestions.length) {
+            envColor1 = 'rgba(10, 10, 15, 0.3)';
+            envColor2 = 'rgba(0, 0, 0, 0.5)';
+            currentThemeColor = '#475569';
+            currentThemeParticles = ['#1f1e33', '#334155', '#0f172a'];
+            needsGlitch = true;
+        } else {
+            switch (key) {
+                case "positive_positive_positive": 
+                    envColor1 = 'rgba(0, 120, 255, 0.15)'; 
+                    envColor2 = 'rgba(0, 50, 150, 0.1)';
+                    currentThemeColor = '#0078ff';
+                    currentThemeParticles = ['#0078ff', '#00d4ff', '#e0f2fe', '#0ea5e9'];
+                    break;
+                case "positive_positive_negative":
+                case "positive_negative_negative":
+                case "positive_negative_positive":
+                    envColor1 = 'rgba(220, 20, 60, 0.18)'; 
+                    envColor2 = 'rgba(100, 0, 0, 0.15)';
+                    currentThemeColor = '#dc143c';
+                    currentThemeParticles = ['#dc143c', '#ff0000', '#8b0000', '#fecdd3'];
+                    needsGlitch = true;
+                    break;
+                case "negative_negative_positive":
+                case "negative_positive_negative":
+                    envColor1 = 'rgba(255, 105, 180, 0.18)'; 
+                    envColor2 = 'rgba(199, 21, 133, 0.1)';
+                    currentThemeColor = '#ff69b4';
+                    currentThemeParticles = ['#ff69b4', '#ff1493', '#fbcfe8', '#db2777'];
+                    break;
+                case "negative_negative_negative":
+                case "negative_positive_positive":
+                    envColor1 = 'rgba(240, 240, 240, 0.3)'; 
+                    envColor2 = 'rgba(200, 200, 200, 0.2)';
+                    currentThemeColor = '#cbd5e1';
+                    currentThemeParticles = ['#ffffff', '#f1f5f9', '#cbd5e1', '#94a3b8'];
+                    break;
+                default:
+                    envColor1 = 'rgba(212, 175, 55, 0.12)';
+                    envColor2 = 'rgba(31, 30, 51, 0.08)';
+                    currentThemeColor = '#d4af37';
+                    currentThemeParticles = ['#d4af37', '#1f1e33', '#475569', '#cbd5e1'];
+                    break;
+            }
+        }
+
+        if (needsGlitch) {
+            document.body.classList.add('heavy-glitch');
+            themeGlitchTimeout = setTimeout(() => {
+                document.body.classList.remove('heavy-glitch');
+            }, 1000);
+        }
+
+        const xPercent = (mouseX / window.innerWidth) * 100;
+        const yPercent = (mouseY / window.innerHeight) * 100;
+        document.body.style.backgroundImage = `
+            radial-gradient(circle at ${xPercent}% ${yPercent}%, ${envColor1}, transparent 40%),
+            radial-gradient(circle at ${100 - xPercent}% ${100 - yPercent}%, ${envColor2}, transparent 40%),
+            repeating-linear-gradient(45deg, rgba(31, 30, 51, 0.02) 0px, rgba(31, 30, 51, 0.02) 1px, transparent 1px, transparent 20px),
+            repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 0px, rgba(212, 175, 55, 0.03) 1px, transparent 1px, transparent 20px)
+        `;
+    }
+
     function showResult() {
         resultContainer.classList.remove("hidden");
         resultContainer.classList.add("fade-in");
         
+        let key = "";
+        key += (scoreDim1 >= 0) ? "positive_" : "negative_";
+        key += (scoreDim2 >= 0) ? "positive_" : "negative_";
+        key += (scoreDim3 >= 0) ? "positive" : "negative";
+        
+        applyTheme(key);
+
+        const shareBlock = document.getElementById("share-info-block");
+
         if (noneCount === activeQuestions.length) {
-            document.getElementById("result-title").innerText = "【彩蛋结局】";
-            document.getElementById("result-desc").innerText = "你怎么什么都不想选，无法完成测试，请重新答题。";
+            shareBlock.style.display = "block";
+            document.getElementById("out-title").innerText = "【彩蛋结局】你怎么什么都不想选";
+            document.getElementById("out-purity").style.display = "none";
+            document.getElementById("out-danger").style.display = "none";
+            document.getElementById("out-same-percent").style.display = "none";
+            document.getElementById("out-leaderboard").style.display = "none";
+            document.getElementById("out-divider").style.display = "none";
+            document.getElementById("result-desc").innerText = "无法完成测试，请重新答题。";
             radarContainer.classList.add("hidden");
         } else {
-            let key = "";
-            key += (scoreDim1 >= 0) ? "positive_" : "negative_";
-            key += (scoreDim2 >= 0) ? "positive_" : "negative_";
-            key += (scoreDim3 >= 0) ? "positive" : "negative";
             const finalOutcome = outcomes[key];
             
-            document.getElementById("result-title").innerText = finalOutcome.title;
+            const maxScoreSum = activeQuestions.length * 3;
+            const currentScoreSum = Math.abs(scoreDim1) + Math.abs(scoreDim2) + Math.abs(scoreDim3);
+            const purity = Math.min(100, Math.floor(60 + (currentScoreSum / maxScoreSum) * 40));
+
+            shareBlock.style.display = "block";
+            
+            if (userId) {
+                const idEl = document.getElementById("out-user-id");
+                idEl.style.display = "block";
+                idEl.innerText = `代号：${userId}`;
+            } else {
+                document.getElementById("out-user-id").style.display = "none";
+            }
+            
+            document.getElementById("out-title").innerText = `你是【${finalOutcome.title}】`;
+            
+            const purityEl = document.getElementById("out-purity");
+            purityEl.style.display = "block";
+            purityEl.innerText = `纯度：${purity}%`;
+            
+            const dangerEl = document.getElementById("out-danger");
+            dangerEl.style.display = "block";
+            dangerEl.innerText = `危险等级：${finalOutcome.danger}`;
+
+            document.getElementById("out-divider").style.display = "block";
+
+            const basePercents = {
+                "强度党": 15, "混沌乐子人": 25, "小红点厨": 10, "狼黑": 12,
+                "军奴": 8, "狼小妹单推厨": 6, "龙狼📏": 4, "萌萌人": 20
+            };
+            let myBase = basePercents[finalOutcome.title] || 10;
+            let myPercent = (myBase + (Math.random() * 4 - 2)).toFixed(1);
+            const samePercentEl = document.getElementById("out-same-percent");
+            samePercentEl.style.display = "block";
+            samePercentEl.innerText = `与你相同人格：${myPercent}% 的人`;
+
+            const allKeys = Object.keys(outcomes);
+            const allTitles = allKeys.map(k => outcomes[k].title);
+            let mostIndex = Math.floor(Math.random() * allTitles.length);
+            let rarestIndex = Math.floor(Math.random() * allTitles.length);
+            while (rarestIndex === mostIndex) {
+                rarestIndex = Math.floor(Math.random() * allTitles.length);
+            }
+            let mostPercent = (28 + Math.random() * 12).toFixed(1);
+            let rarestPercent = (1 + Math.random() * 4).toFixed(1);
+            
+            const leaderboardEl = document.getElementById("out-leaderboard");
+            leaderboardEl.style.display = "block";
+            document.getElementById("out-most").innerText = `今日最多：${allTitles[mostIndex]} (${mostPercent}%)`;
+            document.getElementById("out-rarest").innerText = `最稀有：${allTitles[rarestIndex]} (${rarestPercent}%)`;
+
             document.getElementById("result-desc").innerText = finalOutcome.desc;
             
             radarContainer.classList.remove("hidden");
@@ -805,7 +1068,7 @@
         fCanvas.width = window.innerWidth;
         fCanvas.height = window.innerHeight;
         const particles = [];
-        const colors = ['#d4af37', '#1f1e33', '#475569', '#cbd5e1'];
+        
         class Particle {
             constructor(x, y, color) {
                 this.x = x; this.y = y; this.color = color;
@@ -828,7 +1091,7 @@
             }
         }
         function explode(x, y) {
-            for (let i = 0; i < 40; i++) particles.push(new Particle(x, y, colors[Math.floor(Math.random() * colors.length)]));
+            for (let i = 0; i < 40; i++) particles.push(new Particle(x, y, currentThemeParticles[Math.floor(Math.random() * currentThemeParticles.length)]));
         }
         function fAnimate() {
             fireworkAnimId = requestAnimationFrame(fAnimate);
