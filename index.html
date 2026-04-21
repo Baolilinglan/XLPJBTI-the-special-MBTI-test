@@ -6,6 +6,9 @@
 <title>狼BTI - 你的血狼人格鉴定</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="questions.js"></script>
+
 <style>
     @media (pointer: fine) {
         * { cursor: none !important; }
@@ -334,13 +337,12 @@
 
 <div class="glass-panel" id="start-container">
     <h1 id="main-title">狼BTI</h1>
-    <div id="sub-title">看看你是什么种类的血狼破军观众</div>
+    <div id="sub-title">记录你在相关社区的行为特征</div>
     
-    <input type="text" id="user-id-input" class="hover-target" placeholder="输入你的代号 (选填)" maxlength="16" autocomplete="off">
+    <input type="text" id="user-id-input" class="hover-target" placeholder="输入识别代号 (选填)" maxlength="16" autocomplete="off">
 
     <div class="disclaimer-box">
-        免责声明：<br>
-        本应用“狼BTI”仅供娱乐。测试题目、选项及结局均为对特定亚文化圈层社区现象的夸张化再创作与戏仿。本测试不具备心理学参考价值，绝不代表您的真实性格或现实状态。所有情境均为虚构，不针对任何个人的现实攻击。请保持理智，勿将结果作为现实评价或引发争端的依据。网络并非法外之地，请遵守社区规范。点击开始即视为您已阅读并同意以纯属娱乐的心态体验。
+        免责声明：本应用“狼BTI”仅用于行为模式测定。测试题目、选项及结局是对特定社区现象的总结。本测试不具备心理学参考价值。请理性看待结果。
     </div>
 
     <span class="micro-en" style="margin-bottom: 20px;">SYSTEM INITIALIZATION COMPLETE</span>
@@ -392,7 +394,7 @@
             <div id="out-rarest"></div>
         </div>
         
-        <div class="share-info-row" id="out-path-insight" style="margin-top: 15px; font-size: 13.5px; font-style: italic; background: rgba(31, 30, 51, 0.05); padding: 12px; border-radius: 6px; border-left: 3px solid #d4af37;"></div>
+        <div class="share-info-row" id="out-path-insight" style="margin-top: 15px; font-size: 13.5px; background: rgba(31, 30, 51, 0.05); padding: 12px; border-radius: 6px; border-left: 3px solid #d4af37;"></div>
     </div>
 
     <div id="radar-container" class="hidden">
@@ -402,162 +404,28 @@
     <div id="result-desc"></div>
     
     <div class="qr-footer" id="qr-footer">
-        <div class="qr-text">长按保存或截图<br>扫描右侧二维码测试你的狼BTI</div>
+        <div class="qr-text">保存或截图记录结果<br>扫描右侧二维码测试你的狼BTI</div>
         <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://baolilinglan.github.io/XLPJBTI-the-special-MBTI-test/" crossorigin="anonymous" alt="QR Code">
     </div>
 
     <div class="screenshot-controls" id="screenshot-controls">
         <label><input type="checkbox" id="chk-dark-mode"> 深色模式</label>
         <label><input type="checkbox" id="chk-hide-radar"> 隐藏雷达</label>
-        <label><input type="checkbox" id="chk-hide-path"> 隐藏路径印记</label>
+        <label><input type="checkbox" id="chk-hide-path"> 隐藏路径记录</label>
     </div>
 
     <div class="action-group">
-        <button id="save-btn" class="hidden hover-target">导出成分报告</button>
-        <button id="restart-btn" class="hidden hover-target">重新答题</button>
+        <button id="save-btn" class="hidden hover-target">导出记录</button>
+        <button id="restart-btn" class="hidden hover-target">重新测定</button>
     </div>
 </div>
 
 <script>
-    const S_QD = { d1: 1, d2: 1, d3: 1, typeStr: "强度党" };
-    const S_LZ = { d1: 1, d2: 1, d3: -1, typeStr: "乐子人" };
-    const S_HD = { d1: 1, d2: -1, d3: 1, typeStr: "小红点厨" };
-    const S_LH = { d1: 1, d2: -1, d3: -1, typeStr: "狼黑" };
-    const S_JN = { d1: -1, d2: 1, d3: 1, typeStr: "军奴" };
-    const S_XM = { d1: -1, d2: 1, d3: -1, typeStr: "狼小妹单推" };
-    const S_LL = { d1: -1, d2: -1, d3: 1, typeStr: "龙狼CP" };
-    const S_MM = { d1: -1, d2: -1, d3: -1, typeStr: "萌萌人" };
-    const S_NONE = { d1: 0, d2: 0, d3: 0, typeStr: "无动于衷" };
-
-    const rawQuestions = [
-        { text: "推送一个血狼破军的视频时，你决定点击播放的潜意识诉求是：", options: [ { text: "收集最新的干员数值与机制测评，辅助我的游戏决策", effect: S_QD }, { text: "潜意识里在寻找那些能够引爆社区话题的“暴言”或片段", effect: S_LZ }, { text: "不太在意内容，单纯想看看他今天的直播状态和神态", effect: S_JN }, { text: "在脑海中将其代入某种二次元软妹或傲娇属性的形象", effect: S_XM }, { text: "顺手点开看一眼", effect: S_NONE }, { text: "试图用鼠标左键把屏幕里的他抠出来", effect: S_NONE } ] },
-        { text: "直播画面中突然出现他进食的环节，你内心的真实反应是：", options: [ { text: "饶有兴致地关注他吃了什么、吃相如何以及食量大小", effect: S_JN }, { text: "期待流程中断导致的弹幕躁动，觉得这种混乱很有趣", effect: S_LZ }, { text: "立刻意识到这是一个绝佳的截图素材，准备搬运到贴吧", effect: S_HD }, { text: "觉得太无聊了，不想看人吃饭，准备换台", effect: S_MM }, { text: "一边看一边吃自己的外卖", effect: S_NONE }, { text: "开始精确计算他牙齿咀嚼的频率", effect: S_NONE } ] },
-        { text: "看到龙哥哥、ve等其他主播在弹幕与他互动时，你的下意识举动是：", options: [ { text: "关注他们的对话逻辑，心里暗自建立甚至脑补CP配对", effect: S_LL }, { text: "试图用放大镜从中抠出他们关系不和或失言的字眼", effect: S_LH }, { text: "毫不关心，自动在视野里过滤掉这些不认识的人名", effect: S_MM }, { text: "跟着发些带节奏的弹幕起哄，让互动变得更具冲突性", effect: S_LZ }, { text: "单纯觉得主播间互动挺正常的", effect: S_NONE }, { text: "对着屏幕施放沉默法术禁止他们交流", effect: S_NONE } ] },
-        { text: "对于NGA或贴吧右上角的“小红点”提醒，你的感受是：", options: [ { text: "将其视为自己搬运血狼言论后获得的“战绩勋章”", effect: S_HD }, { text: "觉得这种社交反馈很烦，只关心帖子里有没有具体的数值干货", effect: S_QD }, { text: "看到自己挑起的争论有人互相攻击，会有一种愉悦感", effect: S_LZ }, { text: "基本不看消息提示，对社区内的争吵缺乏参与动机", effect: S_MM }, { text: "点开看看是谁回复我了", effect: S_NONE }, { text: "强迫症发作，想把屏幕上的红点当番茄酱舔掉", effect: S_NONE } ] },
-        { text: "当看到有人在深扒血狼的过往历史时，你的倾向是：", options: [ { text: "默默收藏这些帖子，当作以后证明他言论不当的对线资本", effect: S_LH }, { text: "剥去客观事实，把这些经历加工成某种悲惨或复杂的二创人设", effect: S_XM }, { text: "试图在时间线里寻找他和其他主播最初产生交集的痕迹", effect: S_LL }, { text: "乐于看到这种深扒贴把原本正常的社区搅得乌烟瘴气", effect: S_LZ }, { text: "看一眼觉得没意思就划走了", effect: S_NONE }, { text: "试图从历史记录里推导出下一期彩票号码", effect: S_NONE } ] },
-        { text: "你拉屎喜欢怎么拉？", options: [ { text: "站着拉", effect: S_NONE }, { text: "躺着拉", effect: S_NONE }, { text: "倒立拉", effect: S_NONE }, { text: "我要和血狼破军一样电表倒转着边拉边吃！", effect: S_NONE }, { text: "正常坐在马桶上拉", effect: S_NONE }, { text: "发射到外太空", effect: S_NONE } ] },
-        { text: "关于血狼做出的具体数据解析，你通常会：", options: [ { text: "认为这是比较有价值的参考依据，用来规划自己的抽卡资源", effect: S_QD }, { text: "觉得这些干巴巴的数据阻碍了我看他本人搞节目效果", effect: S_JN }, { text: "其实不太懂这些数据的具体获取渠道和严谨意义", effect: S_MM }, { text: "刻意截取一些偏激的数据面板，去别的群里引发争吵", effect: S_HD }, { text: "大致看懂就行，不会深究", effect: S_NONE }, { text: "把数据抄下来作为我破解银行密码的参考", effect: S_NONE } ] },
-        { text: "参与社区内的“杯级”（大杯超大杯）讨论时，你其实更在意：", options: [ { text: "评级标准是否严谨、能不能客观反映干员在当前环境的强度", effect: S_QD }, { text: "拿着这个评级结果去踩那些持有不同意见的玩家群体", effect: S_HD }, { text: "根本不关心什么杯不杯的，这种评价体系对我毫无意义", effect: S_MM }, { text: "利用这种充满争议的系统激化玩家间的非理性对立", effect: S_LZ }, { text: "随大众标准走，大家觉得强我就抽", effect: S_NONE }, { text: "想用超大杯去装一杯冰美式喝", effect: S_NONE } ] },
-        { text: "若讨论的话题突然从游戏转向了血狼的外貌或性格特征，你会：", options: [ { text: "津津有味地观察，觉得了解他本人的外在表现很有意思", effect: S_JN }, { text: "迅速将其与某位有交集的主播联系起来，脑补他们现实中的互动", effect: S_LL }, { text: "在心里把他转化为某种傲娇或女性化的属性词条进行自我满足", effect: S_XM }, { text: "觉得无聊，要求终止此类话题，希望赶紧回到数据计算的环节", effect: S_QD }, { text: "不参与讨论，就在旁边听听", effect: S_NONE }, { text: "试图论证他其实是由硅基生物构成的", effect: S_NONE } ] },
-        { text: "面对其他人员针对血狼发布的恶毒攻击言论，你的真实处理方式是：", options: [ { text: "内心暗爽，甚至觉得“终于有人替我骂出声了”", effect: S_LH }, { text: "截图保存，像病毒一样搬运到各个外部平台去扩散", effect: S_HD }, { text: "抱着看戏的心态，期待事情闹得越大越好，寻找情绪刺激", effect: S_LZ }, { text: "觉得这些无意义的谩骂很影响观看体验，选择无视或屏蔽", effect: S_MM }, { text: "觉得戾气太重，划走不看了", effect: S_NONE }, { text: "对这些言论进行押韵的Rap重新编曲", effect: S_NONE } ] },
-        { text: "直播进入枯燥的过干员列表环节，你会：", options: [ { text: "继续挂着，听着他的声音就觉得挺踏实，画面不重要", effect: S_JN }, { text: "脑海中幻想他此刻正在给另一个人私下进行解说", effect: S_LL }, { text: "觉得太无聊了，退出页面，这种环节不在我的关注范围内", effect: S_MM }, { text: "在弹幕发些逆天或带节奏的言论试图打破无聊的气氛", effect: S_LZ }, { text: "去倒杯水或者去个洗手间", effect: S_NONE }, { text: "对着干员列表开始背诵乘法口诀", effect: S_NONE } ] },
-        { text: "面对血狼自创的一些“黑话”或新术语，你的态度是：", options: [ { text: "试图从中解读出他与其他主播私下交流或默契的暗号", effect: S_LL }, { text: "完全不明白也不想明白这些梗的意思，缺乏认知背景", effect: S_MM }, { text: "觉得好玩，在弹幕里毫无意义地疯狂复读和刷屏", effect: S_LZ }, { text: "积极地把这些词带到外站使用，同化更多社区群体", effect: S_HD }, { text: "明白大概意思能交流就行", effect: S_NONE }, { text: "把这些黑话收录进我的新华字典里", effect: S_NONE } ] },
-        { text: "当面临对某一角色的强度拉踩环境，你的真实定位更像：", options: [ { text: "一名理性的数据分析师，只拿客观论据说话", effect: S_QD }, { text: "一名乐于拱火的看客，欣赏群体的非理性对立", effect: S_LZ }, { text: "一名勤劳的搬运工，把战火精准地引向其他社群", effect: S_HD }, { text: "一名拿着放大镜的纠错员，试图抓住主播的口误来反击", effect: S_LH }, { text: "一个普通的路人玩家，不参与节奏", effect: S_NONE }, { text: "一名卧底，专门在拉踩贴里推荐原神", effect: S_NONE } ] },
-        { text: "走在路上突然被外星人绑架，外星人要求你证明自己是地球人，你会：", options: [ { text: "给他们表演一段后空翻", effect: S_NONE }, { text: "掏出手机给他们看你刚抽到的当期UP干员", effect: S_NONE }, { text: "大喊“你什么冠军！”", effect: S_NONE }, { text: "试图和外星人讲道理并索要精神损失费", effect: S_NONE }, { text: "给他们看身份证", effect: S_NONE }, { text: "当场变异给外星人反向洗脑", effect: S_NONE } ] },
-        { text: "如果血狼的真实外貌和生活状态被全面公开，你最在乎的是：", options: [ { text: "他真实的样子和声音是否符合我一直以来的想象", effect: S_JN }, { text: "感觉滤镜碎了，失去了网络主播那层朦胧的虚拟美感", effect: S_XM }, { text: "他现实里的样子和我脑补的CP另一半到底搭不搭", effect: S_LL }, { text: "无所谓，外在形象长什么样都不影响他测出的DPS和强度", effect: S_QD }, { text: "单纯满足一下好奇心", effect: S_NONE }, { text: "想知道他到底有几只触手", effect: S_NONE } ] },
-        { text: "如果将社区对某次节奏的声讨比作一场法庭审判，所有人都在指责庭上的被告（如血狼），你的真实心态更接近：", options: [ { text: "抛开群体情绪，我只想验证他当时给出的干员数据到底对不对", effect: S_QD }, { text: "觉得这场审判本身就很荒谬且充满娱乐性，甚至想上前加一把火", effect: S_LZ }, { text: "对审判内容漠不关心，只觉得孤立无援的他有一种脆弱的破碎感", effect: S_JN }, { text: "默默关注人群中，是否有另一位关系密切的主播站出来为他发声", effect: S_LL }, { text: "不关我事，等审判结束了告诉我结论就行", effect: S_NONE }, { text: "冲上去把法官的锤子吃掉", effect: S_NONE } ] },
-        { text: "看着一个原本纯粹做攻略的主播逐渐卷入复杂的社区漩涡，就像魔法少女最终化身为魔女，你会认为：", options: [ { text: "这是流量时代不可避免的代价，只要还能产出有用的评测就行", effect: S_QD }, { text: "这种转变非常带感，为外部社区提供了极佳的话题素材", effect: S_HD }, { text: "更加激发了内心对他物理层面的保护欲，甚至觉得有些心疼", effect: S_JN }, { text: "猜测这种情绪崩溃的背后，是否受到了某个特定人物的深刻影响", effect: S_LL }, { text: "觉得很正常，互联网就是这样的", effect: S_NONE }, { text: "祈祷他变成魔女后掉落稀有素材", effect: S_NONE } ] },
-        { text: "你判断一次直播或视频“非常有价值”的标准是：", options: [ { text: "干员的客观强度得到了非常准确和深度的测定", effect: S_QD }, { text: "提供了大量可以搬运至外部平台的截图素材", effect: S_HD }, { text: "观看人数爆满，弹幕和评论区充满了高强度的攻击性对线", effect: S_LZ }, { text: "捕捉到了他可以与另一位特定主播进行关联的互动暗示", effect: S_LL }, { text: "内容刚好解答了我的游戏疑问", effect: S_NONE }, { text: "能检测出我显示器的坏点", effect: S_NONE } ] },
-        { text: "在审视血狼的社交圈子时，你的习惯是：", options: [ { text: "拿着显微镜发掘任何可能连结他与某人的特定线索进行解读", effect: S_LL }, { text: "不太具备观察的动机，觉得主播的私交跟自己没有任何关系", effect: S_MM }, { text: "只专注于血狼本人的行为，不想分心给其他无关的主播", effect: S_JN }, { text: "故意截取一些互动片段，去引起其他粉丝群体的反感和攻讦", effect: S_LH }, { text: "顺其自然，看到相关推荐就看一眼", effect: S_NONE }, { text: "计算他的社交圈形成黑洞需要多少质量", effect: S_NONE } ] },
-        { text: "你在相关视频下方留下评论的主要动机，通常是：", options: [ { text: "严谨地探讨某个干员技能的具体数值与机制表现", effect: S_QD }, { text: "作为特定言论的传递载体，单纯享受别人回复你的快感", effect: S_HD }, { text: "抒发对他本人的反感，输出持续的负面论断", effect: S_LH }, { text: "试图在两种不同意见之间火上浇油，催化摩擦", effect: S_LZ }, { text: "正常表达自己的观点或提出疑问", effect: S_NONE }, { text: "为了输入神秘代码召唤古神", effect: S_NONE } ] },
-        { text: "如果你女朋友或男朋友和血狼破军同时掉进水里，你会：", options: [ { text: "先救血狼破军", effect: S_NONE }, { text: "把水抽干", effect: S_NONE }, { text: "我也跳下去洗个澡", effect: S_NONE }, { text: "在岸边开直播录屏获取流量", effect: S_NONE }, { text: "废话当然是先救我对象", effect: S_NONE }, { text: "变成潜艇把他们全撞飞", effect: S_NONE } ] },
-        { text: "假设社区阵营就像《三国演义》中的诸侯割据，当血狼遭遇其他UP主联手“讨伐”时，你会：", options: [ { text: "理智评估双方给出的数据论据，只站在逻辑更严密的一方", effect: S_QD }, { text: "觉得这种戏码非常精彩，到处搬运战况", effect: S_HD }, { text: "无论如何都坚定地支持他，将其视为一种悲壮的个人英雄主义", effect: S_JN }, { text: "幻想敌对阵营中存在他的“旧识”，脑补阵前交锋时的内心戏", effect: S_LL }, { text: "默默吃瓜，两不相帮", effect: S_NONE }, { text: "骑着赤兔马冲进去给他们一人一戟", effect: S_NONE } ] },
-        { text: "在某次数据结论明显逆风的情况下，血狼依然坚称自己是对的，如同大开城门唱“空城计”，你的反应是：", options: [ { text: "仔细复盘他的算法，试图找出他如此自信的底层机制逻辑", effect: S_QD }, { text: "认为他只是在硬撑面子，立刻截图发到论坛供大家嘲笑", effect: S_HD }, { text: "被他这种顶住巨大压力的固执所吸引，觉得意外的带感", effect: S_XM }, { text: "猜测是不是有人在背后给他兜底，或者在向某个人隔空置气", effect: S_LL }, { text: "等实战结果出来再下结论", effect: S_NONE }, { text: "搬个小板凳坐在城门口听他唱歌", effect: S_NONE } ] },
-        { text: "当某个模组或干员更新时，你的第一反应通常是：", options: [ { text: "理性分析机制变动对当前环境强度排行的实际影响", effect: S_QD }, { text: "立刻把这个充满争议的话题抛到论坛里看别人吵架", effect: S_LZ }, { text: "根本不在乎更新了什么内容，我只按照自己的习惯玩", effect: S_MM }, { text: "抱怨为什么要出这种东西，从一开始就带着否定的态度", effect: S_LH }, { text: "看看立绘好不好看，决定抽不抽", effect: S_NONE }, { text: "把手机放进微波炉里加速更新", effect: S_NONE } ] },
-        { text: "关于将血狼与其他主播/人物进行捆绑（如组CP或连体带节奏）的行为，你认为：", options: [ { text: "这恰恰是我每天关注他直播和相关切片的核心动力", effect: S_LL }, { text: "这种行为纯粹是在干扰对客观游戏数据的严谨研究", effect: S_QD }, { text: "只要这种捆绑能够导致论坛里产生大规模的争吵就行", effect: S_LZ }, { text: "毫不关心，这种复杂的社交八卦和我完全绝缘", effect: S_MM }, { text: "不太关心，但如果有趣偶尔看看", effect: S_NONE }, { text: "试图用胶带在物理层面上把他们捆在一起", effect: S_NONE } ] },
-        { text: "评价血狼日常进行强度讨论的行为，你内心的真实反应是：", options: [ { text: "对他那种不怕得罪人的锐气抱有一种单纯的欣赏", effect: S_JN }, { text: "仅仅以此来佐证和强化我自己对游戏机制的理解", effect: S_QD }, { text: "截图发至外部群组，逢人便宣扬其缺乏专业态度", effect: S_LH }, { text: "看过就忘了，不会产生什么特别有效的情绪反馈", effect: S_MM }, { text: "作为正常的参考资料对待", effect: S_NONE }, { text: "把他的讨论频率转化成交流电发电", effect: S_NONE } ] },
-        { text: "对于给特定干员起侮辱性或极端绰号的现象，你：", options: [ { text: "只要能精准踩中社区的痛点，我很乐意将其带到各大论坛", effect: S_HD }, { text: "热衷于用这些绰号去不同玩家群体间挑起激烈的对立", effect: S_LZ }, { text: "压根不在乎这些称谓的具体含义，无论其是否合适", effect: S_MM }, { text: "试图分析这个带有情绪的绰号和其他角色之间有没有微妙的关联", effect: S_LL }, { text: "觉得这种风气不太好，自己不用", effect: S_NONE }, { text: "我也要给自己起一个叫“狂拽酷炫龙”的绰号", effect: S_NONE } ] },
-        { text: "走在路上，地上有一张一百块钱和一张血狼破军的签名照，你会：", options: [ { text: "捡签名照", effect: S_NONE }, { text: "把签名照卖了一百块钱", effect: S_NONE }, { text: "都不捡", effect: S_NONE }, { text: "把一百块钱撕了", effect: S_NONE }, { text: "捡一百块钱", effect: S_NONE }, { text: "把一百块钱和照片合成一张卡吃掉", effect: S_NONE } ] },
-        { text: "假如类似决裂那种充满遗憾的戏码，真实发生在血狼和龙哥哥（或其他曾密切互动的主播）身上，你会：", options: [ { text: "觉得无所谓，只要他们还能各自出视频测干员强度就行", effect: S_QD }, { text: "察觉到这是极佳的八卦，立刻开始收集两人决裂的蛛丝马迹四处散播", effect: S_HD }, { text: "完全代入血狼的视角，体会他被抛弃或主动割舍的物理孤独感", effect: S_JN }, { text: "将这种破碎感视为最顶级的代餐，反复咀嚼他们曾经的互动录像", effect: S_LL }, { text: "觉得主播分分合合很正常", effect: S_NONE }, { text: "当场组建一支重金属乐队演奏悲伤的曲子", effect: S_NONE } ] },
-        { text: "如果在直播中他突然触及了某个极度敏感的禁忌话题，你会：", options: [ { text: "理性分析这个禁忌话题背后的游戏机制是否真的存在严重缺陷", effect: S_QD }, { text: "狂喜，意识到马上就会有大节奏，立刻开启录屏准备搬运", effect: S_HD }, { text: "替他捏一把汗，希望他能赶紧转移话题，保护好自己的直播间", effect: S_JN }, { text: "脑补这是他为了某个特定的人或过去，故意做出的情绪化反叛之举", effect: S_XM }, { text: "觉得苗头不对，提前退出直播间", effect: S_NONE }, { text: "开始大声朗读《相对论》试图掩盖声音", effect: S_NONE } ] },
-        { text: "观看他直播的时间里，你绝大多数精力其实消耗在：", options: [ { text: "观察他的表情变化、语气停顿等真实存在的物理特征", effect: S_JN }, { text: "像雷达一样搜寻所有可能成为“黑料”或负面物料的片段", effect: S_LH }, { text: "紧盯屏幕上的技能倍率和数值推演过程，评估其合理性", effect: S_QD }, { text: "把他的形象在脑海中替换为某种虚构的、具有特殊属性的形象", effect: S_XM }, { text: "偶尔瞟两眼屏幕，主要在听声音", effect: S_NONE }, { text: "计算屏幕上像素点变动的速率", effect: S_NONE } ] },
-        { text: "面对血狼给出的具体数据论证，你内心的真实态度是：", options: [ { text: "认为这是比较有价值的参考依据，会用来辅助自己的游戏决策", effect: S_QD }, { text: "觉得数据的对错不重要，重要的是它能引发社区里有趣的争议讨论", effect: S_LZ }, { text: "其实对数据本身不太敏感，注意力更多在看他讲解时的语气和状态", effect: S_JN }, { text: "习惯性地想透过这些干巴巴的数据，去寻找他和其他UP主默契的影子", effect: S_LL }, { text: "参考一下，但不全信", effect: S_NONE }, { text: "试图将这些数据翻译成火星文", effect: S_NONE } ] },
-        { text: "如果你认为血狼镜头前的暴躁只是一层“面具”，你关注的真实动机是：", options: [ { text: "不在乎面具与否，面具下产出的强度结论依然具有实际指导意义", effect: S_QD }, { text: "试图戳破这层面具，揭露他刻意制造矛盾以获取流量的负面本质", effect: S_LH }, { text: "渴望越过面具，触碰他私下里可能存在的疲惫、温和或性格反差", effect: S_JN }, { text: "坚信只有特定的人才能看到他摘下面具的样子，并沉迷于这种专属感", effect: S_LL }, { text: "随便看看，不关心他私下里是个怎样的人", effect: S_NONE }, { text: "冲上去把面具撕下来套在自己头上", effect: S_NONE } ] },
-        { text: "假设舆论走向就像是一出被操控的木偶剧，当你发现他的言论正在引导粉丝进行攻击时，你会：", options: [ { text: "脱离这种群体情绪，自己去实战中测试以获取客观结论", effect: S_QD }, { text: "甘愿成为推波助澜的“木偶”，在不同的平台复制这些言论获取热度", effect: S_HD }, { text: "把他视作舞台中央绝对的焦点，盲目但心甘情愿地给予支持", effect: S_JN }, { text: "将视角拉高，想象他与另一位幕后掌控者在棋盘两端的隐秘博弈", effect: S_LL }, { text: "保持中立，不参与任何攻击行为", effect: S_NONE }, { text: "掏出一把剪刀把木偶的线全剪断", effect: S_NONE } ] },
-        { text: "面对外部各大论坛针对他的长篇负面评价，你会：", options: [ { text: "耐心地看完，以此来完善和对比自己对游戏机制的认知", effect: S_QD }, { text: "兴奋地将其作为素材，搬运到更多平台去赚取眼球和回复", effect: S_HD }, { text: "躲在屏幕后，饶有兴致地观察这篇负面评价引发的社区动荡", effect: S_LZ }, { text: "根本不看这些乌烟瘴气的帖子，缺乏接触此类评价的路径", effect: S_MM }, { text: "当乐子看，看完就滑走", effect: S_NONE }, { text: "把长篇负面评价打印出来当墙纸贴", effect: S_NONE } ] },
-        { text: "如果明天就是世界末日，你今晚会做什么？", options: [ { text: "疯狂吃顿好的", effect: S_NONE }, { text: "看血狼破军最后一次直播", effect: S_NONE }, { text: "去贴吧发最后一个引战帖", effect: S_NONE }, { text: "把所有干员精二", effect: S_NONE }, { text: "和家人在一起度过最后的时光", effect: S_NONE }, { text: "冲到大街上和红绿灯接吻", effect: S_NONE } ] },
-        { text: "当社区内爆发关于强度的激烈冲突时，你参与的方式往往是：", options: [ { text: "根本不在乎对错，只想把水搅浑让两边打得更凶", effect: S_LZ }, { text: "化身无情的复读机，将特定的暴论复制粘贴到各个角落", effect: S_HD }, { text: "通过精准地抛出早年黑料，试图主导冲突的负面走向", effect: S_LH }, { text: "默默关闭页面，当做什么都没发生，完全隔离于冲突之外", effect: S_MM }, { text: "偶尔回两句理性客观的话", effect: S_NONE }, { text: "搬运成吨的沙子试图把冲突掩埋", effect: S_NONE } ] },
-        { text: "如果必须用一句话总结你持续关注这个圈子的原因，你会选择：", options: [ { text: "这里能提供相对硬核的机制分析和对干员强度的无情解构", effect: S_QD }, { text: "我就是喜欢看一群人为了几段数据在网上争得面红耳赤", effect: S_LZ }, { text: "不断搬运信息能让我获得一种身处社交漩涡中心的充实感", effect: S_HD }, { text: "即使带着长期的负面审视，我也无法否认内心的某种执念", effect: S_LH }, { text: "就是当个电子盆栽随便看看打发时间", effect: S_NONE }, { text: "为了在这个圈子里找到失散多年的外星表哥", effect: S_NONE } ] },
-        { text: "看到有新人玩家在弹幕里认真提问一个基础游戏机制，而当时正在进行高强度的对线，你会：", options: [ { text: "觉得这很破坏对线氛围，无视甚至试图转移这个不合时宜的提问", effect: S_LL }, { text: "在心里把新人的茫然和主播的暴躁对比，脑补出一场柔弱对抗强硬的戏码", effect: S_XM }, { text: "迅速截图这个充满违和感的画面，发到论坛里嘲笑", effect: S_LH }, { text: "在一旁静静看着，觉得主播就算在对线中偶尔的回应也很吸引人", effect: S_JN }, { text: "看心情随便回复解答一下新人", effect: S_NONE }, { text: "告诉新人卸载游戏才能变强", effect: S_NONE } ] },
-        { text: "最终，当你关闭直播或视频的网页时，你带走的是：", options: [ { text: "对当前版本干员抽取优先级的清晰规划", effect: S_QD }, { text: "又一场足以让社区混乱好几天的谈资", effect: S_LZ }, { text: "右上角未读消息即将突破99+的期待", effect: S_HD }, { text: "一段可以用来在脑内反复加工和回味的CP互动切片", effect: S_LL }, { text: "普通的观看体验", effect: S_NONE }, { text: "我把电脑主机一起带走了", effect: S_NONE } ] },
-        { text: "如果血狼破军去参加《歌手》，你认为他会唱什么？", options: [ { text: "《小红点之歌》", effect: S_NONE }, { text: "《超大杯进行曲》", effect: S_NONE }, { text: "上去报一段干员DPS菜名", effect: S_NONE }, { text: "在台上表演两分钟吃汉堡", effect: S_NONE }, { text: "唱一首普通的流行歌", effect: S_NONE }, { text: "用腹语模拟干员部署的音效震碎玻璃", effect: S_NONE } ] },
-        { text: "假设你可以拥有一项超能力，你希望是：", options: [ { text: "看一眼就知道干员DPS", effect: S_NONE }, { text: "让任何人在论坛里只能发问号", effect: S_NONE }, { text: "变成龙哥哥", effect: S_NONE }, { text: "把世界变成明日方舟服务器", effect: S_NONE }, { text: "瞬间移动", effect: S_NONE }, { text: "能让全世界的人同时打一个喷嚏", effect: S_NONE } ] },
-        { text: "当血狼在直播中抽卡疯狂沉船，却依然嘴硬说出“会赢的”时，你的反应是：", options: [ { text: "利用概率学计算他沉船的方差，并在弹幕里指出期望值", effect: S_QD }, { text: "火速截图配上2.5条悟的表情包，发到各大论坛进行嘲笑", effect: S_HD }, { text: "看着他嘴硬却无可奈何的样子，心里觉得有一丝微妙的可爱", effect: S_XM }, { text: "这种烂大街的梗已经引不起我的兴趣，甚至觉得他在拖延时长", effect: S_LH }, { text: "同情一下他的运气，然后继续看", effect: S_NONE }, { text: "尝试使用反转术式帮他把合成玉恢复原状", effect: S_NONE } ] },
-        { text: "“连一刻都没有为XX的退环境哀悼，立刻赶赴战场的是……”你认为这句话最适合用在：", options: [ { text: "旧干员被新机制完全上位替代的残酷迭代时刻", effect: S_QD }, { text: "为了争夺社区话语权，迫不及待拉踩新干员的魔怔人身上", effect: S_LZ }, { text: "主播因为某一言论被炎上后，依然面不改色继续开播的场景", effect: S_JN }, { text: "在弹幕里找茬，准备随时挑起下一场骂战的黑子", effect: S_LH }, { text: "只是一句单纯的二次元调侃罢了", effect: S_NONE }, { text: "我立刻赶赴厨房下了一碗鸡蛋面", effect: S_NONE } ] },
-        { text: "如果把血狼的直播间比作一种“领域展开”，你觉得这会是什么领域？", options: [ { text: "「无量空处」——海量且密集的机制数据瞬间灌入你的大脑", effect: S_QD }, { text: "「伏魔御厨子」——无差别的拉踩斩击将所有节奏粉碎", effect: S_LZ }, { text: "「嵌合暗翳庭」——里面全是与其他UP主纠缠不清的影子", effect: S_LL }, { text: "「自闭圆顿裹」——无论外界怎么骂，他在里面依然我行我素", effect: S_LH }, { text: "就是个普通的直播间，哪有什么领域", effect: S_NONE }, { text: "「无尽汉堡制」——到处都是吃不完的快餐包装袋", effect: S_NONE } ] },
-        { text: "“魔虚罗的适应能力”如果在明日方舟的社区节奏中体现，你认为是：", options: [ { text: "随着版本更迭，玩家对数值膨胀和高难强度的阈值越来越高", effect: S_QD }, { text: "黑子们无论怎么被澄清，总能找到新的刁钻角度继续攻击他", effect: S_LH }, { text: "他无论遭受多大的舆论风暴，第二天依然能正常开启直播", effect: S_JN }, { text: "通过不断抛出新暴论，让社区逐渐适应并开始随之起舞", effect: S_LZ }, { text: "梗而已，不太关心背后的节奏", effect: S_NONE }, { text: "他头顶的法轮转了八圈后变成了一个方向盘", effect: S_NONE } ] },
-        { text: "被冠以“纯爱战神”之名，你觉得在主播的生态圈里，这指的是：", options: [ { text: "无论版本怎么变，始终坚持用数据为自己喜欢的干员正名", effect: S_QD }, { text: "在所有人都背叛他时，依然无条件站在他这边的忠诚粉丝", effect: S_JN }, { text: "只磕他和一个特定UP主的CP，绝不允许任何人拆逆", effect: S_LL }, { text: "每天高强度在各大论坛搜索他的黑料，由恨生爱的极致扭曲", effect: S_LH }, { text: "大概是个为了真爱干员倾家荡产的人吧", effect: S_NONE }, { text: "召唤出特级过怨咒灵去帮他打肉鸽", effect: S_NONE } ] },
-        { text: "如果血狼突然在直播时怒吼“我不做人了！”，你认为他接下来会：", options: [ { text: "宣布彻底放弃常态弱势干员，加入唯强度论的轮椅党", effect: S_QD }, { text: "彻底疯狂，开始无差别锐评甚至攻击其他同行UP主", effect: S_LH }, { text: "仅仅是觉得他在搞节目效果，看着他发癫感到很开心", effect: S_LZ }, { text: "期待他这句暴言立刻在贴吧引发百楼对骂的盛况", effect: S_HD }, { text: "以为他在玩什么新游戏或者读台词", effect: S_NONE }, { text: "戴上石鬼面变成吸血鬼然后被太阳晒成灰", effect: S_NONE } ] },
-        { text: "“替身使者是会互相吸引的”，当你发现在看血狼直播时，弹幕里总是出现某几个人，你会想：", options: [ { text: "他们一定是某个隐秘小团体，专门来带节奏和钓鱼的", effect: S_LH }, { text: "脑补他和这些熟面孔之间是否存在不为人知的羁绊", effect: S_LL }, { text: "将这些人视为可以一起搬运爆典、互刷经验的同好", effect: S_HD }, { text: "根本不关心弹幕里有谁，我只是来看他测新干员的", effect: S_MM }, { text: "看久了自然大家就眼熟了", effect: S_NONE }, { text: "我的替身『白金之星』告诉我这都是幻觉", effect: S_NONE } ] },
-        { text: "“砸瓦鲁多（时间停止）！”如果在看攻略视频时你能暂停时间五秒，你会：", options: [ { text: "仔细抄下那一帧里复杂的技能倍率和敌方抗性公式", effect: S_QD }, { text: "截取他表情最扭曲的一帧，做成表情包准备全网发布", effect: S_HD }, { text: "凑近屏幕仔细观察他那一刻的眼神和嘴角，试图读懂什么", effect: S_JN }, { text: "冲进弹幕后台，把所有人发的引战言论全删了或者全点赞", effect: S_LZ }, { text: "去倒杯水，省得错过直播内容", effect: S_NONE }, { text: "搬一台压路机砸在电脑屏幕上", effect: S_NONE } ] },
-        { text: "在这个充满戾气与拉踩的社区环境中，你理解的“黄金精神”是：", options: [ { text: "无论被怎么嘲讽，依然坚持用严谨的数值证明自己观点的正确", effect: S_QD }, { text: "在所有人都跟风黑他的时候，依然在角落里为他进行赛博祈祷", effect: S_JN }, { text: "不畏惧任何网暴，坚持把最真实的战况和节奏传递到每个板块", effect: S_HD }, { text: "保持理智，绝对不参与任何形式的党同伐异和人身攻击", effect: S_MM }, { text: "玩个游戏而已，开心最重要", effect: S_NONE }, { text: "喝下一杯黄色的阿帕茶", effect: S_NONE } ] },
-        { text: "“哦？你不仅没有逃跑，反而主动接近我？”这句话最适合描述哪种场景：", options: [ { text: "某UP主不仅没有避开节奏，反而正面发动态硬刚血狼的观点", effect: S_LZ }, { text: "新出的下位干员机制竟然完美契合他的某种极端打法", effect: S_QD }, { text: "黑子被封号后，立刻换了三个小号继续在他直播间刷屏", effect: S_LH }, { text: "曾经有矛盾的另一位主播突然在直播中提到了他的名字", effect: S_LL }, { text: "单纯的弹幕互动玩笑", effect: S_NONE }, { text: "因为我的替身距离太短，必须靠近才能打他", effect: S_NONE } ] },
-        { text: "当你觉得某次社区大节奏如同“大静谧”般让整个论坛死气沉沉时，你是哪种状态：", options: [ { text: "不受影响，独自在游戏中测试冷门干员的DPS上限", effect: S_QD }, { text: "四处点火试图打破宁静，觉得没有争吵的社区毫无乐趣", effect: S_LZ }, { text: "在寂静中更深刻地凝视着他，感受到一种诡异的孤独美", effect: S_JN }, { text: "对节奏毫无感知，只是奇怪今天怎么没人发帖了", effect: S_MM }, { text: "正好下线休息几天不看论坛", effect: S_NONE }, { text: "我在海底和伊莎玛拉一起唱起了歌", effect: S_NONE } ] },
-        { text: "如果看血狼的视频会增加“源石病感染程度”，你认为病理表现是：", options: [ { text: "张口闭口就是“大杯”、“超大杯”，彻底丧失正常评价能力", effect: S_LZ }, { text: "看到新干员第一反应不是立绘，而是下意识计算常态秒伤", effect: S_QD }, { text: "只要一天听不到他骂人或发飙，浑身就像有虫子在爬", effect: S_JN }, { text: "开始无法控制地在脑海里把他和不同的男主播写成同人小说", effect: S_LL }, { text: "有点审美疲劳，需要换个频道", effect: S_NONE }, { text: "体表长出了黑色的源石结晶并获得了法术能力", effect: S_NONE } ] },
-        { text: "关于“危机合约登顶”，在你的视角里，这种荣誉意味着：", options: [ { text: "最高含金量的实力证明，其总结的数据必须被奉为圭臬", effect: S_QD }, { text: "用来拉踩那些低保玩家和其他不硬核UP主的终极武器", effect: S_HD }, { text: "一种虚荣的狂欢，除了能让某群人跳脚之外毫无意义", effect: S_LZ }, { text: "太遥远了，我只是个抄作业的萌新，登顶跟我有什么关系", effect: S_MM }, { text: "大佬们辛苦了，点个赞", effect: S_NONE }, { text: "站在危机合约的楼顶上大喊我是世界之王", effect: S_NONE } ] },
-        { text: "肉鸽模式（集成战略）抓牌天崩，主播在屏幕前气得砸桌子，你会：", options: [ { text: "复盘他的抓牌思路，指出他在第二层做出的错误概率决策", effect: S_QD }, { text: "哈哈大笑，就爱看他破防无能狂怒的样子，赶紧录屏", effect: S_LZ }, { text: "默默截图他砸桌子的瞬间，发到黑帖里说他情绪管理有问题", effect: S_LH }, { text: "看着他生气的表情，在心里给他加上了一对炸毛的兽耳", effect: S_XM }, { text: "谁玩肉鸽都有脸黑的时候，理解", effect: S_NONE }, { text: "隔着屏幕把我的藏品扔给他", effect: S_NONE } ] },
-        { text: "需要建造自动化流水线。如果你让他来帮你规划，你觉得他会：", options: [ { text: "为了追求0.01%的最高效率，把你原本好看的基地拆得稀巴烂", effect: S_QD }, { text: "在规划过程中不停抱怨你的智商，并在直播里公开处刑你的布局", effect: S_LH }, { text: "你根本不在乎流水线造得怎么样，只是一直盯着他指导你的侧脸", effect: S_JN }, { text: "他绝对会故意留下几个死胡同，就为了看你产能崩溃时的乐子", effect: S_LZ }, { text: "应该会给个中规中矩的方案吧", effect: S_NONE }, { text: "把流水线建成了一个巨大的汉堡制造机", effect: S_NONE } ] },
-        { text: "看到新出的看板娘或女主角，你的第一反应是：", options: [ { text: "这角色的平A倍率和技能机制在实战中会有多大改变？", effect: S_QD }, { text: "立刻寻找把角色和血狼主播形象进行捆绑恶搞的素材", effect: S_HD }, { text: "将她的剧情与其他相关UP主的锐评剪辑在一起挑起端倪", effect: S_LL }, { text: "长得挺好看的，不知道这游戏什么时候公测", effect: S_MM }, { text: "是个可爱的兽耳娘", effect: S_NONE }, { text: "试图用鼠标把她衣服上的拉链拉下来", effect: S_NONE } ] },
-        { text: "“这一切都是命运石之门的选择。”当他预言某个干员会退环境，结果真的应验时，你会：", options: [ { text: "叹服他对数值模型的精准把握，将其作为指导后续抽卡的圣经", effect: S_QD }, { text: "带着他的预言截图，去当年反驳他的帖子里狠狠地“挖坟打脸”", effect: S_HD }, { text: "觉得不过是瞎猫碰上死耗子，心里依然在寻找他翻车的下一次机会", effect: S_LH }, { text: "根本不记得他预言过什么，只觉得现在游戏环境变化太快", effect: S_MM }, { text: "运气好猜中了吧，游戏理解还行", effect: S_NONE }, { text: "掏出手机给过去的自己发一封D-mail", effect: S_NONE } ] },
-        { text: "作为这场社区狂欢的“观测者”，你的定位更接近：", options: [ { text: "冷静记录每一次干员机制变动带来的环境坍缩与数据变化", effect: S_QD }, { text: "高高在上地看着粉丝和黑子互相攻击，享受这种俯视的愉悦", effect: S_LZ }, { text: "无论世界线怎么变动，你眼中的焦点永远只有他和他的CP对象", effect: S_LL }, { text: "被各种繁杂的信息裹挟，其实根本不知道发生了什么", effect: S_MM }, { text: "就是个看客，看完热闹该干嘛干嘛", effect: S_NONE }, { text: "戴着锡箔帽防止机关读取我的思维", effect: S_NONE } ] },
-        { text: "“微波炉香蕉”——如果某次节奏像胶化香蕉一样恶心且变形，你会：", options: [ { text: "彻底无视这团烂摊子，回到自己的世界继续计算干员DPS", effect: S_QD }, { text: "觉得这团恶心的东西刚好可以用来扔向那些我不喜欢的群体", effect: S_HD }, { text: "虽然恶心，但还是忍不住看他在这场节奏中会有怎样破碎的反应", effect: S_JN }, { text: "四处打听这团节奏最开始是因为谁引发的，希望能找到新的攻击目标", effect: S_LH }, { text: "觉得太恶心了，暂时退出相关论坛", effect: S_NONE }, { text: "把胶化香蕉吃下去试图获取时间跳跃的能力", effect: S_NONE } ] },
-        { text: "“欺骗世界吧！”如果你有机会伪造一张血狼的言论截图，你会伪造：", options: [ { text: "一张他承认某位数据UP主计算得比他更准确的低头截图", effect: S_LH }, { text: "一张能够瞬间引爆多个干员厨群体互撕的究极暴论截图", effect: S_LZ }, { text: "一张他在深夜向某位早已不再联系的UP主表达想念的暧昧截图", effect: S_LL }, { text: "一张他把之前踩到脚底的干员重新评为“超大杯”的节奏截图", effect: S_HD }, { text: "我没事伪造这种东西干嘛，吃饱了撑的", effect: S_NONE }, { text: "伪造他宣布自己其实是外星驻地球大使的声明", effect: S_NONE } ] },
-        { text: "“你什么冠军”这句梗在社区中被用来嘲讽时，你会：", options: [ { text: "用实打实的通关记录和极限压人帧数去狠狠地反击这种嘲讽", effect: S_QD }, { text: "跟风把这句梗刷到每一个试图进行客观讨论的楼层里，彻底破坏讨论", effect: S_LZ }, { text: "把这句话印在脑子里，下次他失误的时候原封不动地嘲讽回去", effect: S_LH }, { text: "根本不懂这个梗的意思，只觉得现在的网络流行语莫名有其妙", effect: S_MM }, { text: "当成普通的网络段子看，不当真", effect: S_NONE }, { text: "大喊我是吃热狗大赛街道组季军", effect: S_NONE } ] },
-        { text: "提起“罗德岛德狗分岛”，你的第一反应是联想到：", options: [ { text: "特定干员在极端厨力加持下，能够开发出的极限机制与通关上限", effect: S_QD }, { text: "借着厨力的名义，去疯狂拉踩其他同模板干员的极佳节奏引爆点", effect: S_LZ }, { text: "一种深情的执念，正如我对他那种近乎病态的、不求回报的关注", effect: S_JN }, { text: "谁是德狗？这又是什么新出的黑话？这个游戏好复杂", effect: S_MM }, { text: "就是某个UP主的专属群或粉丝代称吧", effect: S_NONE }, { text: "德克萨斯州漂移到了罗德岛上", effect: S_NONE } ] },
-        { text: "“无限剑制/剑雨”如果被用在社区对线的语境里，你认为是：", options: [ { text: "用密集的数据图表和公式推导，将对手的观点彻底击碎", effect: S_QD }, { text: "无数个小号同时在贴吧发帖带节奏，形成遮天蔽日的拉踩剑雨", effect: S_HD }, { text: "将他过往所有的爆典截图做成动图，像雨点一样砸向他的粉丝", effect: S_LH }, { text: "将这些冰冷的攻击幻想成漫天花瓣，只为衬托他此刻的悲剧美", effect: S_XM }, { text: "单纯的游戏技能梗被滥用了而已", effect: S_NONE }, { text: "我在天空召唤了无数把剑然后它们变成了咸鱼", effect: S_NONE } ] },
-        { text: "如果你走在路上，突然从天而降一个装满合成玉的保险箱砸中了他，你会：", options: [ { text: "立刻计算合成玉的体积和下落速度，推导保险箱的冲击力", effect: S_QD }, { text: "在旁边开香槟，觉得这是天道轮回的节目效果", effect: S_LZ }, { text: "尖叫着冲上去，试图用自己的身体替他挡住二次伤害", effect: S_JN }, { text: "冷漠地路过，觉得这是他做毒攻略应得的报应", effect: S_LH }, { text: "赶紧打120叫救护车并报警", effect: S_NONE }, { text: "抱着保险箱开始在街上跳霹雳舞", effect: S_NONE } ] }
-    ];
-
-    rawQuestions.forEach((q, index) => {
-        q.options.push({ text: "我都不想选", effect: S_NONE });
-        const text = q.text;
-        if (/(数据|数值|强度|杯|机制|DPS|计算|模组|干员|实战|测评|登顶|合约|退环境|打法)/.test(text)) {
-            q.category = 'strength'; 
-        } else if (/(情绪|外貌|CP|龙哥哥|互动|声音|心疼|脑补|幻想|傲娇|真实|羁绊|纯爱|相貌|面具)/.test(text)) {
-            q.category = 'emotion'; 
-        } else {
-            q.category = 'community'; 
-        }
-    });
-
-    const outcomes = {
-        "positive_positive_positive": { 
-            title: "强度党", 
-            desc: "你关注血狼破军只是单纯的为了了解干员强度，然后考虑要不要跳过池子或者对干员开始拉踩，无论如何，你乐在其中。\n\n你是绝对的功利主义者，看视频只跳到最后看结论。只要他敢说一句“中杯”，你就敢拿着截图去贴吧大战三百回合；只要他说一句“必抽”，你立马盘算手里的合成玉。你把他的话当成抽卡圣旨和PVP的弹药库，干员在你眼里不是角色，而是一组组冰冷的DPS数据和你在赛博空间跟人对喷的资本。",
-            danger: "⚠️⚠️"
-        },
-        "positive_positive_negative": { 
-            title: "混沌乐子人", 
-            desc: "无聊，你只是想看到所有人都在网上吵起来，血流成河。\n\n你就是互联网上最纯粹的反派。血狼破军？他只是你用来点燃赛博火药桶的一根火柴罢了。你最喜欢看粉丝和黑子在评论区撕得不可开交，看强度党和XP党打得头破血流。你站在高处，一边吃瓜一边煽风点火，唯恐天下不乱。哪里有战火，哪里就有你的身影，你就是混乱的化身，到处拉屎的毒瘤！",
-            danger: "⚠️⚠️⚠️⚠️⚠️"
-        },
-        "positive_negative_positive": { 
-            title: "小红点厨", 
-            desc: "你单纯喜欢搬运血狼破军的言论到其他论坛，有人叫你狼孝子，有人叫你传话太监，只有你知道你只是对小红点爱得深沉。\n\n你每天像个勤劳的工蜂一样穿梭在B站、贴吧和NGA之间。血狼刚叹了口气，你已经把“血狼对新干员绝望了”发到了各大版块。被人骂又怎样？被封号又怎样？只要看到右上角那个象征着消息回复的红色数字亮起“99+”，你的多巴胺就会疯狂分泌。你不在乎血狼，你只在乎流量，你就是互联网信息搬运界的神。",
-            danger: "⚠️⚠️⚠️⚠️"
-        },
-        "positive_negative_negative": { 
-            title: "狼黑", 
-            desc: "你单纯的讨厌血狼破军，但是却知道血狼破军的每一个黑料，他的每一场直播你都看，他的每一次爆典你都迫不及待地搬运到其他地方给别人看，或许你比所有人都真的更爱血狼破军。\n\n你嘴上骂得比谁都脏，心里却把他装得比谁都满。你美其名曰“收集反面教材”，实则连他三年前直播打了个喷嚏你都记得清清楚楚。你比任何一个粉丝都准时蹲守在直播间，生怕漏掉他哪怕一秒钟的黑历史。你这种由恨生爱的扭曲情感，简直是饭圈虐恋的最高境界，承认吧，你就是他最大的真爱粉。",
-            danger: "⚠️⚠️⚠️⚠️⚠️"
-        },
-        "negative_positive_positive": { 
-            title: "军奴", 
-            desc: "你只是单纯喜欢血狼破军的肉体，喜欢他的声音，性格，还有大胃袋，其实你或许没有那么关注明日方舟的干员强度，你只是喜欢看血狼破军。\n\n每当他开播，你的关注点永远不在什么DPS计算和法术抗性上，你只在乎他今天吃了几个汉堡，喝了多少可乐。哪怕他在屏幕前发呆打嗝，你都能在屏幕后疯狂截屏。你对他的爱超越了泰拉大陆的任何一个干员，你不是来玩游戏的，你是来赛博追星的，纯度极高的老缠粉说的就是你。",
-            danger: "⚠️⚠️⚠️"
-        },
-        "negative_positive_negative": { 
-            title: "狼小妹单推厨", 
-            desc: "你喜欢看血狼破军，但是会把他幻想成一个娘化的萌妹形象再对其进行前所未有的性压抑。\n\n在你扭曲的视界里，那个满嘴强度的男人早已被套上了白丝女仆装。你每天在脑海里进行着不可告人的二创，把他的每一次破防大叫都脑补成傲娇萝莉的娇嗔。别人在看干员测评，你在进行赛博发情，你的成分之复杂、XP之诡异，简直是方舟圈未解之谜，建议立刻去看医生！",
-            danger: "⚠️⚠️⚠️⚠️"
-        },
-        "negative_negative_positive": { 
-            title: "龙狼📏", 
-            desc: "你喜欢看血狼破军和其他主播互动，磕cp，比如龙哥哥，比如ve，比如某个fifa人物，或许你也喜欢看一些其他主播的cp，比如龙龙骗骗请和......\n\n你的雷达永远只对男男互动有反应。只要血狼的直播间出现了其他男人的声音，或者提到了某人的名字，你的大脑就会立刻开始撰写十万字的同人小黄文。你对明日方舟的强度毫无兴趣，你只在乎今天龙哥哥有没有来查房，ve有没有和他连麦。你就是互联网上最可怕的赛博红娘，拿着放大镜在玻璃碴子里找糖吃。",
-            danger: "⚠️⚠️⚠️"
-        },
-        "negative_negative_negative": { 
-            title: "萌萌人", 
-            desc: "血狼破军是谁？\n\n你对这片风起云涌的互联网粪坑一无所知。什么大杯超大杯，什么龙狼CP，什么传话太监，你统统不关心。你可能只是一个偶尔上线抽个卡、看看漂亮纸片人老婆的纯路人。这个充满黑话和戾气的测试对你来说就像是天书，快跑吧，这里的水太深了，不适合你这种纯洁的泰拉小白。",
-            danger: "⚠️"
-        }
-    };
-
     let activeQuestions = [];
     let currentQuestionIndex = 0;
     let scoreHistory = [];
     let userPath = []; 
-    let scoreDim1 = 0, scoreDim2 = 0, scoreDim3 = 0;
+    let scoreDim1 = 0, scoreDim2 = 0, scoreDim3 = 0, scoreDim4 = 0;
     let noneCount = 0;
     let typeWriterInterval = null;
     let isTyping = false;
@@ -611,7 +479,7 @@
         osc.start(); osc.stop(audioCtx.currentTime + duration);
     }
 
-    if (localStorage.getItem('wbti_progress')) {
+    if (localStorage.getItem('wbti_progress_v2')) {
         resumeBtn.classList.remove('hidden');
     }
 
@@ -622,7 +490,7 @@
             bgmPlayer.pause();
             musicToggle.style.opacity = '0.5';
         } else {
-            bgmPlayer.play().catch(e => console.log("BGM播放失败:", e));
+            bgmPlayer.play().catch(e => console.log("BGM挂起:", e));
             musicToggle.style.opacity = '1';
         }
         isMusicPlaying = !isMusicPlaying;
@@ -659,14 +527,16 @@
             trails.push({ x: mouseX, y: mouseY, life: 1, char: Math.random() > 0.5 ? '1' : '0' });
         }
 
-        const xPercent = (mouseX / window.innerWidth) * 100;
-        const yPercent = (mouseY / window.innerHeight) * 100;
-        document.body.style.backgroundImage = `
-            radial-gradient(circle at ${xPercent}% ${yPercent}%, ${envColor1}, transparent 40%),
-            radial-gradient(circle at ${100 - xPercent}% ${100 - yPercent}%, ${envColor2}, transparent 40%),
-            repeating-linear-gradient(45deg, rgba(31, 30, 51, 0.02) 0px, rgba(31, 30, 51, 0.02) 1px, transparent 1px, transparent 20px),
-            repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 0px, rgba(212, 175, 55, 0.03) 1px, transparent 1px, transparent 20px)
-        `;
+        if(!themeLocked) {
+            const xPercent = (mouseX / window.innerWidth) * 100;
+            const yPercent = (mouseY / window.innerHeight) * 100;
+            document.body.style.backgroundImage = `
+                radial-gradient(circle at ${xPercent}% ${yPercent}%, ${envColor1}, transparent 40%),
+                radial-gradient(circle at ${100 - xPercent}% ${100 - yPercent}%, ${envColor2}, transparent 40%),
+                repeating-linear-gradient(45deg, rgba(31, 30, 51, 0.02) 0px, rgba(31, 30, 51, 0.02) 1px, transparent 1px, transparent 20px),
+                repeating-linear-gradient(-45deg, rgba(212, 175, 55, 0.03) 0px, rgba(212, 175, 55, 0.03) 1px, transparent 1px, transparent 20px)
+            `;
+        }
     });
 
     function animateTrail() {
@@ -715,19 +585,10 @@
 
     function initGameSession() {
         userId = userIdInput.value.trim();
-        
-        let strengthPool = rawQuestions.filter(q => q.category === 'strength').sort(() => 0.5 - Math.random());
-        let emotionPool = rawQuestions.filter(q => q.category === 'emotion').sort(() => 0.5 - Math.random());
-        let commPool = rawQuestions.filter(q => q.category === 'community').sort(() => 0.5 - Math.random());
-
-        activeQuestions = [
-            ...strengthPool.slice(0, 5),
-            ...emotionPool.slice(0, 5),
-            ...commPool.slice(0, 5)
-        ].sort(() => 0.5 - Math.random());
-        
+        // 这里依赖于外部文件 questions.js 中的 rawQuestions
+        activeQuestions = [...rawQuestions].sort(() => 0.5 - Math.random()).slice(0, 20);
         currentQuestionIndex = 0;
-        scoreDim1 = 0; scoreDim2 = 0; scoreDim3 = 0;
+        scoreDim1 = 0; scoreDim2 = 0; scoreDim3 = 0; scoreDim4 = 0;
         noneCount = 0;
         scoreHistory = [];
         userPath = []; 
@@ -746,17 +607,17 @@
 
     function saveProgress() {
         const data = {
-            activeQuestions, currentQuestionIndex, scoreDim1, scoreDim2, scoreDim3, noneCount, userPath, scoreHistory
+            activeQuestions, currentQuestionIndex, scoreDim1, scoreDim2, scoreDim3, scoreDim4, noneCount, userPath, scoreHistory
         };
-        localStorage.setItem('wbti_progress', JSON.stringify(data));
+        localStorage.setItem('wbti_progress_v2', JSON.stringify(data));
     }
 
     function clearProgress() {
-        localStorage.removeItem('wbti_progress');
+        localStorage.removeItem('wbti_progress_v2');
     }
 
     resumeBtn.addEventListener('click', () => {
-        const savedData = JSON.parse(localStorage.getItem('wbti_progress'));
+        const savedData = JSON.parse(localStorage.getItem('wbti_progress_v2'));
         if(savedData) {
             if (!isMusicPlaying) {
                 bgmPlayer.play().catch(e => console.log("BGM挂起:", e));
@@ -767,6 +628,7 @@
             scoreDim1 = savedData.scoreDim1;
             scoreDim2 = savedData.scoreDim2;
             scoreDim3 = savedData.scoreDim3;
+            scoreDim4 = savedData.scoreDim4 || 0;
             noneCount = savedData.noneCount;
             userPath = savedData.userPath;
             scoreHistory = savedData.scoreHistory;
@@ -785,7 +647,7 @@
             bgmPlayer.play().then(() => {
                 isMusicPlaying = true;
                 musicToggle.style.opacity = '1';
-            }).catch(e => console.log("BGM播放挂起:", e));
+            }).catch(e => console.log("BGM挂起:", e));
         }
         initGameSession();
         customCursor.classList.remove('cursor-hover');
@@ -821,6 +683,7 @@
             scoreDim1 = prevState.d1;
             scoreDim2 = prevState.d2;
             scoreDim3 = prevState.d3;
+            scoreDim4 = prevState.d4 || 0;
             noneCount = prevState.nc;
             userPath.pop(); 
             updateEnvironmentLight();
@@ -859,7 +722,12 @@
         quizActionBar.classList.add("hidden");
         optionsContainer.innerHTML = "";
         
-        currentQuestion.options.forEach(option => {
+        let shuffledOptions = [...currentQuestion.options];
+        const noneOpt = shuffledOptions.pop();
+        shuffledOptions.sort(() => 0.5 - Math.random());
+        shuffledOptions.push(noneOpt);
+
+        shuffledOptions.forEach(option => {
             const button = document.createElement("button");
             button.innerText = option.text;
             button.classList.add("option-btn");
@@ -888,12 +756,13 @@
     }
 
     function selectOption(effect, isNone) {
-        scoreHistory.push({ d1: scoreDim1, d2: scoreDim2, d3: scoreDim3, nc: noneCount });
+        scoreHistory.push({ d1: scoreDim1, d2: scoreDim2, d3: scoreDim3, d4: scoreDim4, nc: noneCount });
         userPath.push({ qIndex: currentQuestionIndex, type: effect.typeStr });
         
         scoreDim1 += effect.d1;
         scoreDim2 += effect.d2;
         scoreDim3 += effect.d3;
+        scoreDim4 += effect.d4 || 0;
         if (isNone) noneCount++;
         currentQuestionIndex++;
         updateEnvironmentLight();
@@ -914,7 +783,7 @@
             document.body.classList.remove("glitch-active");
             quizContainer.classList.add("hidden");
             processingContainer.classList.remove("hidden");
-            const logs = ["> 提取行为决策链...", "> 解析社区交互参数...", "> 注入狼小妹能量...", "> 比对成分数据...", "> 生成最终模型...", "> COMPLETED."];
+            const logs = ["> 提取行为决策链...", "> 解析社区交互参数...", "> 验证四维状态量...", "> 比对成分数据...", "> 生成最终模型...", "> COMPLETED."];
             let logIndex = 0;
             processingLog.innerHTML = "";
             const logInterval = setInterval(() => {
@@ -944,12 +813,15 @@
             Math.abs(scoreDim1 >= 0 ? scoreDim1 : 0), 
             Math.abs(scoreDim2 >= 0 ? scoreDim2 : 0), 
             Math.abs(scoreDim3 >= 0 ? scoreDim3 : 0), 
+            Math.abs(scoreDim4 <= 0 ? scoreDim4 : 0), 
             Math.abs(scoreDim1 < 0 ? scoreDim1 : 0),  
             Math.abs(scoreDim2 < 0 ? scoreDim2 : 0),  
-            Math.abs(scoreDim3 < 0 ? scoreDim3 : 0)   
+            Math.abs(scoreDim3 < 0 ? scoreDim3 : 0),
+            Math.abs(scoreDim4 > 0 ? scoreDim4 : 0)
         ];
 
         const avgData = [
+            Math.floor(Math.random() * 5 + 2), Math.floor(Math.random() * 5 + 2),
             Math.floor(Math.random() * 5 + 2), Math.floor(Math.random() * 5 + 2),
             Math.floor(Math.random() * 5 + 2), Math.floor(Math.random() * 5 + 2),
             Math.floor(Math.random() * 5 + 2), Math.floor(Math.random() * 5 + 2)
@@ -958,10 +830,10 @@
         myRadarChart = new Chart(ctx, {
             type: 'radar',
             data: {
-                labels: ['强度关注', '乐子拱火', '核心黏性', '脑补二创', '佛系吃瓜', '逆向黑粉'],
+                labels: ['强度关注', '乐子拱火', '核心黏性', '衍生创作', '佛系吃瓜', '逆向黑粉', '场外资本', '跨界对比'],
                 datasets: [
                 {
-                    label: '你的倾向',
+                    label: '测定倾向',
                     data: userData,
                     backgroundColor: 'rgba(212, 175, 55, 0.4)',
                     borderColor: 'rgba(212, 175, 55, 1)',
@@ -971,7 +843,7 @@
                     order: 1
                 },
                 {
-                    label: '大众平均',
+                    label: '大众基准',
                     data: avgData,
                     backgroundColor: 'rgba(100, 116, 139, 0.1)',
                     borderColor: 'rgba(100, 116, 139, 0.3)',
@@ -988,7 +860,7 @@
                         angleLines: { color: 'rgba(31, 30, 51, 0.1)' },
                         grid: { color: 'rgba(31, 30, 51, 0.1)' },
                         pointLabels: {
-                            font: { size: 12, family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" },
+                            font: { size: 11, family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" },
                             color: '#1f1e33'
                         },
                         ticks: { display: false, min: 0, max: maxScore }
@@ -1016,26 +888,21 @@
             currentThemeParticles = ['#1f1e33', '#334155', '#0f172a'];
             needsGlitch = true;
         } else {
-            switch (key) {
-                case "positive_positive_positive": 
-                    envColor1 = 'rgba(0, 120, 255, 0.15)'; envColor2 = 'rgba(0, 50, 150, 0.1)';
-                    currentThemeColor = '#0078ff'; currentThemeParticles = ['#0078ff', '#00d4ff', '#e0f2fe', '#0ea5e9']; break;
-                case "positive_positive_negative":
-                case "positive_negative_negative":
-                case "positive_negative_positive":
-                    envColor1 = 'rgba(220, 20, 60, 0.18)'; envColor2 = 'rgba(100, 0, 0, 0.15)';
-                    currentThemeColor = '#dc143c'; currentThemeParticles = ['#dc143c', '#ff0000', '#8b0000', '#fecdd3']; needsGlitch = true; break;
-                case "negative_negative_positive":
-                case "negative_positive_negative":
-                    envColor1 = 'rgba(255, 105, 180, 0.18)'; envColor2 = 'rgba(199, 21, 133, 0.1)';
-                    currentThemeColor = '#ff69b4'; currentThemeParticles = ['#ff69b4', '#ff1493', '#fbcfe8', '#db2777']; break;
-                case "negative_negative_negative":
-                case "negative_positive_positive":
-                    envColor1 = 'rgba(240, 240, 240, 0.3)'; envColor2 = 'rgba(200, 200, 200, 0.2)';
-                    currentThemeColor = '#cbd5e1'; currentThemeParticles = ['#ffffff', '#f1f5f9', '#cbd5e1', '#94a3b8']; break;
-                default:
-                    envColor1 = 'rgba(212, 175, 55, 0.12)'; envColor2 = 'rgba(31, 30, 51, 0.08)';
-                    currentThemeColor = '#d4af37'; currentThemeParticles = ['#d4af37', '#1f1e33', '#475569', '#cbd5e1']; break;
+            if (key.includes("positive_positive_positive_negative")) {
+                envColor1 = 'rgba(0, 120, 255, 0.15)'; envColor2 = 'rgba(0, 50, 150, 0.1)';
+                currentThemeColor = '#0078ff'; currentThemeParticles = ['#0078ff', '#00d4ff', '#e0f2fe', '#0ea5e9'];
+            } else if (key.includes("positive_positive_negative_negative") || key.includes("negative_negative_positive_negative")) {
+                envColor1 = 'rgba(220, 20, 60, 0.18)'; envColor2 = 'rgba(100, 0, 0, 0.15)';
+                currentThemeColor = '#dc143c'; currentThemeParticles = ['#dc143c', '#ff0000', '#8b0000', '#fecdd3']; needsGlitch = true;
+            } else if (key.includes("negative_negative_negative_negative") || key.includes("negative_negative_positive_positive")) {
+                envColor1 = 'rgba(255, 105, 180, 0.18)'; envColor2 = 'rgba(199, 21, 133, 0.1)';
+                currentThemeColor = '#ff69b4'; currentThemeParticles = ['#ff69b4', '#ff1493', '#fbcfe8', '#db2777'];
+            } else if (key.includes("positive_negative_positive_negative") || key.includes("negative_positive_negative_negative")) {
+                envColor1 = 'rgba(240, 240, 240, 0.3)'; envColor2 = 'rgba(200, 200, 200, 0.2)';
+                currentThemeColor = '#cbd5e1'; currentThemeParticles = ['#ffffff', '#f1f5f9', '#cbd5e1', '#94a3b8'];
+            } else {
+                envColor1 = 'rgba(212, 175, 55, 0.12)'; envColor2 = 'rgba(31, 30, 51, 0.08)';
+                currentThemeColor = '#d4af37'; currentThemeParticles = ['#d4af37', '#1f1e33', '#475569', '#cbd5e1'];
             }
         }
 
@@ -1055,13 +922,13 @@
     }
 
     function generatePathInsight() {
-        if(noneCount === activeQuestions.length) return "未检测到有效选择路径。";
+        if(noneCount === activeQuestions.length) return "未检测到有效选择。";
         let validPaths = userPath.filter(p => p.type !== "无动于衷");
         if(validPaths.length === 0) return "未记录到具备倾向性的行为特征。";
 
         for(let i = 0; i <= validPaths.length - 3; i++) {
             if(validPaths[i].type === validPaths[i+1].type && validPaths[i+1].type === validPaths[i+2].type) {
-                return `在第${validPaths[i].qIndex + 1}题附近，你连续呈现【${validPaths[i].type}】的显著特征。`;
+                return `测试阶段，连续呈现【${validPaths[i].type}】行为关联。`;
             }
         }
         
@@ -1071,10 +938,10 @@
             lastHalf.forEach(p => { counts[p.type] = (counts[p.type] || 0) + 1; });
             let maxType = Object.keys(counts).reduce((a, b) => counts[a] > counts[b] ? a : b);
             if(counts[maxType] >= 3) {
-                return `在测试中后期，你的决策模型明显转向了【${maxType}】行为路径。`;
+                return `近期选择模型明显趋向【${maxType}】行为路径。`;
             }
         }
-        return "行为特征呈散发性，阵营意向反复横跳。";
+        return "行为特征呈散发状。";
     }
 
     function detectAchievements() {
@@ -1083,12 +950,12 @@
         userPath.forEach(p => {
             if(p.type === lastType && p.type !== "无动于衷") currentStreak++;
             else { currentStreak = 1; lastType = p.type; }
-            if(currentStreak === 5) achs.push(`【死忠印记】连续5次选择${p.type}倾向`);
+            if(currentStreak === 5) achs.push(`【连贯印记】连续执行${p.type}向选择`);
         });
 
-        if(Math.abs(scoreDim1) >= 12) achs.push("【魔怔人】强度属性极度溢出");
-        if(Math.abs(scoreDim2) >= 12) achs.push("【终极乐子人】情绪属性极度溢出");
-        if(noneCount >= 8 && noneCount < 15) achs.push("【高傲的看客】拒绝参与绝大部分互动");
+        if(Math.abs(scoreDim1) >= 12) achs.push("【行为固化】某维度属性大幅溢出");
+        if(Math.abs(scoreDim2) >= 12) achs.push("【情绪传导】交互偏好表现明显");
+        if(noneCount >= 8 && noneCount < 15) achs.push("【隔离状态】规避了多数核心冲突议题");
         
         return [...new Set(achs)];
     }
@@ -1099,16 +966,18 @@
         resultContainer.classList.add("fade-in");
         
         let key = "";
+        // 依赖于外部文件中的 outcomes
         key += (scoreDim1 >= 0) ? "positive_" : "negative_";
         key += (scoreDim2 >= 0) ? "positive_" : "negative_";
-        key += (scoreDim3 >= 0) ? "positive" : "negative";
+        key += (scoreDim3 >= 0) ? "positive_" : "negative_";
+        key += (scoreDim4 >= 0) ? "positive" : "negative";
         
         applyTheme(key);
         const shareBlock = document.getElementById("share-info-block");
 
         if (noneCount === activeQuestions.length) {
             shareBlock.style.display = "block";
-            document.getElementById("out-title").innerText = "【彩蛋结局】你怎么什么都不想选";
+            document.getElementById("out-title").innerText = "判定失败：数据不足";
             document.getElementById("out-purity").style.display = "none";
             document.getElementById("out-danger").style.display = "none";
             document.getElementById("out-same-percent").style.display = "none";
@@ -1116,25 +985,25 @@
             document.getElementById("out-divider").style.display = "none";
             document.getElementById("out-path-insight").style.display = "none";
             document.getElementById("achievements-container").innerHTML = "";
-            document.getElementById("result-desc").innerText = "无法完成测试，请重新答题。";
+            document.getElementById("result-desc").innerText = "测试终止。";
             radarContainer.classList.add("hidden");
         } else {
             const finalOutcome = outcomes[key];
-            const maxScoreSum = activeQuestions.length * 3;
-            const currentScoreSum = Math.abs(scoreDim1) + Math.abs(scoreDim2) + Math.abs(scoreDim3);
+            const maxScoreSum = activeQuestions.length * 4;
+            const currentScoreSum = Math.abs(scoreDim1) + Math.abs(scoreDim2) + Math.abs(scoreDim3) + Math.abs(scoreDim4);
             const purity = Math.min(100, Math.floor(60 + (currentScoreSum / maxScoreSum) * 40));
 
             shareBlock.style.display = "block";
             
             if (userId) {
                 const idEl = document.getElementById("out-user-id");
-                idEl.style.display = "block"; idEl.innerText = `代号：${userId}`;
+                idEl.style.display = "block"; idEl.innerText = `记录代号：${userId}`;
             } else { document.getElementById("out-user-id").style.display = "none"; }
             
-            document.getElementById("out-title").innerText = `你是【${finalOutcome.title}】`;
+            document.getElementById("out-title").innerText = `归类结果：【${finalOutcome.title}】`;
             
             const purityEl = document.getElementById("out-purity");
-            purityEl.style.display = "block"; purityEl.innerText = `纯度：${purity}%`;
+            purityEl.style.display = "block"; purityEl.innerText = `特征纯度：${purity}%`;
             
             const dangerEl = document.getElementById("out-danger");
             dangerEl.style.display = "block"; dangerEl.innerText = `危险等级：${finalOutcome.danger}`;
@@ -1151,14 +1020,9 @@
 
             document.getElementById("out-divider").style.display = "block";
 
-            const basePercents = {
-                "强度党": 15, "混沌乐子人": 25, "小红点厨": 10, "狼黑": 12,
-                "军奴": 8, "狼小妹单推厨": 6, "龙狼📏": 4, "萌萌人": 20
-            };
-            let myBase = basePercents[finalOutcome.title] || 10;
-            let myPercent = (myBase + (Math.random() * 4 - 2)).toFixed(1);
+            let myPercent = (5 + (Math.random() * 4 - 2)).toFixed(1);
             const samePercentEl = document.getElementById("out-same-percent");
-            samePercentEl.style.display = "block"; samePercentEl.innerText = `与你相同人格：${myPercent}% 的人`;
+            samePercentEl.style.display = "block"; samePercentEl.innerText = `相似特征占比：${myPercent}%`;
 
             const allKeys = Object.keys(outcomes);
             const allTitles = allKeys.map(k => outcomes[k].title);
@@ -1170,12 +1034,12 @@
             
             const leaderboardEl = document.getElementById("out-leaderboard");
             leaderboardEl.style.display = "block";
-            document.getElementById("out-most").innerText = `今日最多：${allTitles[mostIndex]} (${mostPercent}%)`;
-            document.getElementById("out-rarest").innerText = `最稀有：${allTitles[rarestIndex]} (${rarestPercent}%)`;
+            document.getElementById("out-most").innerText = `当前主流态：${allTitles[mostIndex]} (${mostPercent}%)`;
+            document.getElementById("out-rarest").innerText = `游离态：${allTitles[rarestIndex]} (${rarestPercent}%)`;
 
             const pathInsightEl = document.getElementById("out-path-insight");
             pathInsightEl.style.display = "block";
-            pathInsightEl.innerText = `轨迹刻印：${generatePathInsight()}`;
+            pathInsightEl.innerText = `记录：${generatePathInsight()}`;
 
             document.getElementById("result-desc").innerText = finalOutcome.desc;
             
@@ -1224,7 +1088,7 @@
             useCORS: true 
         }).then(canvas => {
             const link = document.createElement('a');
-            link.download = '狼BTI成分报告.png';
+            link.download = '狼BTI记录.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
             
@@ -1239,7 +1103,7 @@
             this.classList.remove('hidden');
             restartBtn.classList.remove('hidden');
         }).catch(err => {
-            console.error("截图生成失败", err);
+            console.error("生成失败", err);
             controlsRow.style.display = 'flex';
             this.classList.remove('hidden');
             restartBtn.classList.remove('hidden');
