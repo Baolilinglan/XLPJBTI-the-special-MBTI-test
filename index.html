@@ -381,6 +381,11 @@
     <div class="share-info-block" id="share-info-block">
         <div class="share-info-row" id="out-user-id" style="display: none;"></div>
         <div class="share-info-row" id="out-title"></div>
+        
+        <div style="text-align: center;">
+            <img id="out-image" src="" alt="人格图片" style="display: none; width: 100%; max-width: 220px; border-radius: 8px; margin: 12px auto; border: 1px solid rgba(31, 30, 51, 0.1);">
+        </div>
+
         <div class="share-info-row" id="out-purity"></div>
         <div class="share-info-row share-info-danger" id="out-danger"></div>
         
@@ -585,7 +590,6 @@
 
     function initGameSession() {
         userId = userIdInput.value.trim();
-        // 这里依赖于外部文件 questions.js 中的 rawQuestions
         activeQuestions = [...rawQuestions].sort(() => 0.5 - Math.random()).slice(0, 20);
         currentQuestionIndex = 0;
         scoreDim1 = 0; scoreDim2 = 0; scoreDim3 = 0; scoreDim4 = 0;
@@ -966,7 +970,6 @@
         resultContainer.classList.add("fade-in");
         
         let key = "";
-        // 依赖于外部文件中的 outcomes
         key += (scoreDim1 >= 0) ? "positive_" : "negative_";
         key += (scoreDim2 >= 0) ? "positive_" : "negative_";
         key += (scoreDim3 >= 0) ? "positive_" : "negative_";
@@ -978,6 +981,7 @@
         if (noneCount === activeQuestions.length) {
             shareBlock.style.display = "block";
             document.getElementById("out-title").innerText = "判定失败：数据不足";
+            document.getElementById("out-image").style.display = "none";
             document.getElementById("out-purity").style.display = "none";
             document.getElementById("out-danger").style.display = "none";
             document.getElementById("out-same-percent").style.display = "none";
@@ -997,10 +1001,38 @@
             
             if (userId) {
                 const idEl = document.getElementById("out-user-id");
-                idEl.style.display = "block"; idEl.innerText = `记录代号：${userId}`;
+                idEl.style.display = "block"; idEl.innerText = `代号：${userId}`;
             } else { document.getElementById("out-user-id").style.display = "none"; }
             
             document.getElementById("out-title").innerText = `归类结果：【${finalOutcome.title}】`;
+
+            const imageMap = {
+                "positive_positive_positive_positive": "qiangdu.png",
+                "positive_positive_negative_positive": "leziren.png",
+                "positive_negative_positive_positive": "xiaohongdian.png",
+                "positive_negative_negative_positive": "langhei.png",
+                "negative_positive_positive_positive": "junnu.png",
+                "negative_positive_negative_positive": "langxiaomei.png",
+                "negative_negative_positive_positive": "longlang.png",
+                "negative_negative_negative_positive": "mengmengren.png",
+                "positive_positive_positive_negative": "erchuang.png",
+                "positive_positive_negative_negative": "chuanzi.png",
+                "positive_negative_positive_negative": "laozili.png",
+                "positive_negative_negative_negative": "laoban.png",
+                "negative_positive_positive_negative": "fuduji.png",
+                "negative_positive_negative_negative": "qianshuizhe.png",
+                "negative_negative_positive_negative": "jiaolv.png",
+                "negative_negative_negative_negative": "koukou.png"
+            };
+
+            const outImage = document.getElementById("out-image");
+            if (imageMap[key]) {
+                outImage.src = imageMap[key];
+                outImage.style.display = "block";
+                outImage.onerror = () => { outImage.style.display = "none"; };
+            } else {
+                outImage.style.display = "none";
+            }
             
             const purityEl = document.getElementById("out-purity");
             purityEl.style.display = "block"; purityEl.innerText = `特征纯度：${purity}%`;
@@ -1034,8 +1066,8 @@
             
             const leaderboardEl = document.getElementById("out-leaderboard");
             leaderboardEl.style.display = "block";
-            document.getElementById("out-most").innerText = `当前主流态：${allTitles[mostIndex]} (${mostPercent}%)`;
-            document.getElementById("out-rarest").innerText = `游离态：${allTitles[rarestIndex]} (${rarestPercent}%)`;
+            document.getElementById("out-most").innerText = `今日人数最多：${allTitles[mostIndex]} (${mostPercent}%)`;
+            document.getElementById("out-rarest").innerText = `今日人数最少：${allTitles[rarestIndex]} (${rarestPercent}%)`;
 
             const pathInsightEl = document.getElementById("out-path-insight");
             pathInsightEl.style.display = "block";
