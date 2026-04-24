@@ -12,13 +12,13 @@ const S_XM = { d1: -1, d2: 1, d3: -1, d4: 1, typeStr: "狼小妹单推" };
 const S_LL = { d1: -1, d2: -1, d3: 1, d4: 1, typeStr: "龙狼关联" };
 const S_MM = { d1: -1, d2: -1, d3: -1, d4: 1, typeStr: "萌萌人" };
 
-const S_EC = { d1: 1, d2: 1, d3: 1, d4: -1, typeStr: "二创爱好者" };
+const S_EC = { d1: 1, d2: 1, d3: 1, d4: -2, typeStr: "二创爱好者" };
 const S_CZ = { d1: 1, d2: 1, d3: -1, d4: -2, typeStr: "串子" };
-const S_LZL = { d1: 1, d2: -1, d3: 1, d4: -1, typeStr: "老资历" };
+const S_LZL = { d1: 1, d2: -1, d3: 1, d4: -2, typeStr: "老资历" };
 const S_LB = { d1: 1, d2: -1, d3: -1, d4: -2, typeStr: "老板" };
-const S_FDJ = { d1: -1, d2: 1, d3: 1, d4: -1, typeStr: "复读机" };
+const S_FDJ = { d1: -1, d2: 1, d3: 1, d4: -2, typeStr: "复读机" };
 const S_QSZ = { d1: -1, d2: 1, d3: -1, d4: -2, typeStr: "潜水者" };
-const S_SZJL = { d1: -1, d2: -1, d3: 1, d4: -1, typeStr: "数值焦虑制造者" };
+const S_SZJL = { d1: -1, d2: -1, d3: 1, d4: -2, typeStr: "数值焦虑制造者" };
 const S_KK = { d1: -1, d2: -1, d3: -1, d4: -2, typeStr: "口口爱好者" };
 
 const S_NONE = { d1: 0, d2: 0, d3: 0, d4: 0, typeStr: "无动于衷" };
