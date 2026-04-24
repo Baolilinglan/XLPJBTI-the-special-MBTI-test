@@ -12,14 +12,14 @@ const S_XM = { d1: -1, d2: 1, d3: -1, d4: 1, typeStr: "狼小妹单推" };
 const S_LL = { d1: -1, d2: -1, d3: 1, d4: 1, typeStr: "龙狼关联" };
 const S_MM = { d1: -1, d2: -1, d3: -1, d4: 1, typeStr: "萌萌人" };
 
-const S_EC = { d1: 1, d2: 1, d3: 1, d4: -3, typeStr: "二创爱好者" };
-const S_CZ = { d1: 1, d2: 1, d3: -1, d4: -3, typeStr: "串子" };
-const S_LZL = { d1: 1, d2: -1, d3: 1, d4: -3, typeStr: "老资历" };
-const S_LB = { d1: 1, d2: -1, d3: -1, d4: -3, typeStr: "老板" };
-const S_FDJ = { d1: -1, d2: 1, d3: 1, d4: -3, typeStr: "复读机" };
-const S_QSZ = { d1: -1, d2: 1, d3: -1, d4: -3, typeStr: "潜水者" };
-const S_SZJL = { d1: -1, d2: -1, d3: 1, d4: -3, typeStr: "数值焦虑制造者" };
-const S_KK = { d1: -1, d2: -1, d3: -1, d4: -3, typeStr: "口口爱好者" };
+const S_EC = { d1: 1, d2: 1, d3: 1, d4: -1, typeStr: "二创爱好者" };
+const S_CZ = { d1: 1, d2: 1, d3: -1, d4: -2, typeStr: "串子" };
+const S_LZL = { d1: 1, d2: -1, d3: 1, d4: -1, typeStr: "老资历" };
+const S_LB = { d1: 1, d2: -1, d3: -1, d4: -2, typeStr: "老板" };
+const S_FDJ = { d1: -1, d2: 1, d3: 1, d4: -1, typeStr: "复读机" };
+const S_QSZ = { d1: -1, d2: 1, d3: -1, d4: -2, typeStr: "潜水者" };
+const S_SZJL = { d1: -1, d2: -1, d3: 1, d4: -1, typeStr: "数值焦虑制造者" };
+const S_KK = { d1: -1, d2: -1, d3: -1, d4: -2, typeStr: "口口爱好者" };
 
 const S_NONE = { d1: 0, d2: 0, d3: 0, d4: 0, typeStr: "无动于衷" };
 
@@ -109,7 +109,667 @@ const rawQuestions = [
     { text: "当某个备受争议的弱势干员突然崛起，血狼破军大喊“魔虚罗，适应了这个环境！”时，你会：", options: [ { text: "利用血狼破军这句话，宣称没有这个模组的玩家将被彻底淘汰，拉满恐慌情绪", effect: S_SZJL }, { text: "翻出血狼破军以前狂踩这个干员的视频截图，放在一起制造强烈的反差乐子", effect: S_LZ }, { text: "坚决不承认干员变强，认为血狼破军只是为了迎合官方强行吹捧，丧失了底线", effect: S_LH }, { text: "忽略血狼破军的大喊，冷静分析新模组增加的白值是否真的跨越了质变阈值", effect: S_QD }, { text: "发弹幕问血狼破军这种老角色翻身的机制，有没有抄袭其他二次元游戏的设定", effect: S_KK }, { text: "虽然不懂魔虚罗是什么，但觉得这个干员变强了是个好消息", effect: S_MM } ] },
     { text: "血狼破军在一次打赌中运气爆棚，连续单抽出了三个六星，直播间瞬间沸腾，你会：", options: [ { text: "把血狼破军抽卡瞬间的狂喜表情剪辑下来，配上《好日子》的BGM循环播放", effect: S_EC }, { text: "比血狼破军本人还要高兴，觉得这是上天对血狼平时辛苦付出的奖赏", effect: S_JN }, { text: "伪装成破防的非酋玩家，在论坛大骂游戏暗调了血狼破军账号的爆率引发众怒", effect: S_CZ }, { text: "觉得现在的人大惊小怪，回忆起以前无保底时代出货才叫真正的奇迹", effect: S_LZL }, { text: "加入满屏的复读大军，疯狂复制“吸血狼破军欧气”、“寿命换的”", effect: S_FDJ }, { text: "即使直播间弹幕已经卡得动不了，你依然双手离开键盘，静静观看", effect: S_QSZ } ] },
     { text: "血狼破军在洗脚时由于太放松，不小心说漏了某个社区大佬的真名或隐秘八卦，你会：", options: [ { text: "如获至宝，立刻记录下这个名字，作为在贴吧掀起腥风血雨的终极武器", effect: S_HD }, { text: "大脑飞速运转，将这个新名字纳入CP关系网中，分析血狼破军与他们的修罗场", effect: S_LL }, { text: "认为血狼破军故意泄露别人隐私，立刻将这段录音发给当事人挑拨离间", effect: S_LH }, { text: "觉得今晚没有白看，坐等这位被泄露隐私的大佬明天发文和血狼破军撕逼", effect: S_LZ }, { text: "赶紧打赏高额礼物刷屏，试图用这种方式把血狼破军说漏嘴的弹幕掩盖过去", effect: S_LB }, { text: "根本不知道血狼破军提到的大佬是谁，觉得只是个无聊的人名，继续看他泡脚", effect: S_MM } ] },
-    { text: "如果血狼破军在漫展线下和粉丝掰手腕，结果被粉丝秒杀的视频被传到网上，你会：", options: [ { text: "拿着这个视频到处转发，嘲笑血狼破军在网上重拳出击，在线下软弱无力", effect: S_LH }, { text: "觉得血狼破军即使输了，咬牙切齿的不甘表情也非常符合傲娇受的设定，反复观看", effect: S_XM }, { text: "严谨地分析两人的杠杆原理、肌肉发力点，指出血狼破军输在姿势不对而不是力量", effect: S_QD }, { text: "跑去原视频下面带节奏，说那个粉丝其实是收了钱故意演戏来羞辱血狼破军的", effect: S_CZ }, { text: "评价说如果是另一款游戏的主播，肯定平时有更好的锻炼，不会像血狼破军这么虚", effect: S_KK }, { text: "感叹血狼破军现在为了热度什么烂活都接，以前那个高冷的技术流已经死了", effect: S_LZL } ] }
+    { text: "如果血狼破军在漫展线下和粉丝掰手腕，结果被粉丝秒杀的视频被传到网上，你会：", options: [ { text: "拿着这个视频到处转发，嘲笑血狼破军在网上重拳出击，在线下软弱无力", effect: S_LH }, { text: "觉得血狼破军即使输了，咬牙切齿的不甘表情也非常符合傲娇受的设定，反复观看", effect: S_XM }, { text: "严谨地分析两人的杠杆原理、肌肉发力点，指出血狼破军输在姿势不对而不是力量", effect: S_QD }, { text: "跑去原视频下面带节奏，说那个粉丝其实是收了钱故意演戏来羞辱血狼破军的", effect: S_CZ }, { text: "评价说如果是另一款游戏的主播，肯定平时有更好的锻炼，不会像血狼破军这么虚", effect: S_KK }, { text: "感叹血狼破军现在为了热度什么烂活都接，以前那个高冷的技术流已经死了", effect: S_LZL } ] },
+{ 
+        text: "如果突然爆出惊天猛料，血狼破军其实是gay，你的第一反应是：", 
+        options: [ 
+            { text: "立刻计算这会不会影响他拔剑的速度和测评干员的DPS", effect: S_QD }, 
+            { text: "狂喜，立刻去贴吧发帖“大节奏来了！血狼性取向大揭秘！”", effect: S_HD }, 
+            { text: "早就看出来了，他和龙哥那眼神拉丝的互动还用说？立刻动笔写万字同人", effect: S_LL }, 
+            { text: "故意去反串带节奏：“只有这种性取向才能测好男干员，你们懂什么！”", effect: S_CZ }, 
+            { text: "无论他喜欢男的还是女的，只要他这身肉还在，我就依然爱他", effect: S_JN }, 
+            { text: "这下彻底粉转黑了，截屏他以前的话证明他不仅嘴臭还隐藏身份", effect: S_LH } 
+        ] 
+    },
+    { 
+        text: "假设血狼破军某天直播时忘了关摄像头，站起来时不小心露出了粉色蕾丝女仆装裙摆，你会：", 
+        options: [ 
+            { text: "逐帧截图放大，用AI修复画质，然后发到各大群里引发全网鬼畜狂欢", effect: S_EC }, 
+            { text: "心中那股难以名状的XP被点燃了，觉得他娇羞的样子太可爱了！", effect: S_XM }, 
+            { text: "疯狂复读弹幕：“粉色女仆装？”“粉色女仆装？”“粉色女仆装？”", effect: S_FDJ }, 
+            { text: "趁乱刷十个醒目留言，要求他立刻站起来转一圈！", effect: S_LB }, 
+            { text: "跑去其他游戏论坛发帖：“你们二游的主播有我们这么硬核的变装吗？”", effect: S_KK }, 
+            { text: "毫不关心他穿什么，发弹幕问他：“所以新干员的DPH到底破千没？”", effect: S_QD } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军宣布退网去送外卖，且你刚好点到了他送的黄焖鸡米饭，你会：", 
+        options: [ 
+            { text: "拉着他不让他走，非要他在楼道里给你手算一遍红蒂拐水陈的极值", effect: S_QD }, 
+            { text: "拍照发NGA：“震惊！昔日方舟大UP沦落至此，原因竟是数值膨胀？”", effect: S_SZJL }, 
+            { text: "觉得他送外卖的样子充满了沧桑的男子气概，忍不住想给他擦汗", effect: S_JN }, 
+            { text: "怀念道：“你以前做攻略的时候，哪怕也是这股黄焖鸡味，但至少干货满满。”", effect: S_LZL }, 
+            { text: "默默接过外卖，一声不吭地关上门，假装不认识他", effect: S_QSZ }, 
+            { text: "故意给差评，然后在评论区写：“送得太慢，不如某字头游戏的物流体验”", effect: S_KK } 
+        ] 
+    },
+    { 
+        text: "直播测干员时，血狼破军因为新干员太弱，气得当场咬碎了牙，你会：", 
+        options: [ 
+            { text: "在旁边配上《野蜂飞舞》的BGM，做成鬼畜踩点视频投稿，配标题“卧槽牙崩了”", effect: S_EC }, 
+            { text: "立刻去各大论坛发帖引战：“血狼破军因干员太弱直播自残，策划不出来磕头？”", effect: S_HD }, 
+            { text: "阴阳怪气地发弹幕：“急了急了，他急了，好似！”", effect: S_LH }, 
+            { text: "完全不理会他的发癫，自己默默在Excel里验证这干员是不是真的没救了", effect: S_QD }, 
+            { text: "心疼地砸下重金发SC：“别咬牙了，哥哥咬我吧！”", effect: S_LB }, 
+            { text: "假装没看见，继续在弹幕问：“萌新刚入坑，请问这游戏要怎么注册？”", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "如果某天血狼破军在直播间公开招亲，要求对象必须能心算物理闪避期望，你会：", 
+        options: [ 
+            { text: "立刻掏出草稿纸，开始默写各路干员的闪避帧与概率分布，誓要拿下正宫之位", effect: S_QD }, 
+            { text: "觉得这种择偶标准太傲娇了，简直就像轻小说里口嫌体正直的女主", effect: S_XM }, 
+            { text: "在贴吧带节奏：“心算闪避期望？这是在选妃还是在选人形计算机？”", effect: S_LZ }, 
+            { text: "跑到评论区假扮萌妹发言：“哥哥好厉害，人家连1+1都不会，可以教人家吗？”", effect: S_CZ }, 
+            { text: "疯狂艾特龙哥哥，让他赶紧出来算，守护属于他们的爱情！", effect: S_LL }, 
+            { text: "看着满屏的相亲弹幕，自己作为老粉丝只觉得这人越来越魔怔了", effect: S_LZL } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军被雷劈了之后突然性情大变，开始对每一个干员进行无差别的吹捧：“太强了，全是超大杯”，你的反应是：", 
+        options: [ 
+            { text: "觉得他终于收钱了，立刻收集截图准备全网网暴他", effect: S_LH }, 
+            { text: "极度恐慌，认为如果全是超大杯，那自己的玉肯定不够，到处贩卖数值焦虑", effect: S_SZJL }, 
+            { text: "觉得这种失去理智的反差感太涩了，赶紧把音频录下来晚上循环播放", effect: S_JN }, 
+            { text: "去隔壁友商论坛发帖：“看吧，方舟连最硬核的主播都开始无脑吹了，这游戏要完”", effect: S_KK }, 
+            { text: "跟着弹幕一起疯狂刷：“太强了！超大杯！太强了！超大杯！”", effect: S_FDJ }, 
+            { text: "默默看了一会觉得没意思，一言不发地退出了直播间", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "血狼破军去参加《非诚勿扰》，面对女嘉宾的提问，他用全损干员DPS曲线作为回答，你会：", 
+        options: [ 
+            { text: "把女嘉宾全部灭灯的画面剪辑下来，配上伤感的二次元BGM", effect: S_EC }, 
+            { text: "立刻去贴吧发帖：“血狼非诚勿扰爆典！相亲不如算DPS！”", effect: S_HD }, 
+            { text: "觉得只有那些能看懂图表的高端大佬，才配得上他孤高的灵魂", effect: S_LL }, 
+            { text: "仔细核对他在大屏幕上放出的DPS曲线，发现了一处计算错误", effect: S_QD }, 
+            { text: "砸钱给节目组，要求在屏幕上飘过自己的SC嘲笑他", effect: S_LB }, 
+            { text: "看不懂这个节目，觉得还是纸片人老婆比较好", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "在漫展上，你竟然发现一个身高一米八的壮汉在出星熊的cosplay，走近一看是血狼破军，你会：", 
+        options: [ 
+            { text: "被这种反差萌击中，立刻脑补出一万字的娇羞猛男文学", effect: S_XM }, 
+            { text: "冲上去问他：“穿这身衣服能不能硬扛三阶段爱国者的长枪？”", effect: S_QD }, 
+            { text: "拍下照片并加上群嘲配文，发到每一个对立主播的粉丝群里引战", effect: S_CZ }, 
+            { text: "嘲笑他辣眼睛，并恶毒地指出他腿毛都没刮干净", effect: S_LH }, 
+            { text: "指指点点：“别的二游主播出的cos多还原，这出的是个啥？”", effect: S_KK }, 
+            { text: "在一旁冷笑，感叹当年那个纯粹的数据测评UP主终究还是媚宅了", effect: S_LZL } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军突然发布视频，声称自己其实是某公司开发的AI虚拟测评机器人，你会：", 
+        options: [ 
+            { text: "大喊“这太赛博朋克了”，开始疯狂煽动大家去查他背后的代码是谁写的", effect: S_LZ }, 
+            { text: "宣称既然是AI，那以后的所有节奏和错误全都可以甩锅给程序员", effect: S_SZJL }, 
+            { text: "毫不惊讶，并表示只有AI才能拥有如此冷酷无情的排轴计算能力", effect: S_QD }, 
+            { text: "复读弹幕：“血狼是AI？”“血狼是AI？”“血狼是AI？”", effect: S_FDJ }, 
+            { text: "觉得不管是人是机器，只要能继续听他富有磁性的机械音就行", effect: S_JN }, 
+            { text: "只是挂着后台听个响，完全不打算在评论区发表看法", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "血狼直播切屏时不小心暴露了浏览记录，上面赫然写着‘如何治疗严重脱发’，你会：", 
+        options: [ 
+            { text: "把这张图配上牛子豪一起做成表情包，成为全B站通用的防脱发圣经", effect: S_EC }, 
+            { text: "去NGA发帖：“实锤了！方舟的高难环境已经把主播逼秃了！”", effect: S_HD }, 
+            { text: "心疼哥哥，立刻扫码转账让他去买最好的霸王防脱洗发水", effect: S_LB }, 
+            { text: "觉得这一定是算数据算出来的工伤，默默向他致敬", effect: S_QD }, 
+            { text: "假装不知情，但在别的地方带节奏：“某UP主头发都没了还天天教人打游戏？”", effect: S_CZ }, 
+            { text: "完全没注意浏览记录，还在问刚才那局怎么部署的", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军决定去打综合格斗，且上台的BGM选了明日方舟的抽卡音效，你会：", 
+        options: [ 
+            { text: "在脑海里帮他配上字幕：“这一拳，有十万的DPH！”", effect: S_XM }, 
+            { text: "期待他在台上被暴打，然后在贴吧实时转播他的惨状", effect: S_LH }, 
+            { text: "发现对手是某竞品游戏的主播，立刻将其上升为两款游戏的尊严之战", effect: S_KK }, 
+            { text: "分析他的臂展和肌肉量，计算他的平A伤害能否破防对手", effect: S_QD }, 
+            { text: "在台下大喊早年的方舟名台词，试图唤醒他身为老玩家的斗志", effect: S_LZL }, 
+            { text: "在场边一言不发，安静地看完全场比赛", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "你有幸参加泰拉探索协会线下聚会，却发现血狼破军正在用拖把在地上画干员攻击范围，你会：", 
+        options: [ 
+            { text: "惊呼他已经走火入魔，到处散播他神经失常的谣言制造恐慌", effect: S_SZJL }, 
+            { text: "立刻上前，和他一起用粉笔把怪物的行动轨迹和帧数补全", effect: S_QD }, 
+            { text: "在一旁录像，并配文《当代明日方舟主播的抽象精神状态》发到B站", effect: S_EC }, 
+            { text: "觉得他挥舞拖把的样子孔武有力，被那种奇异的魅力深深折服", effect: S_JN }, 
+            { text: "脑补他其实是在和另一位保洁大叔进行地盘的阵营博弈", effect: S_LL }, 
+            { text: "跟着围观群众一起喊：“拖把战神！”“拖把战神！”", effect: S_FDJ } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军在菜市场和卖菜大妈因为一毛钱吵了起来，甚至用上了‘这白菜的性价比不如卫戍协议六本买个图图’的句式，你会：", 
+        options: [ 
+            { text: "立刻开启直播，把这场菜市场论战包装成年度最强节奏", effect: S_HD }, 
+            { text: "觉得他在无理取闹，发帖指责他素质低下、欺负老人", effect: S_LH }, 
+            { text: "走到大妈摊位前，甩出一百块钱：“他买的白菜我全包了！”", effect: S_LB }, 
+            { text: "在旁边起哄：“大妈快用你的大招！打断他的施法前摇！”", effect: S_LZ }, 
+            { text: "反串成大妈的家属，去网上发帖要求血狼破军公开道歉", effect: S_CZ }, 
+            { text: "买完自己的土豆就走，不关心旁边在吵什么", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "血狼破军突然宣布顿悟了，以后只测一星干员的强度，认为二星及以上都是数值膨胀的异端，你会：", 
+        options: [ 
+            { text: "觉得他终于疯了，感叹这个圈子又少了一个正常算数据的人", effect: S_LZL }, 
+            { text: "开始认真研究一星干员的极限压等级打法，跟随他的新脚步", effect: S_QD }, 
+            { text: "在各大论坛散布论调：“完了，连血狼都放弃高星了，这游戏氪金彻底没用了！”", effect: S_SZJL }, 
+            { text: "觉得这种偏执狂的设定非常有魅力，简直像是个美强惨的反派", effect: S_XM }, 
+            { text: "跑到别的游戏社区宣扬：“看看我们方舟，一星干员才是真理！”", effect: S_KK }, 
+            { text: "只要不说话，就没人知道我还在偷偷练六星干员", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "假设血狼破军穿越到了泰拉大陆，变成了整合运动里最底层的小兵，你觉得他会：", 
+        options: [ 
+            { text: "因为精确计算了罗德岛干员的攻击死角，苟活到了大结局", effect: S_QD }, 
+            { text: "天天在军营里煽动小兵造反，引发整合运动内部的派系大乱斗", effect: S_LZ }, 
+            { text: "由于嘴太臭，第一天就被塔露拉一把火给烧成了灰", effect: S_LH }, 
+            { text: "成功引起了某个男性高级将领的注意，上演了一出军营绝恋", effect: S_LL }, 
+            { text: "被做成搞笑MMD：小兵血狼破军的悲惨挨打一生", effect: S_EC }, 
+            { text: "满世界到处跑腿，遇到谁都只会喊那几句NPC台词", effect: S_FDJ } 
+        ] 
+    },
+    { 
+        text: "如果有人爆料血狼破军晚上睡觉打呼噜的节奏是完美的摩尔斯电码，翻译过来是‘法抗’，你会：", 
+        options: [ 
+            { text: "把呼噜声录下来，发到B站作为今年最阴间的方舟二创", effect: S_HD }, 
+            { text: "心疼他为了游戏数据连潜意识都被侵蚀了，想给他买安眠药", effect: S_JN }, 
+            { text: "认为这是他发出的求救信号，肯定是被资本绑架了！", effect: S_CZ }, 
+            { text: "用打赏SC的方式在直播间破译他的呼噜声", effect: S_LB }, 
+            { text: "感叹老一辈UP主的执着，现在的年轻UP主连做梦都不算数据了", effect: S_LZL }, 
+            { text: "根本不信，觉得太魔幻了，这肯定是段子", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "抽卡非到极致，血狼破军直播时徒手把手机捏成了粉末，并在屏幕前咆哮，你会：", 
+        options: [ 
+            { text: "趁机向萌新贩卖焦虑：“看吧，连大UP都抽不到，微氪玩家趁早跑路！”", effect: S_SZJL }, 
+            { text: "不关心他碎掉的手机，开始计算他这波非酋的概率学极小值", effect: S_QD }, 
+            { text: "觉得这种充满力量感的破坏欲简直荷尔蒙爆棚！", effect: S_XM }, 
+            { text: "去米哈游的社区发帖：“方舟的爆率把主播逼疯了，还是咱们这边好！”", effect: S_KK }, 
+            { text: "静静地看着他发疯，双手离开键盘绝不发一条安慰的弹幕", effect: S_QSZ }, 
+            { text: "把咆哮声剪下来，加上电音做成新时代的鬼畜战歌", effect: S_EC } 
+        ] 
+    },
+    { 
+        text: "血狼破军被外星人绑架，要求他用数据论证地球人还有活下去的价值，不然就毁灭地球，你会：", 
+        options: [ 
+            { text: "立刻在论坛发帖倒计时：“地球毁灭倒计时！血狼能算出保底吗？”", effect: S_HD }, 
+            { text: "疯狂带节奏：“他肯定会背叛地球的，他个汉奸！”", effect: S_LH }, 
+            { text: "期待他用一套完美的DPS推演说服外星人，拯救全人类", effect: S_QD }, 
+            { text: "觉得外星人首领肯定会被他折服，上演跨越星际的强制爱CP", effect: S_LL }, 
+            { text: "在直播间刷火箭，希望外星人看在钱的份上放过地球", effect: S_LB }, 
+            { text: "复读：“地球要毁灭了？”“地球要毁灭了？”“地球要毁灭了？”", effect: S_FDJ } 
+        ] 
+    },
+    { 
+        text: "某天看直播时，血狼破军突然顺着网线爬出屏幕，强迫你和他一起算红蒂的buff收益，你会：", 
+        options: [ 
+            { text: "虽然害怕，但还是拿起笔和他一起探讨那0.5%的误差去哪了", effect: S_QD }, 
+            { text: "觉得这简直就是恐怖片，立刻拍照发微博引发全网恐慌", effect: S_LZ }, 
+            { text: "娇羞地低下头，觉得这种强迫系的展开简直是乙女游戏照进现实", effect: S_XM }, 
+            { text: "立刻换上其他游戏的Cos服，试图用文化差异劝退他", effect: S_KK }, 
+            { text: "反向操作，装作自己是方舟策划，当面嘲笑他算的全是错的", effect: S_CZ }, 
+            { text: "闭上眼睛假装在做梦，一动不动直到他自己退回屏幕里", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "血狼破军发布了首张个人单曲，全网打榜，但歌词全是他念的技能倍率公式，你会：", 
+        options: [ 
+            { text: "天天在各种方舟群里发链接刷屏，强迫所有人听这首神曲", effect: S_HD }, 
+            { text: "将这首歌作为素材，混音成各大电音节的DJ打碟神曲", effect: S_EC }, 
+            { text: "听着听着流下了眼泪，回忆起开服时期大家一起算数据的纯真年代", effect: S_LZL }, 
+            { text: "借机嘲讽：“这什么破歌，干员的上限就这么点，听得我都焦虑了！”", effect: S_SZJL }, 
+            { text: "戴上耳机闭着眼，单纯欣赏他低沉的嗓音，完全不听他在唱什么", effect: S_JN }, 
+            { text: "没听过，也不打算听，我是来玩游戏的不是来听歌的", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "有水友扒出血狼破军在贴吧开了个小号，天天自己给自己发帖‘血狼破军也太帅了吧’，你会：", 
+        options: [ 
+            { text: "立刻把截图做成传世经典大字报，贴满整个NGA", effect: S_LH }, 
+            { text: "觉得他太自恋了，赶紧去帖子底下引战让他下不来台", effect: S_LZ }, 
+            { text: "觉得这种背地里自夸的反差萌太可爱了，连带滤镜也加深了", effect: S_XM }, 
+            { text: "用自己的钞能力买下贴吧头条，帮他把这句话挂在首页示众", effect: S_LB }, 
+            { text: "去他的小号下面跟帖复读：“血狼破军也太帅了吧+1”", effect: S_FDJ }, 
+            { text: "跑去别的游戏区发帖：“你们主播有我们家主播这么戏多吗？”", effect: S_KK } 
+        ] 
+    },
+    { 
+        text: "为了证明某个重装干员真的很肉，血狼破军直播穿上三级防弹衣让龙哥哥拿平底锅拍他来作为比喻，你会：", 
+        options: [ 
+            { text: "无视他的哀嚎，开始计算平底锅挥舞的动能和防弹衣的减伤率", effect: S_QD }, 
+            { text: "把挨打的画面做成GIF，配上‘大飞老师’的音效在全网疯传", effect: S_EC }, 
+            { text: "觉得龙哥哥打他的动作充满了不可描述的张力，瞬间脑补出一万字", effect: S_LL }, 
+            { text: "假扮成圣母去举报他的直播间宣扬暴力，试图封他的号", effect: S_CZ }, 
+            { text: "发弹幕感慨：“现在做个测评真不容易，以前哪有这种花活。”", effect: S_LZL }, 
+            { text: "冷漠地看着他挨打，内心毫无波澜甚至想吃黄瓜", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "血狼破军去参加了《最强大脑》，挑战项目是‘蒙眼听攻击音效辨别出是哪位干员’，你会：", 
+        options: [ 
+            { text: "在电视机前同步跟着猜，借机检验自己对游戏的硬核理解程度", effect: S_QD }, 
+            { text: "把他在节目上因为猜错而抓狂的表情截下来到处发帖嘲笑", effect: S_HD }, 
+            { text: "借机在微博上带节奏：“玩个破游戏也能上最强大脑？黑幕！”", effect: S_LZ }, 
+            { text: "趁机科普，说如果玩的是隔壁某大作，肯定不用记这么无聊的东西", effect: S_KK }, 
+            { text: "被他蒙眼时那种专注且脆弱的神情深深迷住", effect: S_JN }, 
+            { text: "不看综艺，只关心周四方舟又要更新什么", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军打赌输了，被迫在直播时戴上猫耳，每说一句话都要加个‘喵’，你会：", 
+        options: [ 
+            { text: "立刻大额打赏，要求他不仅要叫喵，还要学猫洗脸！", effect: S_LB }, 
+            { text: "把音频全部提取出来，配上宅舞模型做成血狼版《极乐净土》", effect: S_EC }, 
+            { text: "觉得这种行为极度恶心，发长文批判他为了流量不要底线", effect: S_LH }, 
+            { text: "听得头皮发麻，但为了干员的最终测评结论，硬着头皮听完", effect: S_QD }, 
+            { text: "满脑子都是傲娇老男人被调教的剧情，在弹幕里狂刷爱心", effect: S_XM }, 
+            { text: "疯狂复读：“喵喵喵？”“喵喵喵？”", effect: S_FDJ } 
+        ] 
+    },
+    { 
+        text: "突然有八卦博主惊爆：血狼破军其实是龙哥失散多年的亲兄弟，两人为了争夺家产在网上演戏，你会：", 
+        options: [ 
+            { text: "尖叫抓狂！这种骨科兄弟相爱相杀的戏码简直是同人女的终极狂欢！", effect: S_LL }, 
+            { text: "立刻到处煽风点火，跑到两人直播间疯狂刷对方的名字引战", effect: S_LZ }, 
+            { text: "假装内部知情人，在贴吧爆料更多离谱的豪门恩怨剧情", effect: S_CZ }, 
+            { text: "感叹：“怪不得以前他们连麦的时候氛围就不对劲，一切都有迹可循啊！”", effect: S_LZL }, 
+            { text: "借机散布恐慌：“两人争家产，那以后的方舟攻略岂不是要断更了？”", effect: S_SZJL }, 
+            { text: "默默在屏幕前看着这出闹剧，绝不参与任何一边的站队", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "血狼破军决定转型美食区，开直播教大家如何用精确到毫克的配比调出一杯‘超大杯’奶茶，你会：", 
+        options: [ 
+            { text: "拿起笔记本，严格记录糖分和茶底的配比，试图复刻最完美的数值", effect: S_QD }, 
+            { text: "把他在厨房翻车的各种名场面剪下来，发到B站赚取硬币", effect: S_EC }, 
+            { text: "觉得他做饭的样子很有居家好男人的魅力，让人忍不住想嫁", effect: S_JN }, 
+            { text: "砸醒目留言，让他直接公布外卖在哪买的，懒得自己做", effect: S_LB }, 
+            { text: "去别的平台拉踩：“这手艺还不如我家楼下卖原神联名奶茶的！”", effect: S_KK }, 
+            { text: "看不懂为什么一个游戏UP主要去搞这些花里胡哨的", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "某天血狼发了一张光头自拍，宣布自己已经看破二游红尘出家了，法号‘真伤’，你会：", 
+        options: [ 
+            { text: "在各个群里疯狂转发他的光头照，并配文：‘一代方舟法师的陨落’", effect: S_HD }, 
+            { text: "跑到他的寺庙去，在门外大喊假扮隔壁竞品游戏的粉丝进行挑衅", effect: S_CZ }, 
+            { text: "恶毒地评论：“这种心术不正的人就算出家了也是个妖僧！”", effect: S_LH }, 
+            { text: "满屏幕复读：“高僧预测！”“高僧预测！”“高僧预测！”", effect: S_FDJ }, 
+            { text: "觉得就算没有头发，他那算无遗策的智慧光芒依然让人迷醉", effect: S_XM }, 
+            { text: "默默地退订了他的频道，不再留恋", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "你发现某二手交易平台上有人在卖‘血狼破军穿过的原味袜子（带有高玩加持）’，你会：", 
+        options: [ 
+            { text: "立刻砸下重金拍下，觉得只要有了这双袜子自己也能刀刀烈火！", effect: S_LB }, 
+            { text: "把商品页面截图发到贴吧，配文‘现在的方舟圈已经变态到这种地步了吗？’", effect: S_LZ }, 
+            { text: "觉得这是个完美的同人梗，立刻写一篇《血狼与丢失的左脚袜》", effect: S_LL }, 
+            { text: "借题发挥：“连UP主都要卖袜子求生了，普通玩家还能在这游戏活下去吗？”", effect: S_SZJL }, 
+            { text: "发长文痛斥这种把老牌UP主饭圈化的行为，怀念当年纯洁的社区环境", effect: S_LZL }, 
+            { text: "觉得太恶心了，看了一眼立刻关掉页面去洗手", effect: S_MM } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军去当小学数学老师，每天用‘打大盾需要几刀’来给小学生出应用题，你会：", 
+        options: [ 
+            { text: "在后排旁听，并在他漏算了护甲穿透时大声指出他的错误", effect: S_QD }, 
+            { text: "把小学生们被应用题难哭的视频做成鬼畜集锦全网放送", effect: S_EC }, 
+            { text: "满眼星星地看着他在黑板上写粉笔字，觉得认真的男人最帅", effect: S_JN }, 
+            { text: "去教育局假装学生家长实名举报他给小孩灌输暴力游戏思想", effect: S_CZ }, 
+            { text: "对比自己玩过的其他游戏，觉得方舟的数值系统确实只能拿来当奥数题", effect: S_KK }, 
+            { text: "在教室外一言不发地看着这一切发生，像个透明的幽灵", effect: S_QSZ } 
+        ] 
+    },
+    { 
+        text: "血狼直播时不小心切到了隔壁《O神》，并且正在深渊里用极品面板大杀四方，你会：", 
+        options: [ 
+            { text: "立刻把截图发到贴吧：“惊天大瓜！血狼破军原来是O神仙人！”", effect: S_HD }, 
+            { text: "狂喜，立刻在弹幕里用最恶劣的语言拉踩两款游戏，挑起终极跨界大战", effect: S_LZ }, 
+            { text: "嘲讽地发弹幕：“怪不得最近方舟测得这么水，原来是去玩米O游了！”", effect: S_LH }, 
+            { text: "跟着弹幕一起刷满屏的：“O神，启动！”“O神，启动！”", effect: S_FDJ }, 
+            { text: "不关心他玩什么游戏，只关注他推演深渊怪物的DPS计算过程是否严谨", effect: S_QD }, 
+            { text: "借机疯狂输出：“看吧，我就说O神的数值设计比方舟优秀多了！”", effect: S_KK } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军的麦克风漏电发出了奇怪的电音，你的反应是：", 
+        options: [ 
+            { text: "提取漏电声音的频率作为干员攻击间隔的参考", effect: S_QD }, 
+            { text: "发帖宣称他遭到了神秘组织的电击暗杀", effect: S_HD }, 
+            { text: "觉得漏电时的抽搐动作有一种奇异的机械美感", effect: S_XM }, 
+            { text: "将电音采样提取出来制作成鬼畜单曲", effect: S_EC }, 
+            { text: "在弹幕不断复读漏电的拟声词", effect: S_FDJ }, 
+            { text: "觉得这股电流声和微波炉加热的声音很像", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "当发现血狼偷偷将一个公认的下水道干员练到满级满专精时，你会：", 
+        options: [ 
+            { text: "计算该干员在极限环境下的理论伤害上限", effect: S_QD }, 
+            { text: "截图发至各大论坛嘲笑其硬核人设崩塌", effect: S_LH }, 
+            { text: "猜测这是为了引起另一位特定UP主的注意", effect: S_LL }, 
+            { text: "借机宣扬游戏数值彻底崩坏，下水道也能当主力", effect: S_SZJL }, 
+            { text: "赞助高额留言要求其用该干员单通高难关卡", effect: S_LB }, 
+            { text: "盯着干员立绘上的纽扣看了十分钟", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "如果血狼在直播时不小心露出桌面壁纸是初音未来，你会：", 
+        options: [ 
+            { text: "觉得他打破了冰冷的数据人设，变得更亲近了", effect: S_JN }, 
+            { text: "截图搬运到相关贴吧引发虚拟偶像圈的讨论", effect: S_HD }, 
+            { text: "宣称玩其他二游的玩家品味比这高多了", effect: S_KK }, 
+            { text: "伪装成初音粉丝在弹幕里发带节奏的言论", effect: S_CZ }, 
+            { text: "默默截图保存但不发表任何言论", effect: S_QSZ }, 
+            { text: "发现显示器右下角的时间慢了两分钟", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "面对血狼将新干员评级定为“超超大杯”的情况，你会：", 
+        options: [ 
+            { text: "拿着评级截图去贴吧四处引战", effect: S_LZ }, 
+            { text: "记录数据以便安排后续的抽卡资源规划", effect: S_QD }, 
+            { text: "回忆开服时期的幻神，认为现在的评级已经通货膨胀", effect: S_LZL }, 
+            { text: "将该评级片段做成动态表情包广泛传播", effect: S_EC }, 
+            { text: "抱怨由于该干员太强，后续关卡如果不抽将无法通关", effect: S_SZJL }, 
+            { text: "觉得水杯里的水今天格外透明", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "当血狼在实战演示中连续撤退失败导致干员没发挥出水平时，你会：", 
+        options: [ 
+            { text: "计算撤退失败损失的部署费用和再部署时间", effect: S_QD }, 
+            { text: "将失败画面录制并在对立群体中循环播放", effect: S_LH }, 
+            { text: "认为这种失误操作显得他非常呆萌可爱", effect: S_XM }, 
+            { text: "在弹幕里复制其他人的嘲讽话语跟进刷屏", effect: S_FDJ }, 
+            { text: "提出如果是某款竞品游戏就不会有这种反人类操作", effect: S_KK }, 
+            { text: "开始数弹幕里有多少个标点符号", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "看到血狼破军在贴吧被人挂了长篇大论进行攻击，你会：", 
+        options: [ 
+            { text: "将长文转发到更多平台以扩大负面影响", effect: S_HD }, 
+            { text: "逐条反驳文中的数据错误以维护其实力", effect: S_QD }, 
+            { text: "在长文下发激化矛盾的评论让双方打得更激烈", effect: S_LZ }, 
+            { text: "对这种网络冲突漠不关心，只看个热闹", effect: S_MM }, 
+            { text: "认为这是资本下场购买水军进行的打压", effect: S_CZ }, 
+            { text: "觉得这个帖子的背景颜色有点伤眼", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "如果血狼破军突然宣布要联动某知名虚拟偶像，你的做法是：", 
+        options: [ 
+            { text: "觉得这种媚宅行为背叛了硬核攻略的初衷", effect: S_LZL }, 
+            { text: "期待看到他在联动中被迫进行羞耻营业", effect: S_LZ }, 
+            { text: "在弹幕中发送大量付费留言以支持此次活动", effect: S_LB }, 
+            { text: "将其形象与虚拟偶像进行二次创作结合", effect: S_EC }, 
+            { text: "全程挂在直播间观看但不发送一条互动弹幕", effect: S_QSZ }, 
+            { text: "尝试用舌头舔到自己的手肘", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "当血狼破军在打肉鸽模式时由于贪导致防线崩盘，你会：", 
+        options: [ 
+            { text: "总结崩盘原因并计算不同节点的抓位收益", effect: S_QD }, 
+            { text: "将防线崩溃瞬间其绝望的表情截屏做成头像", effect: S_LH }, 
+            { text: "觉得他运气不好的样子让人产生强烈的保护欲", effect: S_JN }, 
+            { text: "在弹幕区复制别人的满屏问号", effect: S_FDJ }, 
+            { text: "借机散布肉鸽模式存在暗改爆率的阴谋论", effect: S_SZJL }, 
+            { text: "觉得如果把手机倒过来拿手感会更好", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "发现血狼把某干员的名字连续念错三次，你会：", 
+        options: [ 
+            { text: "将错误读音剪辑成鬼畜循环音频", effect: S_EC }, 
+            { text: "认为他连名字都记不住，攻略的专业性存疑", effect: S_LH }, 
+            { text: "觉得他笨嘴拙舌的属性与冷酷外表形成了完美反差", effect: S_XM }, 
+            { text: "将这一片段截屏并配上嘲笑的标题发布至贴吧", effect: S_HD }, 
+            { text: "认为他是故意念错以在社区制造话题度", effect: S_CZ }, 
+            { text: "盯着键盘上的H键陷入沉思", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "如果血狼在直播时突然咳嗽了五分钟，你的反应是：", 
+        options: [ 
+            { text: "立刻进行大额打赏让其休息", effect: S_LB }, 
+            { text: "猜测他是因为某位特定对象的言论而气出病来", effect: S_LL }, 
+            { text: "认为他是为了逃避测试某个弱势干员而在装病", effect: S_LH }, 
+            { text: "记录下咳嗽的时长和频率寻找隐藏的规律", effect: S_QD }, 
+            { text: "认为以前的攻略作者身体素质更好，能连续通宵", effect: S_LZL }, 
+            { text: "去厨房把昨天的剩饭热了一下", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "官方更新公告直接修改机制，背刺了血狼刚测完的结论，你会：", 
+        options: [ 
+            { text: "重新计算修改后的数据并发布修正版参数", effect: S_QD }, 
+            { text: "跑去各大论坛看他被打脸的笑话", effect: S_LZ }, 
+            { text: "认为这是官方在针对他，发帖控诉游戏公司", effect: S_HD }, 
+            { text: "借机宣传这游戏的策划水平不如某款开放世界游戏", effect: S_KK }, 
+            { text: "持续复读“被背刺了”“被打脸了”", effect: S_FDJ }, 
+            { text: "觉得公告的字体行距看起来不太协调", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼发动态表示今天停播，理由是“去登山”，你的反应是：", 
+        options: [ 
+            { text: "觉得这是一种孤独忧郁的文艺属性表现", effect: S_XM }, 
+            { text: "猜测他是和另外一位知名玩家一起去的", effect: S_LL }, 
+            { text: "在论坛发帖造谣他因为节奏太大已经跑路", effect: S_HD }, 
+            { text: "对其私生活毫不关心，只等他回来继续发攻略", effect: S_MM }, 
+            { text: "默默点赞停播动态，但不留下任何评论", effect: S_QSZ }, 
+            { text: "开始研究家里地板瓷砖的花纹", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼在算数据时计算器软件突然崩溃卡死，你会：", 
+        options: [ 
+            { text: "嘲笑其电脑配置太低，连个计算器都带不动", effect: S_LH }, 
+            { text: "将崩溃瞬间的卡顿画面截取作为二创素材", effect: S_EC }, 
+            { text: "用手算帮他完成剩余公式的推导", effect: S_QD }, 
+            { text: "认为这是因为新干员的数值膨胀导致了溢出错误", effect: S_SZJL }, 
+            { text: "假装路人发弹幕宣称计算器罢工说明干员没救了", effect: S_CZ }, 
+            { text: "觉得鼠标滑轮的阻尼感今天不太对", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "有人做了一个血狼的音MAD视频并在首页爆火，你会：", 
+        options: [ 
+            { text: "将视频链接转发至所有能看到的群聊和社区", effect: S_HD }, 
+            { text: "认为这种娱乐化创作削弱了他作为攻略作者的严肃性", effect: S_LZL }, 
+            { text: "在视频评论区跟随其他人重复刷名词短语", effect: S_FDJ }, 
+            { text: "觉得视频里的他展现出了不同于往常的迷人一面", effect: S_JN }, 
+            { text: "不点开看，不关心游戏外的衍生内容", effect: S_MM }, 
+            { text: "发现自己左手食指的指甲该剪了", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "当血狼在论战中抛出了一句“你什么冠军”时，你的做法是：", 
+        options: [ 
+            { text: "将这句话收录为引战语录，四处使用", effect: S_LZ }, 
+            { text: "顺着他的逻辑，列出各干员在危机合约的登顶次数", effect: S_QD }, 
+            { text: "在其他频道的评论区发这句话进行挑衅", effect: S_CZ }, 
+            { text: "认为这句话体现了他作为权威的傲慢与狂气", effect: S_XM }, 
+            { text: "发送付费留言让他在直播里再大声念一遍", effect: S_LB }, 
+            { text: "看着窗外的树叶掉落，觉得很符合重力学", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "如果粉丝群里有人发了血狼的AI合成性转照片，你会：", 
+        options: [ 
+            { text: "觉得这种行为非常冒犯，发长文进行抵制", effect: S_JN }, 
+            { text: "脑补他与男版自己的同人剧情", effect: S_LL }, 
+            { text: "将照片保存并用作自己新一期整活视频的素材", effect: S_EC }, 
+            { text: "发到外网论坛嘲笑该游戏玩家的精神状态", effect: S_KK }, 
+            { text: "潜水看大家讨论，自己不发图也不说话", effect: S_QSZ }, 
+            { text: "觉得这张图的像素密度看起来不均匀", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼直播玩恐怖游戏被吓出尖叫，你的反应是：", 
+        options: [ 
+            { text: "认为他平时的冷静都是装出来的，实际上是个胆小鬼", effect: S_LH }, 
+            { text: "把尖叫声剪辑下来替换掉游戏里怪物的音效", effect: S_EC }, 
+            { text: "觉得他受惊吓的样子很让人心疼", effect: S_JN }, 
+            { text: "拿着尖叫的片段去贴吧发帖取笑他", effect: S_HD }, 
+            { text: "复制弹幕里的高音评价进行刷屏", effect: S_FDJ }, 
+            { text: "把水杯从桌子左边移到了右边", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼和某人连麦时陷入了长达一分钟的沉默，你会：", 
+        options: [ 
+            { text: "构思这一分钟内两人之间暗流涌动的情感交锋", effect: S_LL }, 
+            { text: "借机在弹幕带节奏说两人已经决裂", effect: S_LZ }, 
+            { text: "利用这一分钟去计算刚才提到的某项数据", effect: S_QD }, 
+            { text: "觉得早期玩家之间的连麦更纯粹，现在只剩下尴尬", effect: S_LZL }, 
+            { text: "将这段沉默原封不动地录制下来配上伤感文案发布", effect: S_HD }, 
+            { text: "突然想算一下自己一分钟能呼吸几次", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼破军被做成了终末地里的一个干员模型替换模组，你会：", 
+        options: [ 
+            { text: "测试该模组的数值是否符合他平时的强度标准", effect: S_QD }, 
+            { text: "认为这种做法侵犯了肖像权，去作者评论区攻击", effect: S_LH }, 
+            { text: "录制用该模组打通各路关卡的视频", effect: S_EC }, 
+            { text: "发帖抱怨现在的玩家净搞这些没用的衍生内容", effect: S_KK }, 
+            { text: "虽然觉得有趣，但只看别人玩，自己不下载", effect: S_MM }, 
+            { text: "发现游戏界面的边框其实不是纯黑色", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "当血狼在抽卡时连续歪了六次并当场破防，你会：", 
+        options: [ 
+            { text: "计算这种极端情况发生的概率学数值", effect: S_QD }, 
+            { text: "觉得他破防砸桌子的动作充满了狂野的张力", effect: S_XM }, 
+            { text: "将抽卡录像发到论坛作为嘲讽他的绝佳素材", effect: S_HD }, 
+            { text: "大肆宣扬游戏的抽卡机制存在暗改，制造资源焦虑", effect: S_SZJL }, 
+            { text: "发送大额打赏嘲笑他的运气，并在屏幕上长时间停留", effect: S_LB }, 
+            { text: "觉得抽卡界面的光效有点刺眼，于是调低了亮度", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "如果血狼在下播前极其温柔地说了“晚安”，你会：", 
+        options: [ 
+            { text: "将这两个字截取下来作为每天睡前的专属助眠音频", effect: S_JN }, 
+            { text: "猜测这句晚安是特意说给潜伏在直播间里的某个人听的", effect: S_LL }, 
+            { text: "认为他是在为了挽回人气而刻意营业", effect: S_LH }, 
+            { text: "觉得早期他下播时干脆利落的告别更有硬核感", effect: S_LZL }, 
+            { text: "听完后关闭网页，不回复晚安", effect: S_QSZ }, 
+            { text: "觉得晚安这个词的拼音是对称的", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "发现血狼的测评视频被原封不动抄袭到了外网，你会：", 
+        options: [ 
+            { text: "跑去抄袭者的评论区用极端语言挑起跨平台骂战", effect: S_LZ }, 
+            { text: "将抄袭事件整理成长图发回国内论坛获取关注", effect: S_HD }, 
+            { text: "认为既然是客观数据，只要数据没错谁发都一样", effect: S_QD }, 
+            { text: "假装外国网友在抄袭视频下留言带节奏抹黑他", effect: S_CZ }, 
+            { text: "跟随大部队在评论区复读维权的口号", effect: S_FDJ }, 
+            { text: "发现自己的网页浏览器占用了太多内存", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼宣布以后再也不测某个特定职业的干员，你会：", 
+        options: [ 
+            { text: "分析该职业在当前版本由于机制落后确实没有测试价值", effect: S_QD }, 
+            { text: "将此言论解读为他因为玩不懂该职业而气急败坏", effect: S_LH }, 
+            { text: "在贴吧发帖散布恐慌，称该职业已经被官方彻底放弃", effect: S_SZJL }, 
+            { text: "觉得他这种偏执决绝的性格非常有上位者的霸气", effect: S_XM }, 
+            { text: "跑到别的二游论坛称这边的职业平衡做得像个笑话", effect: S_KK }, 
+            { text: "觉得今天的天气不太适合出门扔垃圾", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "有人扒出血狼的账号UID是个极度稀有的豹子号，你会：", 
+        options: [ 
+            { text: "认为这证明了他是官方内定的人员，发帖揭露黑幕", effect: S_CZ }, 
+            { text: "试图通过UID的数字排列寻找他和其他主播的暗号联系", effect: S_LL }, 
+            { text: "觉得他拥有这种特殊的数字赋予了他某种天选之人的宿命感", effect: S_JN }, 
+            { text: "充值大额礼物，要求他用这个特定账号帮自己代抽", effect: S_LB }, 
+            { text: "看过UID后就忘了，并不关心这种数字规律", effect: S_MM }, 
+            { text: "尝试把这几个数字加起来看是不是偶数", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "直播时血狼的背景音里传来了猫叫声，你会：", 
+        options: [ 
+            { text: "觉得养猫的设定让他硬核无情的人设多了一丝温柔", effect: S_XM }, 
+            { text: "截取猫叫声配上方舟干员的动作做成搞笑视频", effect: S_EC }, 
+            { text: "认为猫叫声干扰了他推演数据的专注度，发长文批评", effect: S_LZL }, 
+            { text: "将他在直播中分心逗猫的片段发到论坛引发讨论", effect: S_HD }, 
+            { text: "在弹幕里跟随其他人疯狂复读猫叫声", effect: S_FDJ }, 
+            { text: "有没有可能那是龙哥哥的八万？", effect: S_LL } 
+        ] 
+    },
+    { 
+        text: "血狼在预测合约登顶阵容思路时预测错了登顶的阵容，你会：", 
+        options: [ 
+            { text: "根据实际阵容重新核对之前被忽略的干员机制上限", effect: S_QD }, 
+            { text: "拿着之前的预测截图四处去嘲笑他游戏理解不过关", effect: S_LH }, 
+            { text: "认为他是为了给特定攻略组让路故意预测错的", effect: S_LL }, 
+            { text: "在别人的直播间发引战弹幕对比理解能力", effect: S_LZ }, 
+            { text: "看完实战录像后默默关掉网页，不参与讨论", effect: S_QSZ }, 
+            { text: "觉得合约的UI布局有点左倾", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼收到一个自称是“未来人”的邮件，预言了下个强力干员，你会：", 
+        options: [ 
+            { text: "对预言嗤之以鼻，坚持只有通过严谨计算得出的才是真理", effect: S_QD }, 
+            { text: "把邮件截图发至各大群组，引发对未来干员强度的无端焦虑", effect: S_SZJL }, 
+            { text: "认为这是他为了搞节目效果自己编造的，发帖攻击他", effect: S_CZ }, 
+            { text: "觉得这种悬疑色彩的剧情非常适合写成二次创作小说", effect: S_XM }, 
+            { text: "吹嘘隔壁游戏的内鬼爆料比这种邮件准确多了", effect: S_KK }, 
+            { text: "检查了一下自己的邮箱有没有垃圾邮件", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "当血狼在演示极限操作时手滑点到了退出关卡，你会：", 
+        options: [ 
+            { text: "觉得他手滑懊恼的样子非常真实可爱", effect: S_JN }, 
+            { text: "将退出的瞬间截图，配上放弃游戏的文字到处散播", effect: S_HD }, 
+            { text: "认为他操作退化已经跟不上当年了，发帖怀念过去", effect: S_LZL }, 
+            { text: "用高额打赏嘲笑他的老年人手速", effect: S_LB }, 
+            { text: "跟随弹幕大军刷满屏的嘲讽词汇", effect: S_FDJ }, 
+            { text: "觉得退出界面的动画过渡很平滑", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼的粉丝自发组织了一次线下聚会，但他本人没去，你的反应是：", 
+        options: [ 
+            { text: "猜测他没去是因为要和某个不能公开的人去过周末", effect: S_LL }, 
+            { text: "认为他清高耍大牌，跑到各大社区发帖带节奏", effect: S_LZ }, 
+            { text: "将聚会照片和他以往的孤独发言剪辑制作对比视频", effect: S_EC }, 
+            { text: "觉得他不凑热闹、坚持测数据的性格才是真正的魅力", effect: S_JN }, 
+            { text: "本身就不关注线下活动，安静打游戏就好", effect: S_MM }, 
+            { text: "觉得自己今天穿的袜子颜色不太搭配", effect: S_NONE } 
+        ] 
+    },
+    { 
+        text: "血狼在新年直播中抽奖，结果自己抽中了自己，你会：", 
+        options: [ 
+            { text: "用概率学公式论证在大量参与者中抽中自己的极小概率", effect: S_QD }, 
+            { text: "截图跑到论坛发帖控诉其暗箱操作", effect: S_LH }, 
+            { text: "披上伪装马甲去粉丝群里挑拨离间，试图引起内部混乱", effect: S_CZ }, 
+            { text: "宣扬不仅抽卡爆率存在问题，连抽奖系统都是假的", effect: S_SZJL }, 
+            { text: "待在直播间看大家吵架，自己绝不发表评论", effect: S_QSZ }, 
+            { text: "盯着抽奖名单的滚动条看了五秒钟", effect: S_NONE } 
+        ] 
+    }
 ];
 
 // 为每一题自动追加“我都不想选”选项
@@ -199,4 +859,145 @@ const outcomes = {
         desc: "你其实比起明日方舟更爱另外一款游戏，或许你才是真正的串子。你关注相关讨论是为了对比或寻找差异，在弹幕或论坛中伺机引入其他游戏的元素，试图转移话题或挑起不同游戏受众之间的摩擦。",
         danger: "⚠️⚠️⚠️⚠️"
     }
+};
+// ==========================================
+// 追加模块：120种交互风味文本字典 (matchDictionary)
+// ==========================================
+// 键名格式：按字母顺序排列的两种结局键值，中间用 '|' 分隔。
+
+const matchDictionary = {
+    "negative_negative_negative_negative|negative_negative_negative_positive": "一方试图引入外部游戏元素，另一方对社区信息呈现隔离状态。交流缺乏共同的认知基础。",
+    "negative_negative_negative_negative|negative_negative_positive_negative": "一方试图转移话题至其他游戏，另一方专注于制造本游戏内的资源恐慌。两者均在输出负面情绪，但方向不同。",
+    "negative_negative_negative_negative|negative_negative_positive_positive": "一方关注跨界对比，另一方专注于内部人物关系图谱。双方关注点处于不相交的平行线。",
+    "negative_negative_negative_negative|negative_positive_negative_negative": "一方试图引入外部元素，另一方保持沉默。单方面输出无法形成有效互动。",
+    "negative_negative_negative_negative|negative_positive_negative_positive": "一方讨论其他游戏环境，另一方沉浸于人物的二次设定。双方处于完全不同的讨论维度。",
+    "negative_negative_negative_negative|negative_positive_positive_negative": "一方试图拉踩其他游戏，另一方仅复制当前弹幕内容。互动停留在机械重复层面。",
+    "negative_negative_negative_negative|negative_positive_positive_positive": "一方贬低当前游戏环境，另一方无条件支持主播。容易在维护主观立场时发生直接对立。",
+    "negative_negative_negative_negative|positive_negative_negative_negative": "一方引入跨界对比，另一方通过资金获取话语权。双方的信息传播渠道与目的存在壁垒。",
+    "negative_negative_negative_negative|positive_negative_negative_positive": "一方排斥当前游戏，另一方排斥主播本人。在输出负面情绪时存在部分重合，但针对主体不同。",
+    "negative_negative_negative_negative|positive_negative_positive_negative": "一方用其他游戏进行横向对比，另一方用早期版本进行纵向对比。均对现状不满，但评价参照物不同。",
+    "negative_negative_negative_negative|positive_negative_positive_positive": "一方提供跨界引战素材，另一方负责将其搬运至外部论坛。存在行为上的上下游配合可能。",
+    "negative_negative_negative_negative|positive_positive_negative_negative": "一方进行跨界拉踩，另一方伪装身份进行煽动。容易在社区中混合形成复杂的混乱源。",
+    "negative_negative_negative_negative|positive_positive_negative_positive": "一方试图转移话题，另一方乐于观测跨界拉踩引发的争吵。后者会从前者的行为中获取情绪反馈。",
+    "negative_negative_negative_negative|positive_positive_positive_negative": "一方讨论其他游戏，另一方提取素材。前者较难为后者提供本游戏相关的核心创作切片。",
+    "negative_negative_negative_negative|positive_positive_positive_positive": "一方脱离本游戏数值体系，另一方专注于本游戏数据推演。交流通常会因参照系不同而中断。",
+    
+    "negative_negative_negative_positive|negative_negative_positive_negative": "一方对游戏机制不敏感，另一方试图制造数值焦虑。后者的信息输入难以对前者产生实质影响。",
+    "negative_negative_negative_positive|negative_negative_positive_positive": "一方仅关注游戏表层，另一方专注于人物关系发掘。双方在信息获取深度上存在差异。",
+    "negative_negative_negative_positive|negative_positive_negative_negative": "双方均缺乏主动交互意愿。处于互不干扰的绝对静默状态。",
+    "negative_negative_negative_positive|negative_positive_negative_positive": "一方作为普通玩家，另一方带有强烈的个人幻想。认知模式存在显著差异。",
+    "negative_negative_negative_positive|negative_positive_positive_negative": "一方偶尔观看，另一方机械重复信息。不产生实质性交流。",
+    "negative_negative_negative_positive|negative_positive_positive_positive": "一方心态平和，另一方带有强烈的排他性支持。前者无法理解后者的狂热行为。",
+    "negative_negative_negative_positive|positive_negative_negative_negative": "一方不参与深入讨论，另一方使用资金主导互动。处于社区生态的完全不同层级。",
+    "negative_negative_negative_positive|positive_negative_negative_positive": "一方回避社区节奏，另一方主动散播负面信息。前者会主动切断与后者的信息接触。",
+    "negative_negative_negative_positive|positive_negative_positive_negative": "一方对当前环境接受度高，另一方执着于过去。缺乏共同的时间轴参照。",
+    "negative_negative_negative_positive|positive_negative_positive_positive": "一方不关心社区争议，另一方依靠争议获取关注。行为模式互不兼容。",
+    "negative_negative_negative_positive|positive_positive_negative_negative": "一方难以识别伪装，但也较少受到煽动影响。后者的挑拨对前者无效。",
+    "negative_negative_negative_positive|positive_positive_negative_positive": "一方回避冲突，另一方制造冲突。前者是后者行为的被动旁观者或逃避者。",
+    "negative_negative_negative_positive|positive_positive_positive_negative": "一方是内容的被动消费者，另一方是内容的加工者。存在单向的信息传递关系。",
+    "negative_negative_negative_positive|positive_positive_positive_positive": "一方不关注极限数据，另一方追求数值精确。讨论难以深入同一维度。",
+    
+    "negative_negative_positive_negative|negative_negative_positive_positive": "一方制造数值恐慌，另一方关注人物关系。讨论领域无交集。",
+    "negative_negative_positive_negative|negative_positive_negative_negative": "一方持续输出焦虑，另一方保持观察不予回应。",
+    "negative_negative_positive_negative|negative_positive_negative_positive": "一方关注干员强度劣势，另一方关注主播形象。信息处理方向完全不同。",
+    "negative_negative_positive_negative|negative_positive_positive_negative": "一方散播恐慌言论，另一方将其作为复读素材扩大传播。存在无意识的放大效应。",
+    "negative_negative_positive_negative|negative_positive_positive_positive": "一方强调数值不足，另一方维护主播的所有输出。会因对主播的强度评价产生单向摩擦。",
+    "negative_negative_positive_negative|positive_negative_negative_negative": "一方制造抽卡焦虑，另一方具备充足的资源。后者的资金能力直接消解了前者的焦虑输出。",
+    "negative_negative_positive_negative|positive_negative_negative_positive": "一方针对游戏机制输出负面情绪，另一方针对主播本人。两者均带有攻击性，但目标不一致。",
+    "negative_negative_positive_negative|positive_negative_positive_negative": "一方放眼当前的数值膨胀，另一方怀念过去的机制环境。均对现状持批判态度。",
+    "negative_negative_positive_negative|positive_negative_positive_positive": "一方的焦虑言论为另一方提供了搬运素材。存在客观上的内容供给关系。",
+    "negative_negative_positive_negative|positive_positive_negative_negative": "一方煽动资源恐慌，另一方煽动群体对立。两者结合易造成社区环境的快速恶化。",
+    "negative_negative_positive_negative|positive_positive_negative_positive": "一方的焦虑输出为另一方提供了观测争吵的契机。",
+    "negative_negative_positive_negative|positive_positive_positive_negative": "一方的极端恐慌言论偶尔会被截取，作为视频的切片素材。",
+    "negative_negative_positive_negative|positive_positive_positive_positive": "一方利用数据制造恐慌，另一方依靠数据进行客观推演。存在基于机制理解深度的直接对抗。",
+
+    "negative_negative_positive_positive|negative_positive_negative_negative": "一方积极构建关系网络，另一方处于完全的静默观察状态。",
+    "negative_negative_positive_positive|negative_positive_negative_positive": "一方关注多人物间的互动，另一方将焦点完全集中于单一主体。存在幻想对象的排他性差异。",
+    "negative_negative_positive_positive|negative_positive_positive_negative": "一方输出人物关系解读，另一方仅作机械重复。",
+    "negative_negative_positive_positive|negative_positive_positive_positive": "一方关注主播与他人的联系，另一方关注主播本身的状态。在注意力分配上存在分歧。",
+    "negative_negative_positive_positive|positive_negative_negative_negative": "一方依靠观察细节满足想象，另一方通过付费直接干预直播内容。",
+    "negative_negative_positive_positive|positive_negative_negative_positive": "一方寻找互动细节进行正面解读，另一方截取细节进行负面攻击。对同一素材存在截然相反的处理方式。",
+    "negative_negative_positive_positive|positive_negative_positive_negative": "一方关注当前的人物互动，另一方回忆早年的人际关系。关注的时间节点不同。",
+    "negative_negative_positive_positive|positive_negative_positive_positive": "一方的关联解读可能被搬运至论坛，成为外界争议的话题。",
+    "negative_negative_positive_positive|positive_positive_negative_negative": "一方的圈子文化容易被另一方利用，进行反向串联与群体攻击。",
+    "negative_negative_positive_positive|positive_positive_negative_positive": "一方的人物关系讨论若引发摩擦，将成为另一方的观测乐趣。",
+    "negative_negative_positive_positive|positive_positive_positive_negative": "一方的想象为另一方提供了混剪和创作的文本灵感。存在客观的互补性。",
+    "negative_negative_positive_positive|positive_positive_positive_positive": "一方关注人际互动，另一方关注数据面板。属于完全不相交的两套评价体系。",
+
+    "negative_positive_negative_negative|negative_positive_negative_positive": "一方不发一言，另一方沉浸于个人幻想。互不干扰。",
+    "negative_positive_negative_negative|negative_positive_positive_negative": "一方拒绝交互，另一方依赖现成文本。两者均不产出有效增量信息。",
+    "negative_positive_negative_negative|negative_positive_positive_positive": "一方隐匿行踪，另一方高调维护。行为模式处于两极。",
+    "negative_positive_negative_negative|positive_negative_negative_negative": "一方零成本观察，另一方高成本介入。参与社区的维度完全不同。",
+    "negative_positive_negative_negative|positive_negative_negative_positive": "一方静默，另一方四处搜集黑料并散发。无交集。",
+    "negative_positive_negative_negative|positive_negative_positive_negative": "一方不参与当前讨论，另一方持续输出过去的标准。",
+    "negative_positive_negative_negative|positive_negative_positive_positive": "一方不产生可搬运的交互，另一方无法从其身上获取收益。",
+    "negative_positive_negative_negative|positive_positive_negative_negative": "一方不发表言论，使得另一方的引战行为无法获取反馈。",
+    "negative_positive_negative_negative|positive_positive_negative_positive": "一方不参与冲突，无法为另一方提供情绪观测价值。",
+    "negative_positive_negative_negative|positive_positive_positive_negative": "一方仅消费内容，不产生可供二次创作的文本特征。",
+    "negative_positive_negative_negative|positive_positive_positive_positive": "一方仅作为客观数据的接收端，不参与数值推演过程。",
+
+    "negative_positive_negative_positive|negative_positive_positive_negative": "一方的幻想表达可能被另一方直接复制刷屏。",
+    "negative_positive_negative_positive|negative_positive_positive_positive": "双方均持有高度关注，但一方偏向二次元形象解构，另一方偏向现实状态维护。存在潜在认知冲突。",
+    "negative_positive_negative_positive|positive_negative_negative_negative": "一方依靠内心幻想，另一方依靠资金引起注意。",
+    "negative_positive_negative_positive|positive_negative_negative_positive": "一方美化主播形象，另一方丑化主播形象。存在绝对的对立关系。",
+    "negative_positive_negative_positive|positive_negative_positive_negative": "一方关注当前构建的二次设定，另一方强调过去真实的社区表现。",
+    "negative_positive_negative_positive|positive_negative_positive_positive": "一方的极端单推言论容易被截取至外部论坛引发围观。",
+    "negative_positive_negative_positive|positive_positive_negative_negative": "一方的情感投射容易被另一方伪装利用，进而引发群体摩擦。",
+    "negative_positive_negative_positive|positive_positive_negative_positive": "一方对主播的维护若引发争吵，将成为另一方的娱乐来源。",
+    "negative_positive_negative_positive|positive_positive_positive_negative": "一方的幻想设定可直接转化为另一方进行视频剪辑的基础素材。",
+    "negative_positive_negative_positive|positive_positive_positive_positive": "一方解构人物形象，另一方解构数值机制。讨论目标南辕北辙。",
+
+    "negative_positive_positive_negative|negative_positive_positive_positive": "一方机械刷屏，另一方可能认为其干扰了正常的支持表达。",
+    "negative_positive_positive_negative|positive_negative_negative_negative": "一方使用零成本的文本复制，另一方使用高成本的资金留言。",
+    "negative_positive_positive_negative|positive_negative_negative_positive": "一方若复制了攻击性文本，客观上协助了后者的负面传播。",
+    "negative_positive_positive_negative|positive_negative_positive_negative": "一方跟随当前节奏，另一方试图拉回过去的语境。",
+    "negative_positive_positive_negative|positive_negative_positive_positive": "一方的刷屏行为本身可能成为另一方截取的社区乱象素材。",
+    "negative_positive_positive_negative|positive_positive_negative_negative": "一方极易被引导，成为另一方扩大特定冲突的复读工具。",
+    "negative_positive_positive_negative|positive_positive_negative_positive": "一方无意识的扩大矛盾，为另一方提供了持续的冲突场景。",
+    "negative_positive_positive_negative|positive_positive_positive_negative": "一方的重复性弹幕构成视觉奇观，可被用作视频的背景素材。",
+    "negative_positive_positive_negative|positive_positive_positive_positive": "一方干扰讨论环境，另一方需要清晰的交流空间进行数据论证。存在环境排斥。",
+
+    "negative_positive_positive_positive|positive_negative_negative_negative": "双方均有强烈的支持意愿，但实现途径分别为弹幕声援与资金介入。",
+    "negative_positive_positive_positive|positive_negative_negative_positive": "一方极端维护，另一方极端攻击。在社区内呈现绝对的排斥与对线状态。",
+    "negative_positive_positive_positive|positive_negative_positive_negative": "一方无条件支持现状，另一方对现状进行审视并怀念过去。",
+    "negative_positive_positive_positive|positive_negative_positive_positive": "一方的过度维护言论常被另一方作为饭圈化的案例搬运至外站。",
+    "negative_positive_positive_positive|positive_positive_negative_negative": "一方的忠诚度极易被另一方利用，通过反串引发与其他群体的对立。",
+    "negative_positive_positive_positive|positive_positive_negative_positive": "一方对抗负面言论的过程，是另一方获取情绪观测价值的主要途径。",
+    "negative_positive_positive_positive|positive_positive_positive_negative": "一方对主播状态的细致观察，能为后者提供特定的高光切片节点。",
+    "negative_positive_positive_positive|positive_positive_positive_positive": "一方关注人物本身的处境与感受，另一方剥离情感只看数据。",
+
+    "positive_negative_negative_negative|positive_negative_negative_positive": "一方投入资金支持，另一方投入精力攻击。两者的行为逻辑互不理解。",
+    "positive_negative_negative_negative|positive_negative_positive_negative": "一方试图用资金影响当前走向，另一方坚持过去的社区规范。",
+    "positive_negative_negative_negative|positive_negative_positive_positive": "一方的大额打赏或特殊要求经常成为另一方搬运至论坛的话题事件。",
+    "positive_negative_negative_negative|positive_positive_negative_negative": "一方的醒目留言可能被另一方作为靶子，进行群体上的挑拨。",
+    "positive_negative_negative_negative|positive_positive_negative_positive": "一方引发的特殊互动或争议，为另一方提供了稀有的观测样本。",
+    "positive_negative_negative_negative|positive_positive_positive_negative": "一方的付费互动往往能触发特定反应，直接产生高质量创作素材。",
+    "positive_negative_negative_negative|positive_positive_positive_positive": "一方通过资金加速测试进度，另一方关注测试过程的严谨性。",
+
+    "positive_negative_negative_positive|positive_negative_positive_negative": "一方全面否定当前主体，另一方通过对比过去表达不满。在否定倾向上有一定重合。",
+    "positive_negative_negative_positive|positive_negative_positive_positive": "双方具有高度的共生关系。一方负责生产发掘负面素材，另一方负责跨平台扩散。",
+    "positive_negative_negative_positive|positive_positive_negative_negative": "双方均旨在破坏社区环境。经常出现目标一致但手段不同的协同效应。",
+    "positive_negative_negative_positive|positive_positive_negative_positive": "一方主导攻击行为，另一方在旁观攻击引发的混乱中获取乐趣。",
+    "positive_negative_negative_positive|positive_positive_positive_negative": "一方的攻击性言论或恶意截图，偶尔会被转化为偏向负面的剪辑素材。",
+    "positive_negative_negative_positive|positive_positive_positive_positive": "一方以攻击为目的曲解数据，另一方要求客观中立。存在关于事实裁定的直接冲突。",
+
+    "positive_negative_positive_negative|positive_negative_positive_positive": "一方对过去的回顾可能被另一方用作论证现环境恶化的素材搬运。",
+    "positive_negative_positive_negative|positive_positive_negative_negative": "一方的怀旧言论容易被利用，成为拉踩新玩家或新机制的武器。",
+    "positive_negative_positive_negative|positive_positive_negative_positive": "一方对现状的不满若引发与其他群体的摩擦，会被另一方视作观测节目。",
+    "positive_negative_positive_negative|positive_positive_positive_negative": "一方掌握的早期知识可为后者的视频提供历史考据视角的补充。",
+    "positive_negative_positive_negative|positive_positive_positive_positive": "双方均有数据分析能力，但一方基于过往框架，另一方基于当前版本。",
+
+    "positive_negative_positive_positive|positive_positive_negative_negative": "双方是信息污染的上下游。一方在内部伪装引战，另一方将战火搬运至外部。",
+    "positive_negative_positive_positive|positive_positive_negative_positive": "双方均从社区冲突中获益。一方追求论坛的回复量，另一方追求即时的情绪刺激。",
+    "positive_negative_positive_positive|positive_positive_positive_negative": "一方搬运文字与截图，另一方处理视频与音频。同为信息的再加工者，媒介不同。",
+    "positive_negative_positive_positive|positive_positive_positive_positive": "一方为了话题度可能断章取义，另一方坚持数据的完整性与客观性。存在本质矛盾。",
+
+    "positive_positive_negative_negative|positive_positive_negative_positive": "双方均以引发混乱为目的。前者亲自下场扮演角色，后者旁观并推波助澜。",
+    "positive_positive_negative_negative|positive_positive_positive_negative": "一方伪造群体立场，另一方进行物理层面的素材剪辑。行为轨迹通常不发生直接交叉。",
+    "positive_positive_negative_negative|positive_positive_positive_positive": "一方通过非理性言论破坏讨论，另一方试图维持理性的计算环境。水火不容。",
+
+    "positive_positive_negative_positive|positive_positive_positive_negative": "一方享受即时的混乱对线，另一方将混乱过程提炼为具备传播属性的成型视频。",
+    "positive_positive_negative_positive|positive_positive_positive_positive": "一方希望数据存在争议以引发对立，另一方希望数据精确以终结悬念。",
+
+    "positive_positive_positive_negative|positive_positive_positive_positive": "一方关注表现力与节目效果，另一方关注底层逻辑与数值结果。各取所需，互不干扰。"
 };
